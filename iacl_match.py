@@ -38,7 +38,7 @@ def intraconfig_refs(cfile):
                 IToACL[iName] = references  
     print(IToACL)
     with open('data.txt', 'w') as outfile:
-        json.dump(IToACL, outfile)           
+        json.dump(IToACL, outfile, indent = 4)           
     return IToACL
 
 
