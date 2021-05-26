@@ -1,7 +1,7 @@
 import re
 import json
 
-#returns boolean indicating 
+#returns boolean indicating if argument regex pattern exists in argument string
 def is_regex_match(pattern, line):
     p = re.compile(pattern)
     iList = p.findall(line)
@@ -31,7 +31,8 @@ def write_to_outfile(IToACL, total_num_interfaces, out_acl_ref, filename):
         json.dump(IToACL, outfile, indent = 4)  
     return   
 
-#
+#creates and returns a dictionary representing intra-config references between
+#interfaces (keys) and ACLs (values) in argument config file
 def intraconfig_refs(cfile):
     IToACL = {} #dictionary in form of {interface name: [ACL references]}
     infile = open(cfile, "r")
@@ -40,7 +41,7 @@ def intraconfig_refs(cfile):
     #iterating over each line in file
     total_num_interfaces = 0;
     out_acl_ref = 0;
-
+    #look at each line in cfile
     while line:
         line = infile.readline()
         #look for interface names
