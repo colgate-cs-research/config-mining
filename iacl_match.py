@@ -1,5 +1,6 @@
 import re
 import json
+import argparse
 
 #returns boolean indicating if argument regex pattern exists in argument string
 def is_regex_match(pattern, line):
@@ -33,7 +34,7 @@ def write_to_outfile(IToACL, total_num_interfaces, out_acl_ref, filename):
 
 #creates and returns a dictionary representing intra-config references between
 #interfaces (keys) and ACLs (values) in argument config file
-def intraconfig_refs(cfile):
+def intraconfig_refs(cfile, writetofile):
     IToACL = {} #dictionary in form of {interface name: [ACL references]}
     infile = open(cfile, "r")
     infile.readline() #go past empty line
@@ -44,7 +45,7 @@ def intraconfig_refs(cfile):
     #look at each line in cfile
     while line:
         line = infile.readline()
-        #look for interface names
+        #look for interface definitions
         if is_regex_match('^interface [a-zA-Z0-9\-]+', line):
             total_num_interfaces += 1;
             iName = getName(line, 1)
@@ -52,7 +53,7 @@ def intraconfig_refs(cfile):
             line = infile.readline()
             found_ref = False
             while (line.strip() != "!"):
-                #look for ACL names
+                #look for ACL references
                 if (is_regex_match('ip access-group [a-zA-Z0-9\-]+ ', line)):
                     found_ref = True
                     ACLName = getName(line, 2)
@@ -65,9 +66,24 @@ def intraconfig_refs(cfile):
                 if len(references) > 1:
                     out_acl_ref += 1;
 
-    write_to_outfile(IToACL, total_num_interfaces, out_acl_ref, 'data.txt')
+    write_to_outfile(IToACL, total_num_interfaces, out_acl_ref, writetofile)
 
     return IToACL
 
+#parsing arguments
+import argparse
+parser = argparse.ArgumentParser(description='Commandline arguments')
+parser.add_argument('Path',metavar='path',type=str, help='provide path of the configration file to compute')
+parser.add_argument('outfile',metavar='outfile',type=str,help='provide name of file to write to')
 
-intraconfig_refs("/shared/configs/northwestern/core1.conf")
+arguments=parser.parse_args()
+
+config_file = arguments.Path
+outfile = arguments.outfile
+
+
+print("Program working so far")
+intraconfig_refs(config_file, outfile)
+print("Program completed")
+
+
