@@ -7,13 +7,31 @@ def is_regex_match(pattern, line):
     iList = p.findall(line)
     return (len(iList) > 0)
         
-
+#returns tokenNum token from argument line. Return value is a string
+#representing an interface or ACL name
 def getName(line, tokenNum):
     splitLine = line.split()
     iName = splitLine[tokenNum]
     return iName  
 
+#writes confidence/support for association rules as well as IToACL dictionary  
+#contents to argument file
+def write_to_outfile(IToACL, total_num_interfaces, out_acl_ref, filename):
+    with open(filename, 'w') as outfile:
+        outfile.write("C(Interface -> Have ACL references)\n")
+        outfile.write("\tInterfaces with ACL reference(s): " + str(len(IToACL)) + "\n")
+        outfile.write("\tSupport (num interfaces): " + str(total_num_interfaces) + "\n")
+        outfile.write("\tConfidence: " + str(len(IToACL)/total_num_interfaces) + "\n\n")
+        
+        outfile.write("C('in' access list -> 'out' access list)\n")
+        outfile.write("\tInterfaces with 'out' access lists: " + str(out_acl_ref) + "\n")
+        outfile.write("\tSupport (num interfaces with 'in' access list): " + str(len(IToACL)) + "\n")
+        outfile.write("\tConfidence: " + str(out_acl_ref/len(IToACL)) + "\n\n")
 
+        json.dump(IToACL, outfile, indent = 4)  
+    return   
+
+#
 def intraconfig_refs(cfile):
     IToACL = {} #dictionary in form of {interface name: [ACL references]}
     infile = open(cfile, "r")
@@ -22,6 +40,7 @@ def intraconfig_refs(cfile):
     #iterating over each line in file
     total_num_interfaces = 0;
     out_acl_ref = 0;
+
     while line:
         line = infile.readline()
         #look for interface names
@@ -45,20 +64,7 @@ def intraconfig_refs(cfile):
                 if len(references) > 1:
                     out_acl_ref += 1;
 
-    
-    with open('data.txt', 'w') as outfile:
-        outfile.write("C(Interface -> Have ACL references)\n")
-        outfile.write("\tInterfaces with ACL reference(s): " + str(len(IToACL)) + "\n")
-        outfile.write("\tSupport (num interfaces): " + str(total_num_interfaces) + "\n")
-        outfile.write("\tConfidence: " + str(len(IToACL)/total_num_interfaces) + "\n\n")
-        
-        outfile.write("C('in' access list -> 'out' access list)\n")
-        outfile.write("\tInterfaces with 'out' access lists: " + str(out_acl_ref) + "\n")
-        outfile.write("\tSupport (num interfaces with 'in' access list): " + str(len(IToACL)) + "\n")
-        outfile.write("\tConfidence: " + str(out_acl_ref/len(IToACL)) + "\n\n")
-
-        json.dump(IToACL, outfile, indent = 4)     
-
+    write_to_outfile(IToACL, total_num_interfaces, out_acl_ref, 'data.txt')
 
     return IToACL
 
