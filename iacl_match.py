@@ -36,18 +36,19 @@ def write_to_outfile(IToACL, total_num_interfaces, out_acl_ref, filename):
 #interfaces (keys) and ACLs (values) in argument config file
 def intraconfig_refs(cfile, writetofile):
     IToACL = {} #dictionary in form of {interface name: [ACL references]}
+    ACLtoI = {}
     infile = open(cfile, "r")
     infile.readline() #go past empty line
-    line = True;
+    line = True
     #iterating over each line in file
-    total_num_interfaces = 0;
-    out_acl_ref = 0;
+    total_num_interfaces = 0
+    out_acl_ref = 0
     #look at each line in cfile
     while line:
         line = infile.readline()
         #look for interface definitions
         if is_regex_match('^interface [a-zA-Z0-9\-]+', line):
-            total_num_interfaces += 1;
+            total_num_interfaces += 1
             iName = getName(line, 1)
             references = []
             line = infile.readline()
@@ -64,14 +65,30 @@ def intraconfig_refs(cfile, writetofile):
                 IToACL[iName] = references
                 #check for two references
                 if len(references) > 1:
-                    out_acl_ref += 1;
-
+                    out_acl_ref += 1
+        #look for ACL defs
+        if is_regex_match('ip access-list', line):
+            ACLName = getName(line, 3)
+            line = infile.readline()
+            references = []
+            while (not(is_regex_match('ip access-list', line))):
+                tokens = line.strip()
+                if (tokens[0] == "permit"):
+                    if (len(tokens) <= 3): #standard 
+                        references.append(getName(line, 1))
+                    else:                  #extended
+                        range = [getName(line, 2)]
+                        print(line)
+                        range.append(getName(line, 3))
+                        references.append(range)
+                ACLtoI[ACLName] = references
+                line = infile.readline()
+    print(ACLtoI)
     write_to_outfile(IToACL, total_num_interfaces, out_acl_ref, writetofile)
 
     return IToACL
 
-#parsing arguments
-import argparse
+#parsing command-line arguments
 parser = argparse.ArgumentParser(description='Commandline arguments')
 parser.add_argument('Path',metavar='path',type=str, help='provide path of the configration file to compute')
 parser.add_argument('outfile',metavar='outfile',type=str,help='provide name of file to write to')
@@ -82,8 +99,6 @@ config_file = arguments.Path
 outfile = arguments.outfile
 
 
-print("Program working so far")
 intraconfig_refs(config_file, outfile)
-print("Program completed")
 
 
