@@ -1,7 +1,7 @@
 import re
 import json
 import argparse
-
+#HI MY NAME IS EMILY
 #returns boolean indicating if argument regex pattern exists in argument string
 def is_regex_match(pattern, line):
     p = re.compile(pattern)
@@ -71,18 +71,21 @@ def intraconfig_refs(cfile, writetofile):
             ACLName = getName(line, 3)
             line = infile.readline()
             references = []
-            while (not(is_regex_match('ip access-list', line))):
+            #print(line)
+            while (is_regex_match('^ .+', line)):
+                print(line)
                 tokens = line.strip()
-                if (tokens[0] == "permit"):
-                    if (len(tokens) <= 3): #standard 
+                if (is_regex_match('^ permit',line)):
+                    if (is_regex_match('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$',line)): #standard 
                         references.append(getName(line, 1))
                     else:                  #extended
                         range = [getName(line, 2)]
-                        print(line)
+                        print(range)
                         range.append(getName(line, 3))
                         references.append(range)
                 ACLtoI[ACLName] = references
                 line = infile.readline()
+            
     print(ACLtoI)
     write_to_outfile(IToACL, total_num_interfaces, out_acl_ref, writetofile)
 
