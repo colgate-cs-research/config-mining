@@ -40,32 +40,33 @@ def write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_
 #Calculates and returns number of two-way interface-ACL references (numerator in confidence calc)
 def ACL_Interface(ACLtoI, interfaceIP):
     count = 0
+    total = 0
+    #interfaceIP = {"149.224.15.65": ["naArSbuXSGZ","ZL5LSHxVaqsG"], "164.77.128.65": ["WG8frRhR","Ejbiau4T3"]}
+    #ACLtoI= {"naArSbuXSGZ": [["149.224.15.64", "0.0.0.31"]],"ZL5LSHxVaqsG": [["164.77.33.0", "0.0.0.255"], ["149.224.129.0", "0.0.0.255"], ["149.224.20.0", "0.0.0.255"], ["164.77.21.0", "0.0.0.255"]], "WG8frRhR": [ ["164.77.128.64", "0.0.0.63"] ], "Ejbiau4T3": [ ["164.77.21.0", "0.0.0.255"], ["149.224.20.0", "0.0.0.255"], ["149.224.44.0", "0.0.0.15"], ["149.224.44.32", "0.0.0.15"]]}
     for (ACL, ips) in ACLtoI.items():
-        for (interface_ip, ACL_list) in interfaceIP.items():
-            #range of ip addresses
-            if len(ips) > 1 and is_in_range(interface_ip, ips):
-                if ACL in ACL_list:
+        for ip_list in ips:
+            for (interface_ip, ACL_list) in interfaceIP.items():
+                if len(ip_list) > 1 and is_in_range(interface_ip, ip_list):
+                    total += 1
+                    if ACL in ACL_list:
+                        count += 1
+                elif (len(ip_list) == 1 and ip_list[0] in interfaceIP):
                     count += 1
-            elif (len(ips) == 1 and ips in interfaceIP):
-                count += 1            
-    return count  
+    print("count: " + str(count) + "      total: " + str(total))
+    return count    
 
 #Returns a boolean to see whether the IP address is in range or not              
 def is_in_range(interface_ip, ip_list):
     start = ip_list[0].split(".")
     wildcard_mask = ip_list[1].split(".")
     end = []
-
     currIP = interface_ip.split(".")
-
     for i in range(len(start)):
-        num = start[i] + wildcard_mask[i]
+        num = int(start[i]) + int(wildcard_mask[i])
         end.append(num)
-    
     for i in range(len(currIP)):
-        if (currIP[i] < start[i] or currIP[i] > end[i]):
+        if (int(currIP[i]) < int(start[i]) or int(currIP[i]) > int(end[i])):
             return False
-
     return True
 
 #creates and returns a dictionary representing intra-config references between
