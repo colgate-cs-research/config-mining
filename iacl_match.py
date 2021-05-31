@@ -22,12 +22,14 @@ def write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_
         outfile.write("C(Interface -> Have ACL references)\n")
         outfile.write("\tInterfaces with ACL reference(s): " + str(len(IToACL)) + "\n")
         outfile.write("\tSupport (num interfaces): " + str(total_num_interfaces) + "\n")
-        outfile.write("\tConfidence: " + str(len(IToACL)/total_num_interfaces) + "\n\n")
+        if total_num_interfaces!=0:
+            outfile.write("\tConfidence: " + str(len(IToACL)/total_num_interfaces) + "\n\n")
         
         outfile.write("C('in' access list -> 'out' access list)\n")
         outfile.write("\tInterfaces with 'out' access lists: " + str(out_acl_ref) + "\n")
         outfile.write("\tSupport (num interfaces with 'in' access list): " + str(len(IToACL)) + "\n")
-        outfile.write("\tConfidence: " + str(out_acl_ref/len(IToACL)) + "\n\n")
+        if len(IToACL)!=0:
+            outfile.write("\tConfidence: " + str(out_acl_ref/len(IToACL)) + "\n\n")
 
         json.dump(IToACL, outfile, indent = 4)  
 
@@ -70,6 +72,7 @@ def is_in_range(interface_ip, ip_list):
     return True
 
 def interface_acl_match(cfile):
+    IP_address=0;
     IToACL = {} #dictionary in form of {interface name: [ACL references]}
     interfaceIP = {}
     infile = open(cfile, "r")
@@ -83,6 +86,7 @@ def interface_acl_match(cfile):
         line = infile.readline()
         #look for interface definitions
         if is_regex_match('^interface [a-zA-Z0-9\-]+', line):
+            
             total_num_interfaces += 1
             iName = getName(line, 1)
             references = []
@@ -110,7 +114,7 @@ def interface_acl_match(cfile):
             if found_ip and found_ref:
                 interfaceIP[IP_address] = references
 
-    return [IToACL,IP_address,total_num_interfaces,out_acl_ref]
+    return IToACL,IP_address,total_num_interfaces,out_acl_ref
 
 def acl_ip_match(cfile):
     ACLtoI = {} #dictionary in form of {interface name: [ACL references]}
@@ -144,13 +148,13 @@ def acl_ip_match(cfile):
                 ACLtoI[ACLName] = references
                 line = infile.readline()
 
-    return ACLtoI
+    return ACLtoI,interfaceIP
 
 #creates and returns a dictionary representing intra-config references between
 #interfaces (keys) and ACLs (values) in argument config file
 def intraconfig_refs(cfile, writetofile):
     IToACL,IP_address,total_num_interfaces,out_acl_ref= interface_acl_match(cfile)
-    ACLtoI = acl_ip_match(cfile)
+    ACLtoI,interfaceIP = acl_ip_match(cfile)
     
     #ITOACL
     #interfeaceIP
