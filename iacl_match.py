@@ -1,7 +1,12 @@
 import re
 import json
 import argparse
+<<<<<<< HEAD
 from ipaddress import IPv4Address
+=======
+import glob
+import os
+>>>>>>> 5feae28820bb69bdbab630173c21b487f8466970
 
 #returns boolean indicating if argument regex pattern exists in argument string
 def is_regex_match(pattern, line):
@@ -15,6 +20,30 @@ def getName(line, tokenNum):
     splitLine = line.split()
     iName = splitLine[tokenNum]
     return iName  
+
+
+def check_path(path,outfile_path):
+    print("going into check_path")
+    print("input: "+path+" output: "+outfile)
+    if os.path.isfile(path):
+        print("Input is a file")
+        intraconfig_refs(config_path, outfile)
+
+    else:
+        
+        if os.path.isdir(outfile_path):
+            files = glob.glob(config_path + '/**/*.conf', recursive=True)
+            for file in files:
+                print("file_name"+file)
+                intraconfig_refs(file,outfile_path+"/output_"+file)
+        else:
+            print("input Path is a Directory; output Path is not directory ")
+
+            
+
+
+
+
 
 #writes confidence/support for association rules as well as IToACL dictionary  
 #contents to argument file
@@ -171,10 +200,12 @@ parser.add_argument('outfile',metavar='outfile',type=str,help='provide name of f
 
 arguments=parser.parse_args()
 
-config_file = arguments.Path
+config_path = arguments.Path
 outfile = arguments.outfile
 
 
-intraconfig_refs(config_file, outfile)
+check_path(config_path,outfile)
+
+
 
 
