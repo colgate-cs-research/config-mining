@@ -1,12 +1,9 @@
 import re
 import json
 import argparse
-<<<<<<< HEAD
 from ipaddress import IPv4Address
-=======
 import glob
 import os
->>>>>>> 5feae28820bb69bdbab630173c21b487f8466970
 
 #returns boolean indicating if argument regex pattern exists in argument string
 def is_regex_match(pattern, line):
@@ -90,7 +87,7 @@ def ACL_Interface(ACLtoI, interfaceIP):
     for (ACL, ips) in ACLtoI.items():
         for ip_list in ips:
             for (interface_ip, ACL_list) in interfaceIP.items():
-                if isinstance(ip_list, list) and is_in_range(interface_ip, ip_list):
+                if isinstance(ip_list, list) and is_in_range(interface_ip, ip_list, True):
                     total += 1
                     if ACL in ACL_list:
                         count += 1
@@ -100,24 +97,25 @@ def ACL_Interface(ACLtoI, interfaceIP):
     return count, total
 
 #Returns a boolean to see whether the IP address is in range or not              
-def is_in_range(interface_ip, ip_list):
+def is_in_range(interface_ip, ip_list, is_wildcard_mask):
     start = ip_list[0].split(".")
-    wildcard_mask = ip_list[1].split(".")
     end = []
     currIP = interface_ip.split(".")
-    for i in range(len(start)):
-        num = int(start[i]) + int(wildcard_mask[i])
-        end.append(num)
+    if is_wildcard_mask:
+        wildcard_mask = ip_list[1].split(".")
+        for i in range(len(start)):
+            num = int(start[i]) + int(wildcard_mask[i])
+            end.append(num)
+    else:
+        end = ip_list[1].split(".")
     
-    #print("currIP: ",currIP)
-    #print("start: ", start)
-    #print("end: ", end)
     for i in range(len(currIP)):
         if (int(currIP[i]) < int(start[i]) or int(currIP[i]) > int(end[i])):
             return False
+
     return True
 
-
+#returns the ip address(es) in the argument line either as a string (if one) or a list (more than one)
 def getIP(line):
     linelist = line.split()
     ret_val = []
@@ -128,6 +126,57 @@ def getIP(line):
         return ret_val[0]
     return ret_val #range
 
+#1 function
+#find all interfaces with ACL applied
+#iterate through interfaces and create a range
+#return LIST of interfaces
+def interfaces_with_ACL(ACL, interfaceIP):
+    ilist = []
+    for interface in interfaceIP:
+        for acl in interfaceIP[interface]:
+            if acl == ACL:
+                ilist.append(interface)
+    return ilist
+
+#2
+#computes a RANGE for argument list
+#returns a list with first element = min and last = max
+def compute_range(ilist):
+    ip_range = []
+    print(ilist)
+    ip_range.append(min(ilist))
+    ip_range.append(max(ilist))
+    return ip_range
+
+#3
+#takes access control list and range
+#finds all interfaces within this range (confidence denominator)
+def interfaces_in_range(interfaceIP, IPrange):
+    ilist = []
+    print("given/calculated range: ", IPrange)
+    for interface in interfaceIP:
+        if is_in_range(str(interface), IPrange, False):
+            ilist.append(interface)
+    print("interfaces in range: ", ilist)
+    return ilist
+
+#compute percentage of interfaces that are in range and have ACL applied
+def compute_confidence(numerator, denominator):
+    confidence = numerator / denominator
+    return confidence
+ 
+#4
+# fourth association rule:    
+#Specific ACL applied to an interface => interface's IP falls within a range
+def fourth_association(ACL, interfaceIP):
+    ilist = interfaces_with_ACL(ACL, interfaceIP)
+    if len(ilist) == 0:
+        return 0
+    irange = compute_range(ilist)
+    itotal = interfaces_in_range(interfaceIP, irange)
+    if len(itotal) == 0:
+        return 0
+    return compute_confidence(len(ilist), len(itotal))
 
 #creates and returns a dictionary representing intra-config references between
 #interfaces (keys) and ACLs (values) in argument config file
@@ -177,18 +226,19 @@ def intraconfig_refs(cfile, writetofile):
             ACLName = getName(line, 3)
             line = infile.readline()
             references = []
-            #print(line)
             while (is_regex_match('^ .+', line)):
-                #print(line)
                 tokens = line.strip()
                 if (is_regex_match('^ permit ',line)): 
                     temp = getIP(line)
                     if (len(temp) > 0):
                         references.append(temp)
-                ACLtoI[ACLName] = references
+                if (len(references) > 0):
+                    ACLtoI[ACLName] = references
                 line = infile.readline()
 
     two_way_references, total_ACL_IP_refs= ACL_Interface(ACLtoI, interfaceIP)
+
+    print("PRINT 4th RULE: ", fourth_association("5mIrBOWI9", interfaceIP))
     write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref, writetofile, two_way_references, total_ACL_IP_refs)
 
     return IToACL
@@ -205,7 +255,7 @@ outfile = arguments.outfile
 
 
 check_path(config_path,outfile)
-
+    
 
 
 
