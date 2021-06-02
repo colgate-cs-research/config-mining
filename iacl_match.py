@@ -5,6 +5,7 @@ from ipaddress import IPv4Address
 import glob
 import os
 
+
 #returns boolean indicating if argument regex pattern exists in argument string
 def is_regex_match(pattern, line):
     p = re.compile(pattern)
@@ -19,9 +20,13 @@ def getName(line, tokenNum):
     return iName  
 
 
+def get_filename(path):
+    p = re.compile('[a-zA-Z0-9\-]+.conf$')
+    return p.findall(path)[0]
+
 def check_path(path,outfile_path):
     print("going into check_path")
-    print("input: "+path+" output: "+outfile)
+    print("INPUT: "+path+" OUTPUT: "+outfile)
     if os.path.isfile(path):
         print("Input is a file")
         intraconfig_refs(config_path, outfile)
@@ -31,10 +36,10 @@ def check_path(path,outfile_path):
         if os.path.isdir(outfile_path):
             files = glob.glob(config_path + '/**/*.conf', recursive=True)
             for file in files:
-                print("file_name"+file)
-                intraconfig_refs(file,outfile_path+"/output_"+file)
+                print("CUrrent working FILE:   "+file)
+                intraconfig_refs(file,outfile_path+"output_"+get_filename(file))
         else:
-            print("input Path is a Directory; output Path is not directory ")
+            print("Input Path is a Directory; output Path is not directory ")
 
             
 
