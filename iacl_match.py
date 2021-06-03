@@ -24,20 +24,20 @@ def get_filename(path):
     p = re.compile('[a-zA-Z0-9\-]+.conf$')
     return p.findall(path)[0]
 
-def check_path(path,outfile_path):
+def check_path(path,outfile):
     print("going into check_path")
     print("INPUT: "+path+" OUTPUT: "+outfile)
     if os.path.isfile(path):
         print("Input is a file")
-        intraconfig_refs(config_path, outfile)
+        intraconfig_refs(path, outfile)
 
     else:
         
-        if os.path.isdir(outfile_path):
-            files = glob.glob(config_path + '/**/*.conf', recursive=True)
+        if os.path.isdir(outfile):
+            files = glob.glob(path + '/**/*.conf', recursive=True)
             for file in files:
                 print("CUrrent working FILE:   "+file)
-                intraconfig_refs(file,outfile_path+"output_"+get_filename(file))
+                intraconfig_refs(file,outfile+"output_"+get_filename(file))
         else:
             print("Input Path is a Directory; output Path is not directory ")
 
@@ -248,19 +248,19 @@ def intraconfig_refs(cfile, writetofile):
 
     return IToACL
 
-#parsing command-line arguments
-parser = argparse.ArgumentParser(description='Commandline arguments')
-parser.add_argument('Path',metavar='path',type=str, help='provide path of the configration file to compute')
-parser.add_argument('outfile',metavar='outfile',type=str,help='provide name of file to write to')
+def main():
+    #parsing command-line arguments
+    parser = argparse.ArgumentParser(description='Commandline arguments')
+    parser.add_argument('Path',metavar='path',type=str, help='provide path of the configration file to compute')
+    parser.add_argument('outfile',metavar='outfile',type=str,help='provide name of file to write to')
 
-arguments=parser.parse_args()
+    arguments=parser.parse_args()
 
-config_path = arguments.Path
-outfile = arguments.outfile
-
-
-check_path(config_path,outfile)
-    
+    config_path = arguments.Path
+    outfile = arguments.outfile
 
 
+    check_path(config_path,outfile)
 
+if __name__ == "__main__":
+    main()
