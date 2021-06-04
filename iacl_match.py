@@ -75,7 +75,10 @@ def ACL_Interface(ACLtoI, interfaceIP):
                         count += 1
                 elif (len(ip_list) == 1 and ip_list[0] in interfaceIP):
                     count += 1
-    print("count: " + str(count) + "      total: " + str(total) + "      confidence: " + str(count/total))
+    confidence = "NA"
+    if (total > 0):
+        confidence = str(count/total)
+    print("count: " + str(count) + "      total: " + str(total) + "      confidence: " + confidence)
     return count, total
 
 #Returns a boolean to see whether the IP address is in range or not              
