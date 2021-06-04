@@ -69,9 +69,13 @@ def extract_acls(node):
     data = bfq.namedStructures(nodes=node,structureTypes="IP_ACCESS_LIST").answer().frame()
 
     for i,row in data.iterrows():
+        lines = None
+        if "lines" in row["Structure_Definition"]:
+            lines = extract_acl_lines(row["Structure_Definition"]["lines"])
+
         acl = {
             "name" : row["Structure_Name"],
-            "lines" : extract_acl_lines(row["Structure_Definition"]["lines"])
+            "lines" : lines
         }
         acls[acl["name"]] = acl
 
@@ -80,10 +84,14 @@ def extract_acls(node):
 def extract_acl_lines(data):
     lines = []
 
-    
-
     for row in data:
-        match = row["matchCondition"]["headerSpace"]
+        if "conjuncts" in row["matchCondition"]:
+            for conjunct in row["matchCondition"]["conjuncts"]:
+                if "headerSpace" in conjunct:
+                    match = conjunct["headerSpace"]
+                    break
+        else:
+            match = row["matchCondition"]["headerSpace"]
         srcIps = None
         if "srcIps" in match and "ipWildcard" in match["srcIps"]:
             srcIps = match["srcIps"]["ipWildcard"]
