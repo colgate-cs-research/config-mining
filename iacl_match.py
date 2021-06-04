@@ -5,24 +5,11 @@ from ipaddress import IPv4Address
 import glob
 import os
 
-
 #returns boolean indicating if argument regex pattern exists in argument string
 def is_regex_match(pattern, line):
     p = re.compile(pattern)
     iList = p.findall(line)
     return (len(iList) > 0)
-        
-#returns tokenNum token from argument line. Return value is a string
-#representing an interface or ACL name
-def getName(line, tokenNum):
-    splitLine = line.split()
-    iName = splitLine[tokenNum]
-    return iName  
-
-
-def get_filename(path):
-    p = re.compile('[a-zA-Z0-9\-]+.conf$')
-    return p.findall(path)[0]
 
 def check_path(path,outfile):
     print("going into check_path")
@@ -30,22 +17,14 @@ def check_path(path,outfile):
     if os.path.isfile(path):
         print("Input is a file")
         intraconfig_refs(path, outfile)
-
     else:
-        
         if os.path.isdir(outfile):
             files = glob.glob(path + '/**/*.conf', recursive=True)
             for file in files:
                 print("CUrrent working FILE:   "+file)
-                intraconfig_refs(file,outfile+"output_"+get_filename(file))
+                intraconfig_refs(file,outfile+"output_"+os.path.basename(file))
         else:
             print("Input Path is a Directory; output Path is not directory ")
-
-            
-
-
-
-
 
 #writes confidence/support for association rules as well as IToACL dictionary  
 #contents to argument file
@@ -87,8 +66,6 @@ def write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_
 def ACL_Interface(ACLtoI, interfaceIP):
     count = 0
     total = 0
-    #interfaceIP = {"149.224.15.65": ["naArSbuXSGZ","ZL5LSHxVaqsG"], "164.77.128.65": ["WG8frRhR","Ejbiau4T3"]}
-    #ACLtoI= {"naArSbuXSGZ": [["149.224.15.64", "0.0.0.31"]],"ZL5LSHxVaqsG": [["164.77.33.0", "0.0.0.255"], ["149.224.129.0", "0.0.0.255"], ["149.224.20.0", "0.0.0.255"], ["164.77.21.0", "0.0.0.255"]], "WG8frRhR": [ ["164.77.128.64", "0.0.0.63"] ], "Ejbiau4T3": [ ["164.77.21.0", "0.0.0.255"], ["149.224.20.0", "0.0.0.255"], ["149.224.44.0", "0.0.0.15"], ["149.224.44.32", "0.0.0.15"]]}
     for (ACL, ips) in ACLtoI.items():
         for ip_list in ips:
             for (interface_ip, ACL_list) in interfaceIP.items():
@@ -201,7 +178,7 @@ def intraconfig_refs(cfile, writetofile):
         #look for interface definitions
         if is_regex_match('^interface [a-zA-Z0-9\-]+', line):
             total_num_interfaces += 1
-            iName = getName(line, 1)
+            iName = line.split()[1]
             references = []
             line = infile.readline()
             found_ref = False
@@ -210,12 +187,12 @@ def intraconfig_refs(cfile, writetofile):
                 #look for ACL references
                 if (is_regex_match('ip access-group [a-zA-Z0-9\-]+ ', line)):
                     found_ref = True
-                    ACLName = getName(line, 2)
+                    ACLName = line.split()[2]
                     references.append(ACLName)
 
                 elif (is_regex_match('ip address [0-9]+', line)):
                     found_ip = True
-                    IP_address =  getName(line, 2)
+                    IP_address =  line.split()[2]
                 line = infile.readline()
             #at least one reference
             if found_ref:
@@ -228,7 +205,7 @@ def intraconfig_refs(cfile, writetofile):
                 interfaceIP[IP_address] = references
         #look for ACL defs
         if is_regex_match('ip access-list', line):
-            ACLName = getName(line, 3)
+            ACLName = line.split()[3]
             line = infile.readline()
             references = []
             while (is_regex_match('^ .+', line)):
