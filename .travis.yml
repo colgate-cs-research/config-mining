@@ -2,3 +2,5 @@ language: python
 python:
   - "3.8"
 script: "pytest testing"
+notifications:
+  slack: colgatenetresearch:qKdIZO7iwRApfovqZOk5qA4G
