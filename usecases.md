@@ -22,6 +22,7 @@ ip access-list standard nospoof1
 ip access-list standard nospoof2
     permit 10.0.2.0 0.0.0.255
     deny any
+!
 ```
 
 ### Real-world example
@@ -52,13 +53,14 @@ interface GigabitEthernet0/3
     ip address 10.0.100.1 255.255.255.248
     ip access-group management out
 !
-interfaace GigabitEthernet0/4
+interface GigabitEthernet0/4
     description Network admin servers
     ip address 10.0.101.1 255.255.255.248
 !
 ip access-list standard management
     permit 10.0.10.1 0.0.0.7
     deny any
+!
 ```
 
 ### Real-world example
