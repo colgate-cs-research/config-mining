@@ -41,12 +41,64 @@ def main():
 def extract_node(node):
     parts = {
         "name" : node,
-        "interfaces" : extract_interfaces(node)
+        "interfaces" : extract_interfaces(node),
+        "acls" : extract_acls(node)
     }
     return parts
 
 def extract_interfaces(node):
-    return {}
+    interfaces = {}
+    
+    data = bfq.interfaceProperties(nodes=node, excludeShutInterfaces=False).answer().frame()
+
+    for i,row in data.iterrows():
+        interface = {
+            "name" : row["Interface"].interface,
+            "in_acl" : row["Incoming_Filter_Name"],
+            "out_acl" : row["Outgoing_Filter_Name"],
+            "description" : row["Description"],
+            "address" : row["Primary_Address"]
+        }
+        interfaces[interface["name"]] = interface
+
+    return interfaces
+
+def extract_acls(node):
+    acls = {}
+
+    data = bfq.namedStructures(nodes=node,structureTypes="IP_ACCESS_LIST").answer().frame()
+
+    for i,row in data.iterrows():
+        acl = {
+            "name" : row["Structure_Name"],
+            "lines" : extract_acl_lines(row["Structure_Definition"]["lines"])
+        }
+        acls[acl["name"]] = acl
+
+    return acls
+
+def extract_acl_lines(data):
+    lines = []
+
+    
+
+    for row in data:
+        match = row["matchCondition"]["headerSpace"]
+        srcIps = None
+        if "srcIps" in match and "ipWildcard" in match["srcIps"]:
+            srcIps = match["srcIps"]["ipWildcard"]
+        dstIps = None
+        if "dstIps" in match and "ipWildcard" in match["dstIps"]:
+            dstIps = match["dstIps"]["ipWildcard"]
+
+        line = {
+            "action" : row["action"],
+            "srcIps" : srcIps,
+            "dstIps" : dstIps
+        }
+        lines.append(line)
+
+    return lines
 
 if __name__ == "__main__":
     main()
