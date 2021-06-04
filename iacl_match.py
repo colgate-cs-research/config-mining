@@ -100,16 +100,21 @@ def is_in_range(interface_ip, ip_list, is_wildcard_mask):
 
     return True
 
-#returns the ip address(es) in the argument line either as a string (if one) or a list (more than one)
-def getIP(line):
+#returns a list of ip address(es)/network(s) in an ACL line
+def getAclLineIps(line):
     linelist = line.split()
     ret_val = []
+    last = None
     for token in linelist:
         if is_regex_match("\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", token):
-            ret_val.append(token)
-    if len(ret_val) == 1: #if single ip address and not a range
-        return ret_val[0]
-    return ret_val #range
+            if (last == "host"):
+                ret_val.append([token, "0.0.0.0"])
+            elif (token.startswith("0.")):
+                ret_val[-1][-1] = token
+            else:
+                ret_val.append([token, "0.0.0.0"])
+        last = token
+    return ret_val
 
 #1 function
 #find all interfaces with ACL applied
@@ -211,12 +216,10 @@ def intraconfig_refs(cfile, writetofile):
             ACLName = line.split()[3]
             line = infile.readline()
             references = []
-            while (is_regex_match('^ .+', line)):
+            while (not is_regex_match('^!', line)):
                 tokens = line.strip()
-                if (is_regex_match('^ permit ',line)): 
-                    temp = getIP(line)
-                    if (len(temp) > 0):
-                        references.append(temp)
+                if (is_regex_match('(permit|deny) ',line)): 
+                    references.extend(getAclLineIps(line))
                 if (len(references) > 0):
                     ACLtoI[ACLName] = references
                 line = infile.readline()
