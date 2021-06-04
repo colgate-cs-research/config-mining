@@ -175,7 +175,6 @@ def intraconfig_refs(cfile, writetofile):
     ACLtoI = {} #dictionary in form of {ACL name: [interface names]}
     interfaceIP = {} #dictionary in form of {interface IP: [ACL references]}
     infile = open(cfile, "r")
-    infile.readline() #go past empty line
     line = True
     #iterating over each line in file
     total_num_interfaces = 0
@@ -184,7 +183,7 @@ def intraconfig_refs(cfile, writetofile):
     while line:
         line = infile.readline()
         #look for interface definitions
-        if is_regex_match('^interface [a-zA-Z0-9\-]+', line):
+        if is_regex_match('^interface [a-zA-Z0-9/-]+', line):
             total_num_interfaces += 1
             iName = line.split()[1]
             references = []
