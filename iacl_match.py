@@ -158,7 +158,7 @@ def fourth_association(ACL, interfaceIP):
     itotal = interfaces_in_range(interfaceIP, irange)
     if len(itotal) == 0:
         return 0
-    return compute_confidence(len(ilist), len(itotal))
+    return len(ilist), len(itotal)
 
 #creates and returns a dictionary representing intra-config references between
 #interfaces (keys) and ACLs (values) in argument config file
