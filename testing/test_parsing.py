@@ -12,7 +12,7 @@ import iacl_match
 
 def test_acls():
     configs_dir = os.path.join(testing_dir, "parsing", "configs_json")
-    config_file = os.path.join(configs_dir, "acls.conf") 
+    config_file = os.path.join(configs_dir, "acls.json") 
     expected_dir = os.path.join(testing_dir, "parsing", "expected")
     expected_file = os.path.join(expected_dir, "acls.out") 
     out_dir = tempfile.mkdtemp()
