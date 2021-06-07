@@ -1,125 +1,135 @@
 {
-    "name": "acls",
-    "interfaces": {
-        "GigabitEthernet0/4": {
-            "name": "GigabitEthernet0/4",
-            "in_acl": "aclC",
-            "out_acl": "aclD",
-            "description": null,
-            "address": "10.0.4.1/24"
-        },
-        "GigabitEthernet0/1": {
-            "name": "GigabitEthernet0/1",
-            "in_acl": null,
-            "out_acl": null,
-            "description": null,
-            "address": "10.0.1.1/24"
-        },
-        "GigabitEthernet0/3": {
-            "name": "GigabitEthernet0/3",
-            "in_acl": null,
-            "out_acl": "aclB",
-            "description": null,
-            "address": "10.0.3.1/24"
-        },
-        "GigabitEthernet0/2": {
-            "name": "GigabitEthernet0/2",
-            "in_acl": "aclA",
-            "out_acl": null,
-            "description": null,
-            "address": "10.0.2.1/24"
-        }
-    },
     "acls": {
         "aclA": {
-            "name": "aclA",
             "lines": [
                 {
                     "action": "DENY",
-                    "srcIps": "20.0.1.128/25",
-                    "dstIps": "0.0.0.0/0"
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "20.0.1.128/25"
                 },
                 {
                     "action": "PERMIT",
-                    "srcIps": "20.0.1.0/24",
-                    "dstIps": "0.0.0.0/0"
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "20.0.1.0/24"
                 }
-            ]
+            ],
+            "name": "aclA",
+            "remarks": []
         },
         "aclB": {
-            "name": "aclB",
             "lines": [
                 {
                     "action": "DENY",
-                    "srcIps": "20.0.2.1",
-                    "dstIps": "0.0.0.0/0"
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "20.0.2.1"
                 },
                 {
                     "action": "PERMIT",
-                    "srcIps": "0.0.0.0/0",
-                    "dstIps": "0.0.0.0/0"
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "0.0.0.0/0"
                 }
+            ],
+            "name": "aclB",
+            "remarks": []
+        },
+        "aclC": {
+            "lines": [
+                {
+                    "action": "PERMIT",
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "20.0.3.0/24"
+                },
+                {
+                    "action": "PERMIT",
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "20.0.4.1"
+                },
+                {
+                    "action": "DENY",
+                    "dstIps": "20.0.5.0/24",
+                    "srcIps": "0.0.0.0/0"
+                },
+                {
+                    "action": "DENY",
+                    "dstIps": "20.0.6.1",
+                    "srcIps": "0.0.0.0/0"
+                },
+                {
+                    "action": "PERMIT",
+                    "dstIps": "20.0.8.0/24",
+                    "srcIps": "20.0.7.0/24"
+                },
+                {
+                    "action": "PERMIT",
+                    "dstIps": "20.0.10.1",
+                    "srcIps": "20.0.9.1"
+                },
+                {
+                    "action": "PERMIT",
+                    "dstIps": "20.0.12.1",
+                    "srcIps": "20.0.11.0/24"
+                },
+                {
+                    "action": "PERMIT",
+                    "dstIps": "20.0.14.0/24",
+                    "srcIps": "20.0.13.1"
+                }
+            ],
+            "name": "aclC",
+            "remarks": [
+                "Test filtering by source or destination",
+                "Test filtering by source and destination"
             ]
         },
         "aclD": {
+            "lines": [
+                {
+                    "action": "PERMIT",
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "20.0.16.0/24"
+                },
+                {
+                    "action": "PERMIT",
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "20.0.17.0/24"
+                }
+            ],
             "name": "aclD",
-            "lines": [
-                {
-                    "action": "PERMIT",
-                    "srcIps": "20.0.16.0/24",
-                    "dstIps": "0.0.0.0/0"
-                },
-                {
-                    "action": "PERMIT",
-                    "srcIps": "20.0.17.0/24",
-                    "dstIps": "0.0.0.0/0"
-                }
-            ]
-        },
-        "aclC": {
-            "name": "aclC",
-            "lines": [
-                {
-                    "action": "PERMIT",
-                    "srcIps": "20.0.3.0/24",
-                    "dstIps": "0.0.0.0/0"
-                },
-                {
-                    "action": "PERMIT",
-                    "srcIps": "20.0.4.1",
-                    "dstIps": "0.0.0.0/0"
-                },
-                {
-                    "action": "DENY",
-                    "srcIps": "0.0.0.0/0",
-                    "dstIps": "20.0.5.0/24"
-                },
-                {
-                    "action": "DENY",
-                    "srcIps": "0.0.0.0/0",
-                    "dstIps": "20.0.6.1"
-                },
-                {
-                    "action": "PERMIT",
-                    "srcIps": "20.0.7.0/24",
-                    "dstIps": "20.0.8.0/24"
-                },
-                {
-                    "action": "PERMIT",
-                    "srcIps": "20.0.9.1",
-                    "dstIps": "20.0.10.1"
-                },
-                {
-                    "action": "PERMIT",
-                    "srcIps": "20.0.11.0/24",
-                    "dstIps": "20.0.12.1"
-                },
-                {
-                    "action": "PERMIT",
-                    "srcIps": "20.0.13.1",
-                    "dstIps": "20.0.14.0/24"
-                }
+            "remarks": [
+                "Test filtering based on different protocols"
             ]
         }
-    }
+    },
+    "interfaces": {
+        "GigabitEthernet0/1": {
+            "address": "10.0.1.1/24",
+            "description": null,
+            "in_acl": null,
+            "name": "GigabitEthernet0/1",
+            "out_acl": null
+        },
+        "GigabitEthernet0/2": {
+            "address": "10.0.2.1/24",
+            "description": null,
+            "in_acl": "aclA",
+            "name": "GigabitEthernet0/2",
+            "out_acl": null
+        },
+        "GigabitEthernet0/3": {
+            "address": "10.0.3.1/24",
+            "description": null,
+            "in_acl": null,
+            "name": "GigabitEthernet0/3",
+            "out_acl": "aclB"
+        },
+        "GigabitEthernet0/4": {
+            "address": "10.0.4.1/24",
+            "description": null,
+            "in_acl": "aclC",
+            "name": "GigabitEthernet0/4",
+            "out_acl": "aclD"
+        }
+    },
+    "name": "acls",
+    "vlans": {}
 }

@@ -135,11 +135,13 @@ def extract_acl_remarks(parts, raw_lines):
         i += 1
         if is_regex_match('^ip access-list', line):
             name = line.split()[-1]
+            line = raw_lines[i].strip()
+            i += 1
             while (line != "!"):
                 if is_regex_match('^remark ', line):
                     parts["acls"][name]["remarks"].append(line[7:])
-                i += 1
                 line = raw_lines[i].strip()
+                i += 1
 
 def extract_vlans(raw_lines):
     vlans = {}
