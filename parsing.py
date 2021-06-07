@@ -54,8 +54,9 @@ def extract_node(node, raw_lines):
         "name" : node,
         "interfaces" : extract_interfaces(node),
         "acls" : extract_acls(node),
-        "vlans" : extract_vlans(node, raw_lines)
+        "vlans" : extract_vlans(raw_lines)
     }
+    extract_acl_remarks(parts, raw_lines)
     return parts
 
 def extract_interfaces(node):
@@ -87,7 +88,8 @@ def extract_acls(node):
 
         acl = {
             "name" : row["Structure_Name"],
-            "lines" : lines
+            "lines" : lines,
+            "remarks" : []
         }
         acls[acl["name"]] = acl
 
@@ -126,7 +128,20 @@ def is_regex_match(pattern, line):
     iList = p.findall(line)
     return (len(iList) > 0)
 
-def extract_vlans(node, raw_lines):
+def extract_acl_remarks(parts, raw_lines):
+    i = 0
+    while i < len(raw_lines):
+        line = raw_lines[i].strip()
+        i += 1
+        if is_regex_match('^ip access-list', line):
+            name = line.split()[-1]
+            while (line != "!"):
+                if is_regex_match('^remark ', line):
+                    parts["acls"][name]["remarks"].append(line[7:])
+                i += 1
+                line = raw_lines[i].strip()
+
+def extract_vlans(raw_lines):
     vlans = {}
     i = 0
     while i < len(raw_lines):
