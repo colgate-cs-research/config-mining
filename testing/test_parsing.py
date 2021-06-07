@@ -11,7 +11,7 @@ sys.path.insert(1, os.path.dirname(testing_dir))
 import iacl_match
 
 def test_acls():
-    configs_dir = os.path.join(testing_dir, "parsing", "configs")
+    configs_dir = os.path.join(testing_dir, "parsing", "configs_json")
     config_file = os.path.join(configs_dir, "acls.conf") 
     expected_dir = os.path.join(testing_dir, "parsing", "expected")
     expected_file = os.path.join(expected_dir, "acls.out") 
