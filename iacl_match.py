@@ -1,7 +1,7 @@
 import re
 import json
 import argparse
-from ipaddress import IPv4Address
+import ipaddress 
 import glob
 import os
 
@@ -25,6 +25,7 @@ def check_path(path,outfile):
                 intraconfig_refs(file,outfile+"output_"+os.path.basename(file))
         else:
             print("Input Path is a Directory; output Path is not directory ")
+
 
 #writes confidence/support for association rules as well as IToACL dictionary  
 #contents to argument file
@@ -62,6 +63,18 @@ def write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_
 
     return   
 
+#constructs and returns network object
+def make_network_obj(min_ip, wildcard_mask):
+    wildcard_split = wildcard_mask.split(".") 
+    netmask = []
+    for i in wildcard_split:
+        netmask.append(str(255-int(i)))
+    netmask_str = ".".join(netmask) 
+    network_str = min_ip + "/" + netmask_str
+    print(network_str)
+    #print(ipaddress.IPv4Network(network_str))
+    return ipaddress.IPv4Network(network_str)
+
 #Calculates and returns number of two-way interface-ACL references (numerator in confidence calc)
 def ACL_Interface(ACLtoI, interfaceIP):
     count = 0
@@ -69,11 +82,16 @@ def ACL_Interface(ACLtoI, interfaceIP):
     for (ACL, ips) in ACLtoI.items():
         for ip_list in ips:
             for (interface_ip, ACL_list) in interfaceIP.items():
-                if isinstance(ip_list, list) and is_in_range(interface_ip, ip_list, True):
-                    total += 1
-                    if ACL in ACL_list:
-                        count += 1
-                elif (len(ip_list) == 1 and ip_list[0] in interfaceIP):
+                #CHANGED IS IN RANGE FUNCTION
+                print("ip list: ", str(ip_list))
+                if isinstance(ip_list, list): #range of ip addresses
+                    address = ipaddress.IPv4Address(interface_ip)
+                    network = make_network_obj(ip_list[0], ip_list[1])
+                    if (address in network):
+                        total += 1
+                        if ACL in ACL_list:
+                            count += 1
+                elif (len(ip_list) == 1 and ip_list in interfaceIP): #single ip address
                     count += 1
     confidence = "NA"
     if (total > 0):
@@ -81,18 +99,13 @@ def ACL_Interface(ACLtoI, interfaceIP):
     print("count: " + str(count) + "      total: " + str(total) + "      confidence: " + confidence)
     return count, total
 
-#Returns a boolean to see whether the IP address is in range or not              
-def is_in_range(interface_ip, ip_list, is_wildcard_mask):
+#Returns a boolean to see whether the IP address is in range or not
+##argument interface_ip is a string representation of an ip address  
+#argument ip_list is a list of strings representing a range in the form [min address, max address]           
+def is_in_range(interface_ip, ip_list):
     start = ip_list[0].split(".")
-    end = []
+    end = ip_list[1].split(".")
     currIP = interface_ip.split(".")
-    if is_wildcard_mask:
-        wildcard_mask = ip_list[1].split(".")
-        for i in range(len(start)):
-            num = int(start[i]) + int(wildcard_mask[i])
-            end.append(num)
-    else:
-        end = ip_list[1].split(".")
     
     for i in range(len(currIP)):
         if (int(currIP[i]) < int(start[i]) or int(currIP[i]) > int(end[i])):
@@ -145,7 +158,7 @@ def interfaces_in_range(interfaceIP, IPrange):
     ilist = []
     print("given/calculated range: ", IPrange)
     for interface in interfaceIP:
-        if is_in_range(str(interface), IPrange, False):
+        if is_in_range(str(interface), IPrange):
             ilist.append(interface)
     print("interfaces in range: ", ilist)
     return ilist
