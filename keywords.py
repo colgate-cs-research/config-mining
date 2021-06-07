@@ -4,6 +4,9 @@ import argparse
 import glob
 import json
 import os
+import nltk
+from nltk.corpus import stopwords
+nltk.download('stopwords')
 
 def main():
     #parsing command-line arguments
@@ -18,7 +21,7 @@ def process_configs(config_path,out_path):
     print("INPUT: "+config_path+" OUTPUT: "+out_path)
     if os.path.isfile(config_path):
         print("Input is a file")
-        get_description(config_path, out_path)
+        get_descriptions(config_path, out_path)
     else:
         if os.path.isdir(out_path):
             files = glob.glob(config_path + '/**/*.json', recursive=True)
@@ -40,7 +43,9 @@ def get_descriptions(file, outf):
     for iface in config["interfaces"].values():
         iName = iface["name"]
         if (iface["description"] is not None):
-            desc_dict[iName] = iface["description"].split()
+            words = iface["description"].split()
+            words = [word for word in words if not word in stopwords.words()]
+            desc_dict[iName] = words
 
     # Iterate over VLANs
     for vlan in config["vlans"].values():
