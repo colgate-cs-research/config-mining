@@ -71,7 +71,7 @@ def make_network_obj(min_ip, wildcard_mask):
         netmask.append(str(255-int(i)))
     netmask_str = ".".join(netmask) 
     network_str = min_ip + "/" + netmask_str
-    print(network_str)
+    #print(network_str)
     #print(ipaddress.IPv4Network(network_str))
     return ipaddress.IPv4Network(network_str)
 
@@ -83,7 +83,7 @@ def ACL_Interface(ACLtoI, interfaceIP):
         for ip_list in ips:
             for (interface_ip, ACL_list) in interfaceIP.items():
                 #CHANGED IS IN RANGE FUNCTION
-                print("ip list: ", str(ip_list))
+                #print("ip list: ", str(ip_list))
                 if isinstance(ip_list, list): #range of ip addresses
                     address = ipaddress.IPv4Address(interface_ip)
                     network = make_network_obj(ip_list[0], ip_list[1])
@@ -96,7 +96,7 @@ def ACL_Interface(ACLtoI, interfaceIP):
     confidence = "NA"
     if (total > 0):
         confidence = str(count/total)
-    print("count: " + str(count) + "      total: " + str(total) + "      confidence: " + confidence)
+    #print("count: " + str(count) + "      total: " + str(total) + "      confidence: " + confidence)
     return count, total
 
 #Returns a boolean to see whether the IP address is in range or not
@@ -139,7 +139,7 @@ def interfaces_with_ACL(ACL, interfaceIP):
 #returns a list with first element = min and last = max
 def compute_range(ilist):
     ip_range = []
-    print(ilist)
+    #print(ilist)
     ip_range.append(min(ilist))
     ip_range.append(max(ilist))
     return ip_range
@@ -149,11 +149,11 @@ def compute_range(ilist):
 #finds all interfaces within this range (confidence denominator)
 def interfaces_in_range(interfaceIP, IPrange):
     ilist = []
-    print("given/calculated range: ", IPrange)
+    #print("given/calculated range: ", IPrange)
     for interface in interfaceIP:
         if is_in_range(str(interface), IPrange):
             ilist.append(interface)
-    print("interfaces in range: ", ilist)
+    #print("interfaces in range: ", ilist)
     return ilist
 
 #compute percentage of interfaces that are in range and have ACL applied

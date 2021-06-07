@@ -13,9 +13,9 @@ arugments:
         -ex outfile: "/users/dslee/config-mining/converted/"
 
 example command for single file traversal (in this case the filename is "core1.cof" and username is "dslee"):
-    python3 iacl_match.py "/shared/configs/northwestern/core1.conf" "/users/dslee/config-mining/outputfile"
+    python3 iacl_match.py "/shared/configs/northwestern/configs/core1.conf" "/users/dslee/config-mining/outputfile"
 example command for directory traversal: 
-    python3 iacl_match.py "/shared/configs/northwestern/" "/users/dslee/config-mining/outputdirectory/"
+    python3 iacl_match.py "/shared/configs/northwestern/configs/" "/users/dslee/config-mining/outputdirectory/"
 *** NOTE: keep the end slashes ***
 
 
