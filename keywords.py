@@ -38,6 +38,8 @@ def get_descriptions(file, outf):
         config = json.load(infile)
     desc_dict = {}
     vlan_names = []
+    ACL_names = []
+    remarks = []
 
     # Iterate over interfaces
     for iface in config["interfaces"].values():
@@ -51,6 +53,14 @@ def get_descriptions(file, outf):
     for vlan in config["vlans"].values():
         vlan_names.append(vlan["name"])
 
+    # Iterate over ACL names
+    for name in config["acls"]:
+        ACL_names.append(name)
+    
+        # Iterate over remarks
+        #for remark in config["acls"][name]["remarks"]:
+            #remarks.append(remark)
+
     with open(outf, 'w') as outfile:
         outfile.write("desc_dict\n")
         json.dump(desc_dict, outfile, indent = 4)
@@ -59,6 +69,17 @@ def get_descriptions(file, outf):
 
         outfile.write("vlan_names\n")
         outfile.write(str(vlan_names))
+
+        outfile.write("\n\n-----------------------------------\n")
+        outfile.write("ACL names\n")
+        outfile.write(str(ACL_names))
+
+        outfile.write("\n\n-----------------------------------\n")
+        outfile.write("Remarks\n")
+        outfile.write(str(remarks))
+
+
+
 
     return desc_dict, vlan_names
 

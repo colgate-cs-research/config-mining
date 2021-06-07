@@ -128,7 +128,11 @@ def getAclLineIps(line):
 #return LIST of interfaces
 def interfaces_with_ACL(ACL, interfaceIP):
     ilist = []
+    #print(interfaceIP)
     for interface in interfaceIP:
+        #print("interface acls: " + str(interfaceIP[interface]))
+        #print("acl: " + ACL)
+        #print()
         for acl in interfaceIP[interface]:
             if acl == ACL:
                 ilist.append(interface)
@@ -139,7 +143,11 @@ def interfaces_with_ACL(ACL, interfaceIP):
 #returns a list with first element = min and last = max
 def compute_range(ilist):
     ip_range = []
+<<<<<<< Updated upstream
     #print(ilist)
+=======
+    print("ilist in range: " + str(ilist))
+>>>>>>> Stashed changes
     ip_range.append(min(ilist))
     ip_range.append(max(ilist))
     return ip_range
@@ -153,7 +161,12 @@ def interfaces_in_range(interfaceIP, IPrange):
     for interface in interfaceIP:
         if is_in_range(str(interface), IPrange):
             ilist.append(interface)
+<<<<<<< Updated upstream
     #print("interfaces in range: ", ilist)
+=======
+    print("interfaces in range: ", ilist)
+    print()
+>>>>>>> Stashed changes
     return ilist
 
 #compute percentage of interfaces that are in range and have ACL applied
@@ -164,15 +177,27 @@ def compute_confidence(numerator, denominator):
 #4
 # fourth association rule:    
 #Specific ACL applied to an interface => interface's IP falls within a range
-def fourth_association(ACL, interfaceIP):
-    ilist = interfaces_with_ACL(ACL, interfaceIP)
-    if len(ilist) == 0:
-        return 0
-    irange = compute_range(ilist)
-    itotal = interfaces_in_range(interfaceIP, irange)
-    if len(itotal) == 0:
-        return 0
-    return len(ilist), len(itotal)
+def fourth_association(ACLtoI, interfaceIP):
+    total_result = []
+    for acl in ACLtoI:
+        print("ACL: " + acl)
+        ilist = interfaces_with_ACL(acl, interfaceIP)
+        if len(ilist) > 0:                
+            irange = compute_range(ilist)
+            print("Range" + str(irange))
+            itotal = interfaces_in_range(interfaceIP, irange)
+            if len(itotal) == 0:
+                return 0
+        
+            result = []
+            result.append(len(ilist))
+            result.append(len(itotal))
+
+            total_result.append(result)
+            print(result)
+            print()
+        print()
+    return total_result
 
 #creates and returns a dictionary representing intra-config references between
 #interfaces (keys) and ACLs (values) in argument config file
@@ -228,7 +253,11 @@ def intraconfig_refs(cfile, writetofile):
 
     two_way_references, total_ACL_IP_refs= ACL_Interface(ACLtoI, interfaceIP)
 
-    print("PRINT 4th RULE: ", fourth_association("5mIrBOWI9", interfaceIP))
+    print()
+    print("BEGINNING OF FOURTH RULE")
+    #print("FOURTH ASSOCIATION PRINT: ")
+    fourth_association(ACLtoI, interfaceIP)
+
     write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref, writetofile, two_way_references, total_ACL_IP_refs)
 
     return IToACL
