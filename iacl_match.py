@@ -117,9 +117,12 @@ def is_in_range(interface_ip, ip_list):
 def getAclLineIps(line):
     ret_val = []
     for criteria in ["srcIps", "dstIps"]:
-        net = ipaddress.IPv4Network(line[criteria])
-        if net.prefixlen > 0:
-            ret_val.append([str(net.network_address), str(net.hostmask)])
+        try:
+            net = ipaddress.IPv4Network(line[criteria])
+            if net.prefixlen > 0:
+                ret_val.append([str(net.network_address), str(net.hostmask)])
+        except:
+            print("ERROR parsing: "+line[criteria])
     return ret_val
 
 #1 function
