@@ -1,7 +1,7 @@
 import re
 import json
 import argparse
-import ipaddress 
+import ipaddress
 import glob
 import os
 
@@ -19,7 +19,7 @@ def check_path(path,outfile):
         intraconfig_refs(path, outfile)
     else:
         if os.path.isdir(outfile):
-            files = glob.glob(path + '/**/*.conf', recursive=True)
+            files = glob.glob(path + '/**/*.json', recursive=True)
             for file in files:
                 print("CUrrent working FILE:   "+file)
                 intraconfig_refs(file,outfile+"output_"+os.path.basename(file))
@@ -50,15 +50,15 @@ def write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_
             outfile.write("\tConfidence: " + str(two_way_references/total_ACL_IP_refs) + "\n\n")
 
         outfile.write("IToACL\n")
-        json.dump(IToACL, outfile, indent = 4)  
+        json.dump(IToACL, outfile, indent=4, sort_keys=True)  
         outfile.write("\n------------------------------------------------\n")
 
         outfile.write("interfaceIP\n")
-        json.dump(interfaceIP, outfile, indent = 4)
+        json.dump(interfaceIP, outfile, indent=4, sort_keys=True)
         outfile.write("\n------------------------------------------------\n")
 
         outfile.write("ACLtoI\n")
-        json.dump(ACLtoI, outfile, indent = 4)  
+        json.dump(ACLtoI, outfile, indent=4, sort_keys=True)  
         outfile.write("\n------------------------------------------------\n")
 
     return   
@@ -115,18 +115,11 @@ def is_in_range(interface_ip, ip_list):
 
 #returns a list of ip address(es)/network(s) in an ACL line
 def getAclLineIps(line):
-    linelist = line.split()
     ret_val = []
-    last = None
-    for token in linelist:
-        if is_regex_match("\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", token):
-            if (last == "host"):
-                ret_val.append([token, "0.0.0.0"])
-            elif (token.startswith("0.")):
-                ret_val[-1][-1] = token
-            else:
-                ret_val.append([token, "0.0.0.0"])
-        last = token
+    for criteria in ["srcIps", "dstIps"]:
+        net = ipaddress.IPv4Network(line[criteria])
+        if net.prefixlen > 0:
+            ret_val.append([str(net.network_address), str(net.hostmask)])
     return ret_val
 
 #1 function
@@ -187,54 +180,51 @@ def intraconfig_refs(cfile, writetofile):
     IToACL = {} #dictionary in form of {interface name: [ACL references]}
     ACLtoI = {} #dictionary in form of {ACL name: [interface names]}
     interfaceIP = {} #dictionary in form of {interface IP: [ACL references]}
-    infile = open(cfile, "r")
-    line = True
+
+    # Load config
+    with open(cfile, "r") as infile:
+        config = json.load(infile)
+
     #iterating over each line in file
     total_num_interfaces = 0
     out_acl_ref = 0
-    #look at each line in cfile
-    while line:
-        line = infile.readline()
-        #look for interface definitions
-        if is_regex_match('^interface [a-zA-Z0-9/-]+', line):
-            total_num_interfaces += 1
-            iName = line.split()[1]
-            references = []
-            line = infile.readline()
-            found_ref = False
-            found_ip = False
-            while (line.strip() != "!"):
-                #look for ACL references
-                if (is_regex_match('ip access-group [a-zA-Z0-9\-]+ ', line)):
-                    found_ref = True
-                    ACLName = line.split()[2]
-                    references.append(ACLName)
 
-                elif (is_regex_match('ip address [0-9]+', line)):
-                    found_ip = True
-                    IP_address =  line.split()[2]
-                line = infile.readline()
-            #at least one reference
-            if found_ref:
-                IToACL[iName] = references
-                #check for two references
-                if len(references) > 1:
-                    out_acl_ref += 1
-            #interface ip address and reference(s) exists 
-            if found_ip and found_ref:
-                interfaceIP[IP_address] = references
-        #look for ACL defs
-        if is_regex_match('ip access-list', line):
-            ACLName = line.split()[3]
-            line = infile.readline()
-            references = []
-            while (not is_regex_match('^!', line)):
-                tokens = line.strip()
-                if (is_regex_match('(permit|deny) ',line)): 
-                    references.extend(getAclLineIps(line))
-                if (len(references) > 0):
-                    ACLtoI[ACLName] = references
-                line = infile.readline()
+    # Iterate over interfaces
+    for iface in config["interfaces"].values():
+        total_num_interfaces += 1
+        iName = iface["name"]
+        references = []
+        found_ref = False
+        found_ip = False
+        # Extract ACL references
+        if iface["in_acl"] is not None:
+            found_ref = True
+            references.append(iface["in_acl"])
+        if iface["out_acl"] is not None:
+            found_ref = True
+            references.append(iface["out_acl"])
+        # Extract IP address
+        if iface["address"] is not None:
+            found_ip = True
+            IP_address = iface["address"].split("/")[0]
+        #at least one reference
+        if found_ref:
+            IToACL[iName] = references
+            #check for two references
+            if len(references) > 1:
+                out_acl_ref += 1 #FIXME: Should there also be in_acl_ref?
+        #interface ip address and reference(s) exists 
+        if found_ip and found_ref:
+            interfaceIP[IP_address] = references
+
+    # Iterate over ACLs
+    for acl in config["acls"].values():
+        ACLName = acl["name"]
+        references = []
+        for line in acl["lines"]:
+            references.extend(getAclLineIps(line))
+        if (len(references) > 0):
+            ACLtoI[ACLName] = references
 
     two_way_references, total_ACL_IP_refs= ACL_Interface(ACLtoI, interfaceIP)
 
@@ -246,8 +236,8 @@ def intraconfig_refs(cfile, writetofile):
 def main():
     #parsing command-line arguments
     parser = argparse.ArgumentParser(description='Commandline arguments')
-    parser.add_argument('Path',metavar='path',type=str, help='provide path of the configration file to compute')
-    parser.add_argument('outfile',metavar='outfile',type=str,help='provide name of file to write to')
+    parser.add_argument('Path',metavar='path',type=str, help='Path for a file (or directory) containing a JSON representation of configuration(s)')
+    parser.add_argument('outfile',metavar='outfile',type=str,help='Name of file (or directory) to write to')
 
     arguments=parser.parse_args()
 
