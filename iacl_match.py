@@ -143,11 +143,7 @@ def interfaces_with_ACL(ACL, interfaceIP):
 #returns a list with first element = min and last = max
 def compute_range(ilist):
     ip_range = []
-<<<<<<< Updated upstream
-    #print(ilist)
-=======
-    print("ilist in range: " + str(ilist))
->>>>>>> Stashed changes
+    #print("ilist in range: " + str(ilist))
     ip_range.append(min(ilist))
     ip_range.append(max(ilist))
     return ip_range
@@ -161,12 +157,7 @@ def interfaces_in_range(interfaceIP, IPrange):
     for interface in interfaceIP:
         if is_in_range(str(interface), IPrange):
             ilist.append(interface)
-<<<<<<< Updated upstream
     #print("interfaces in range: ", ilist)
-=======
-    print("interfaces in range: ", ilist)
-    print()
->>>>>>> Stashed changes
     return ilist
 
 #compute percentage of interfaces that are in range and have ACL applied
