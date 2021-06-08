@@ -58,8 +58,8 @@ def get_descriptions(file, outf):
         ACL_names.append(name)
     
         # Iterate over remarks
-        #for remark in config["acls"][name]["remarks"]:
-            #remarks.append(remark)
+        for remark in config["acls"][name]["remarks"]:
+            remarks.append(remark)
 
     with open(outf, 'w') as outfile:
         outfile.write("desc_dict\n")
