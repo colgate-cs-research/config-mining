@@ -27,39 +27,39 @@ def check_path(path,outfile):
             print("Input Path is a Directory; output Path is not directory ")
 
 
+#computes confidence (same as the old write to outfile)
+#retuns 3 dicts a,b,c
+def data_computation(IToACL, total_num_interfaces, out_acl_ref, two_way_references, total_ACL_IP_refs):
+
+    a={}
+    a["message"]="C(Interface -> Have ACL references)"
+    a["n"]="Interfaces with ACL reference(s): " + str(len(IToACL))    # n ~ Numerator
+    a["d"]="Support (num interfaces): " + str(total_num_interfaces)   # d ~ Denominator 
+    if total_num_interfaces != 0:
+        a["c"]="Confidence: " + str(len(IToACL)/total_num_interfaces) # c ~ Confidence
+    b={}
+    b["message"]="C('in' access list -> 'out' access list)"
+    b["n"]="Interfaces with 'out' access lists: " + str(out_acl_ref) 
+    b["d"]="Support (num interfaces with 'in' access list): " + str(len(IToACL)) 
+    if len(IToACL) != 0:
+        b["c"]="Confidence: " + str(out_acl_ref/len(IToACL))
+    c={}
+    c["message"]= "C(ACL covers interfaces IP -> interface has that ACL applied"
+    c["n"]="Two way ACL-Interface references: " + str(two_way_references)
+    c["d"]="Support (num IP addresses covered in ACL): " + str(total_ACL_IP_refs)
+    if total_ACL_IP_refs != 0:
+        c["c"]="Confidence: " + str(two_way_references/total_ACL_IP_refs)
+
+    return a,b,c
+
+
 #writes confidence/support for association rules as well as IToACL dictionary  
 #contents to argument file
 def write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref, filename, two_way_references, total_ACL_IP_refs):
     with open(filename, 'w') as outfile:
-        outfile.write("C(Interface -> Have ACL references)\n")
-        outfile.write("\tInterfaces with ACL reference(s): " + str(len(IToACL)) + "\n")
-        outfile.write("\tSupport (num interfaces): " + str(total_num_interfaces) + "\n")
-        if total_num_interfaces != 0:
-            outfile.write("\tConfidence: " + str(len(IToACL)/total_num_interfaces) + "\n\n")
-        
-        outfile.write("C('in' access list -> 'out' access list)\n")
-        outfile.write("\tInterfaces with 'out' access lists: " + str(out_acl_ref) + "\n")
-        outfile.write("\tSupport (num interfaces with 'in' access list): " + str(len(IToACL)) + "\n")
-        if len(IToACL) != 0:
-            outfile.write("\tConfidence: " + str(out_acl_ref/len(IToACL)) + "\n\n")
-
-        outfile.write("C(ACL covers interfaces IP -> interface has that ACL applied\n")
-        outfile.write("\tTwo way ACL-Interface references: " + str(two_way_references) + "\n")
-        outfile.write("\tSupport (num IP addresses covered in ACL): " + str(total_ACL_IP_refs) + "\n")
-        if total_ACL_IP_refs != 0:
-            outfile.write("\tConfidence: " + str(two_way_references/total_ACL_IP_refs) + "\n\n")
-
-        outfile.write("IToACL\n")
-        json.dump(IToACL, outfile, indent=4, sort_keys=True)  
-        outfile.write("\n------------------------------------------------\n")
-
-        outfile.write("interfaceIP\n")
-        json.dump(interfaceIP, outfile, indent=4, sort_keys=True)
-        outfile.write("\n------------------------------------------------\n")
-
-        outfile.write("ACLtoI\n")
-        json.dump(ACLtoI, outfile, indent=4, sort_keys=True)  
-        outfile.write("\n------------------------------------------------\n")
+        a,b,c=data_computation(IToACL, total_num_interfaces, out_acl_ref, two_way_references, total_ACL_IP_refs)
+        to_dump= [a,b,c,IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref]                          # single json dump in list
+        json.dump(to_dump, outfile, indent=4, sort_keys=True)
 
     return   
 
