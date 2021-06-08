@@ -29,7 +29,7 @@ def check_path(path,outfile):
 
 #computes confidence (same as the old write to outfile)
 #retuns 3 dicts a,b,c
-def data_computation(IToACL, total_num_interfaces, out_acl_ref, two_way_references, total_ACL_IP_refs):
+def data_computation(IToACL, total_num_interfaces, out_acl_ref, in_acl_ref, two_way_references, total_ACL_IP_refs):
 
     a={}
     a["message"]="C(Interface -> Have ACL references)"
@@ -39,10 +39,22 @@ def data_computation(IToACL, total_num_interfaces, out_acl_ref, two_way_referenc
         a["c"]="Confidence: " + str(len(IToACL)/total_num_interfaces) # c ~ Confidence
     b={}
     b["message"]="C('in' access list -> 'out' access list)"
-    b["n"]="Interfaces with 'out' access lists: " + str(out_acl_ref) 
-    b["d"]="Support (num interfaces with 'in' access list): " + str(len(IToACL)) 
-    if len(IToACL) != 0:
-        b["c"]="Confidence: " + str(out_acl_ref/len(IToACL))
+    both_acl_ref = 0
+    for iface, acls in IToACL.items():
+        if len(acls) == 2:
+            both_acl_ref += 1
+        else:
+            print(iface)
+    b["n"]="Interfaces with 'in' & 'out' access lists: " + str(both_acl_ref) 
+    b["d"]="Support (num interfaces with 'in' access list): " + str(in_acl_ref) 
+    if in_acl_ref != 0:
+        b["c"]="Confidence: " + str(both_acl_ref/in_acl_ref)
+    b2={}
+    b2["message"]="C('out' access list -> 'in' access list)"
+    b2["n"]="Interfaces with 'in' & 'out' access lists: " + str(both_acl_ref) 
+    b2["d"]="Support (num interfaces with 'out' access list): " + str(out_acl_ref) 
+    if out_acl_ref != 0:
+        b2["c"]="Confidence: " + str(both_acl_ref/out_acl_ref)
     c={}
     c["message"]= "C(ACL covers interfaces IP -> interface has that ACL applied"
     c["n"]="Two way ACL-Interface references: " + str(two_way_references)
@@ -50,15 +62,15 @@ def data_computation(IToACL, total_num_interfaces, out_acl_ref, two_way_referenc
     if total_ACL_IP_refs != 0:
         c["c"]="Confidence: " + str(two_way_references/total_ACL_IP_refs)
 
-    return a,b,c
+    return a,b,b2,c
 
 
 #writes confidence/support for association rules as well as IToACL dictionary  
 #contents to argument file
-def write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref, filename, two_way_references, total_ACL_IP_refs):
+def write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref, in_acl_ref, filename, two_way_references, total_ACL_IP_refs):
     with open(filename, 'w') as outfile:
-        a,b,c=data_computation(IToACL, total_num_interfaces, out_acl_ref, two_way_references, total_ACL_IP_refs)
-        to_dump= [a,b,c,IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref]                          # single json dump in list
+        a,b,b2,c=data_computation(IToACL, total_num_interfaces, out_acl_ref, in_acl_ref, two_way_references, total_ACL_IP_refs)
+        to_dump= [a,b,b2,c,IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref]                          # single json dump in list
         json.dump(to_dump, outfile, indent=4, sort_keys=True)
     return   
 
@@ -75,27 +87,28 @@ def make_network_obj(min_ip, wildcard_mask):
     return ipaddress.IPv4Network(network_str)
 
 #Calculates and returns number of two-way interface-ACL references (numerator in confidence calc)
-def ACL_Interface(ACLtoI, interfaceIP):
+def ACL_Interface(ACLNametoIpsInRules, InterfaceIptoAppliedAclNames):
     two_way = 0
-    total = 0
-    for (ACL, ips) in ACLtoI.items():
-        for ip_list in ips:
-            for (interface_ip, ACL_list) in interfaceIP.items():
-                #single ip address
-                if (ip_list[1] == "0.0.0.0"): 
-                    if (ip_list[0] == interface_ip): 
-                        total += 1
-                        if ACL in ACL_list:
-                            two_way += 1
-                #range of ip addresses
-                else: 
-                    address = ipaddress.IPv4Address(interface_ip)
-                    network = make_network_obj(ip_list[0], ip_list[1])
-                    if (address in network):
-                        total += 1
-                        if ACL in ACL_list:
-                            two_way += 1
-    return two_way, total
+    one_way = 0
+    for (ACL, ips) in ACLNametoIpsInRules.items():
+        for (interface_ip, ACL_list) in InterfaceIptoAppliedAclNames.items():
+            #single ip address
+            #if (ip_list[1] == "0.0.0.0"): 
+            #    if (ip_list[0] in InterfaceIptoAppliedAclNames): 
+            #        one_way += 1
+            #        if (ACL in InterfaceIptoAppliedAclNames[ip_list[0]]):
+            #            two_way += 1
+            # range of ip address
+            #else:
+            for ip_list in ips:
+                address = ipaddress.IPv4Address(interface_ip)
+                network = make_network_obj(ip_list[0], ip_list[1])
+                if (address in network):
+                    one_way += 1
+                    if ACL in ACL_list:
+                        two_way += 1
+                    break
+    return two_way, one_way
 
 #Returns a boolean to see whether the IP address is in range or not
 ##argument interface_ip is a string representation of an ip address  
@@ -169,33 +182,22 @@ def compute_confidence(numerator, denominator):
 #4
 # fourth association rule:    
 #Specific ACL applied to an interface => interface's IP falls within a range
-def fourth_association(ACLtoI, interfaceIP):
-    total_result = []
-    for acl in ACLtoI:
-        #print("ACL: " + acl)
-        ilist = interfaces_with_ACL(acl, interfaceIP)
-        if len(ilist) > 0:                
-            irange = compute_range(ilist)
-            #print("Range" + str(irange))
-            itotal = interfaces_in_range(interfaceIP, irange)
-            if len(itotal) == 0:
-                return 0
-        
-            result = []
-            result.append(len(ilist))
-            result.append(len(itotal))
-
-            total_result.append(result)
-            #print(result)
-            #print()
-    return total_result
+def fourth_association(ACL, interfaceIP):
+    ilist = interfaces_with_ACL(ACL, interfaceIP)
+    if len(ilist) == 0:
+        return 0
+    irange = compute_range(ilist)
+    itotal = interfaces_in_range(interfaceIP, irange)
+    if len(itotal) == 0:
+        return 0
+    return len(ilist), len(itotal)
 
 #creates and returns a dictionary representing intra-config references between
 #interfaces (keys) and ACLs (values) in argument config file
 def intraconfig_refs(cfile, writetofile):
     IToACL = {} #dictionary in form of {interface name: [ACL references]}
-    ACLtoI = {} #dictionary in form of {ACL name: [interface names]}
-    interfaceIP = {} #dictionary in form of {interface IP: [ACL references]}
+    ACLNametoIpsInRules = {} #dictionary in form of {ACL name: [interface names]}
+    InterfaceIptoAppliedACLNames = {} #dictionary in form of {interface IP: [ACL references]}
 
     # Load config
     with open(cfile, "r") as infile:
@@ -204,6 +206,7 @@ def intraconfig_refs(cfile, writetofile):
     #iterating over each line in file
     total_num_interfaces = 0
     out_acl_ref = 0
+    in_acl_ref = 0
 
     # Iterate over interfaces
     for iface in config["interfaces"].values():
@@ -216,9 +219,11 @@ def intraconfig_refs(cfile, writetofile):
         if iface["in_acl"] is not None:
             found_ref = True
             references.append(iface["in_acl"])
+            in_acl_ref += 1
         if iface["out_acl"] is not None:
             found_ref = True
             references.append(iface["out_acl"])
+            out_acl_ref += 1
         # Extract IP address
         if iface["address"] is not None:
             found_ip = True
@@ -226,12 +231,9 @@ def intraconfig_refs(cfile, writetofile):
         #at least one reference
         if found_ref:
             IToACL[iName] = references
-            #check for two references
-            if len(references) > 1:
-                out_acl_ref += 1 #FIXME: Should there also be in_acl_ref?
         #interface ip address and reference(s) exists 
         if found_ip and found_ref:
-            interfaceIP[IP_address] = references
+            InterfaceIptoAppliedACLNames[IP_address] = references
 
     # Iterate over ACLs
     for acl in config["acls"].values():
@@ -241,13 +243,13 @@ def intraconfig_refs(cfile, writetofile):
             for line in acl["lines"]:
                 references.extend(getAclLineIps(line))
         if (len(references) > 0):
-            ACLtoI[ACLName] = references
+            ACLNametoIpsInRules[ACLName] = references
 
-    two_way_references, total_ACL_IP_refs= ACL_Interface(ACLtoI, interfaceIP)
+    two_way_references, total_ACL_IP_refs= ACL_Interface(ACLNametoIpsInRules, InterfaceIptoAppliedACLNames)
 
-    fourth_association(ACLtoI, interfaceIP)
+    fourth_association(ACLNametoIpsInRules, InterfaceIptoAppliedACLNames)
 
-    write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref, writetofile, two_way_references, total_ACL_IP_refs)
+    write_to_outfile(IToACL, InterfaceIptoAppliedACLNames, ACLNametoIpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref, writetofile, two_way_references, total_ACL_IP_refs)
 
     return IToACL
 
