@@ -59,6 +59,7 @@ def extract_node(node, raw_lines):
     extract_acl_remarks(parts, raw_lines)
     return parts
 
+"""Extract details for all interfaces on a node"""
 def extract_interfaces(node):
     interfaces = {}
     
@@ -70,12 +71,35 @@ def extract_interfaces(node):
             "in_acl" : row["Incoming_Filter_Name"],
             "out_acl" : row["Outgoing_Filter_Name"],
             "description" : row["Description"],
-            "address" : row["Primary_Address"]
+            "address" : row["Primary_Address"],
+            "switchport" : (None if row["Switchport_Mode"] == "NONE" else row["Switchport_Mode"].lower()),
+            "access_vlan" : row["Access_VLAN"],
+            "allowed_vlans" : convert_allowed_vlans(row["Allowed_VLANs"])
         }
         interfaces[interface["name"]] = interface
 
     return interfaces
 
+"""Convert a string of allowed VLANs into a list"""
+def convert_allowed_vlans(raw_string):
+    # Handle empty string
+    if len(raw_string) == 0:
+        return None
+       
+    # Iterate over each item in the string of allowed VLANs
+    full_list = []
+    raw_list = raw_string.strip().split(",")
+    for item in raw_list:
+        # Range of VLANs
+        if "-" in item:
+            start, end = item.split("-")
+            full_list.extend(list(range(int(start), int(end)+1)))
+        # Single VLAN
+        else:
+            full_list.append(int(item))
+    return full_list
+
+"""Extract details for all ACLs on a node"""
 def extract_acls(node):
     acls = {}
 
@@ -95,6 +119,7 @@ def extract_acls(node):
 
     return acls
 
+"""Extract match criteria for all lines in an ACL"""
 def extract_acl_lines(data):
     lines = []
 
@@ -128,6 +153,7 @@ def is_regex_match(pattern, line):
     iList = p.findall(line)
     return (len(iList) > 0)
 
+"""Extract all remarks from all ACLs on a node"""
 def extract_acl_remarks(parts, raw_lines):
     i = 0
     while i < len(raw_lines):
@@ -143,6 +169,7 @@ def extract_acl_remarks(parts, raw_lines):
                 line = raw_lines[i].strip()
                 i += 1
 
+"""Extract all VLAN names from all VLANs on a node"""
 def extract_vlans(raw_lines):
     vlans = {}
     i = 0
