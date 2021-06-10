@@ -32,7 +32,6 @@ def process_configs(config_path,out_path):
         else:
             print("ERROR: input path is a directory; output path is not a directory")
 
-<<<<<<< HEAD
 """Get keywords from a phrase"""
 def get_keywords(phrase, delims=[" "]):
     words = re.split("|".join(delims), phrase)
@@ -47,23 +46,6 @@ def add_keywords(dictionary, key, words):
     for word in words:
         if word not in dictionary[key]:
             dictionary[key].append(word)
-=======
-#returns a list of keywords
-def get_keywords(file, outf):
-    # Load config
-    with open(file, "r") as infile:
-        config = json.load(infile)
-    keywords = []
-
-    for words in 
-
-
-
-
-
-#function that does this later
-#return dictionary with {keywords: [ACLs that the keywords are in]}
->>>>>>> Co-authored-by: Aaron Gember-Jacobson <agember@users.noreply.github.com>
 
 #returns a dictionary with {interface name: [list of words in description]} 
 def get_descriptions(file, outf):
