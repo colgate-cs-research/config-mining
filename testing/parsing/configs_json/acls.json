@@ -102,32 +102,64 @@
     },
     "interfaces": {
         "GigabitEthernet0/1": {
+            "access_vlan": null,
             "address": "10.0.1.1/24",
+            "allowed_vlans": null,
             "description": null,
             "in_acl": null,
             "name": "GigabitEthernet0/1",
-            "out_acl": null
+            "out_acl": null,
+            "switchport": null
         },
         "GigabitEthernet0/2": {
+            "access_vlan": null,
             "address": "10.0.2.1/24",
+            "allowed_vlans": null,
             "description": null,
             "in_acl": "aclA",
             "name": "GigabitEthernet0/2",
-            "out_acl": null
+            "out_acl": null,
+            "switchport": null
         },
         "GigabitEthernet0/3": {
+            "access_vlan": null,
             "address": "10.0.3.1/24",
+            "allowed_vlans": null,
             "description": null,
             "in_acl": null,
             "name": "GigabitEthernet0/3",
-            "out_acl": "aclB"
+            "out_acl": "aclB",
+            "switchport": null
         },
         "GigabitEthernet0/4": {
+            "access_vlan": null,
             "address": "10.0.4.1/24",
+            "allowed_vlans": null,
             "description": null,
             "in_acl": "aclC",
             "name": "GigabitEthernet0/4",
-            "out_acl": "aclD"
+            "out_acl": "aclD",
+            "switchport": null
+        },
+        "GigabitEthernet0/5": {
+            "access_vlan": null,
+            "address": "10.0.5.1/24",
+            "allowed_vlans": null,
+            "description": null,
+            "in_acl": "aclC",
+            "name": "GigabitEthernet0/5",
+            "out_acl": "aclB",
+            "switchport": null
+        },
+        "GigabitEthernet0/6": {
+            "access_vlan": null,
+            "address": "20.0.2.1/24",
+            "allowed_vlans": null,
+            "description": null,
+            "in_acl": null,
+            "name": "GigabitEthernet0/6",
+            "out_acl": "aclB",
+            "switchport": null
         }
     },
     "name": "acls",

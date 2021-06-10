@@ -135,7 +135,7 @@ def ACL_Interface(AclName2IpsInRules, IfaceIp2AppliedAclNames):
                 network = make_network_obj(ip_list[0], ip_list[1])
                 if (address in network):
                     one_way += 1
-                    if ACL in ACL_list:
+                    if ACL in ACL_list.values():
                         two_way += 1
                     break
     return two_way, one_way
