@@ -1,4 +1,5 @@
 import json
+from iacl_match import intraconfig_refs
 
 #returns a list of keywords
 def load_keywords(file):
@@ -65,6 +66,27 @@ def keyword_ACLs(words, keywords):
 
     return keyword_ACL_dict
 
+# call iacl_match.intraconfig_refs to get mapping from interface names to applied ACLs
+def interface_to_applied_ACLs(file):
+    interface_to_ACL = (intraconfig_refs(file))
+    return interface_to_ACL
+
+# For each common keyword, for each interface, check if that interface's ACL exists in list of ACLs with that keyword
+#keyword ---> interface keyword interface dictionary
+#that interface -----> ACLs interface to ACL dictionary
+#ACLs in ------> keyword_ACL dictionary
+def keyword_association(interface_to_ACL, keyword_interface_dict, keyword_ACL_dict):
+    keyword_associations = {}
+    #iterating by keyword
+    for word,interface in keyword_interface_dict.items():
+        keyword = word                                          #current keyword that we are working with
+        for interfaces in interface_to_ACL:                     #Finding the interface's list of ACL's
+            if interface == interfaces:                         #If the interfaces match
+                for ACL in interface_to_ACL[interfaces]:        #iterate through the list of ACL's
+                    for ACLs in keyword_ACL_dict[keyword]:      #iterate through the list of ACL's associated with the keyword
+                        if ACL == ACLs:                         #If the ACL is in the list of ACL's associated with the keyword
+                            keyword_associations[keyword].append[ACL]
+    return keyword_associations
 
 def data_computation(keyword_interfaces):
     a={}
@@ -82,10 +104,15 @@ def write_to_outfile(filename, keyword_interfaces):
 
 
 def main():
-    keywords = load_keywords("output/keywords.json") # FIXME: Take command-line arguments
+    keywords = load_keywords("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json") # FIXME: Take command-line arguments "output/keywords.json"
     common_iface_words = get_common_keywords(keywords, "interfaces", 10)
     keyword_interface_dictionary = keyword_interfaces(common_iface_words, keywords)
     keyword_ACL_dictionary = keyword_ACLs(common_iface_words, keywords)
+    interface_to_ACLnames = interface_to_applied_ACLs("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
+    keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary)
+
+    print(keyword_dictionary)
+    #print(interface_to_ACLnames)
 
     #print(keyword_ACL_dictionary)
 
@@ -93,10 +120,6 @@ def main():
         #keyword_ACL_dictionary
 
     write_to_outfile("output/analyze_keywords", keyword_interface_dictionary)
-
-    # call iacl_match.intraconfig_refs to get mapping from interface names to applied ACLs
-
-    # For each common keyword, for each interface, check if interface's ACL exists in list of ACLs with that keyword
 
 if __name__ == "__main__":
     main()
