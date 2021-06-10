@@ -202,7 +202,7 @@ def interfaces_in_range(IfaceIp2AppliedAclNames, IPrange):
 #compute percentage of interfaces that are in range and have ACL applied
 def compute_confidence(numerator, denominator):
     if (denominator > 0):
-        return numerator / denominator
+        return round(numerator / denominator, 3)
     return None
  
 #4

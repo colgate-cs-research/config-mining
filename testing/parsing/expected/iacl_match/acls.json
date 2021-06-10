@@ -1,12 +1,12 @@
 [
     {
-        "c": "Confidence: 0.8333333333333334",
-        "d": "Support (num interfaces): 6",
+        "c": "Confidence: 0.625",
+        "d": "Support (num interfaces): 8",
         "message": "C(Interface -> Have ACL references)",
         "n": "Interfaces with ACL reference(s): 5"
     },
     {
-        "c": "Confidence: 0.6666666666666666",
+        "c": "Confidence: 0.667",
         "d": "Support (num interfaces with 'in' access list): 3",
         "message": "C('in' access list -> 'out' access list)",
         "n": "Interfaces with 'in' & 'out' access lists: 2"
@@ -18,8 +18,8 @@
         "n": "Interfaces with 'in' & 'out' access lists: 2"
     },
     {
-        "c": "Confidence: 1.0",
-        "d": "Support (num IP addresses covered in ACL): 1",
+        "c": "Confidence: 0.333",
+        "d": "Support (num IP addresses covered in ACL): 3",
         "message": "C(ACL covers interfaces IP -> interface has that ACL applied",
         "n": "Two way ACL-Interface references: 1"
     },
