@@ -1,0 +1,112 @@
+{
+    "acls": {
+        "green": {
+            "lines": [
+                {
+                    "action": "PERMIT",
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "0.0.0.0/0"
+                }
+            ],
+            "name": "green",
+            "remarks": []
+        },
+        "orange": {
+            "lines": [
+                {
+                    "action": "PERMIT",
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "0.0.0.0/0"
+                }
+            ],
+            "name": "orange",
+            "remarks": []
+        },
+        "red": {
+            "lines": [
+                {
+                    "action": "PERMIT",
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "0.0.0.0/0"
+                }
+            ],
+            "name": "red",
+            "remarks": []
+        },
+        "yellow": {
+            "lines": [
+                {
+                    "action": "PERMIT",
+                    "dstIps": "0.0.0.0/0",
+                    "srcIps": "0.0.0.0/0"
+                }
+            ],
+            "name": "yellow",
+            "remarks": []
+        }
+    },
+    "interfaces": {
+        "GigabitEthernet0/1": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": null,
+            "description": "blue",
+            "in_acl": null,
+            "name": "GigabitEthernet0/1",
+            "out_acl": null,
+            "switchport": null
+        },
+        "GigabitEthernet0/2": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": null,
+            "description": "red",
+            "in_acl": "red",
+            "name": "GigabitEthernet0/2",
+            "out_acl": null,
+            "switchport": null
+        },
+        "GigabitEthernet0/3": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": null,
+            "description": "red yellow",
+            "in_acl": null,
+            "name": "GigabitEthernet0/3",
+            "out_acl": "orange",
+            "switchport": null
+        },
+        "GigabitEthernet0/4": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": null,
+            "description": "yellow blue",
+            "in_acl": "yellow",
+            "name": "GigabitEthernet0/4",
+            "out_acl": "green",
+            "switchport": null
+        },
+        "GigabitEthernet0/5": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": null,
+            "description": "red yellow",
+            "in_acl": "orange",
+            "name": "GigabitEthernet0/5",
+            "out_acl": "yellow",
+            "switchport": null
+        },
+        "GigabitEthernet0/6": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": null,
+            "description": "yellow",
+            "in_acl": null,
+            "name": "GigabitEthernet0/6",
+            "out_acl": "yellow",
+            "switchport": null
+        }
+    },
+    "name": "keywords",
+    "vlans": {}
+}
