@@ -30,43 +30,54 @@ def check_path(path,outfile):
 """Analyze a single configuration"""
 def analyze_configuration(infile, outfile):
     # Extract relevant details
-    IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref = intraconfig_refs(infile)
-    
+    IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules = intraconfig_refs(infile)
+
+    rules = []
+
+
+    # C(is interface => interface has ACL reference(s))
+    num_ifaces, has_acl = assoc_iface_has_acl(IfaceIp2AppliedAclNames)
+    rule = {
+        "message": "C(Interface -> Have ACL references)",
+        "n" : "Interfaces with ACL reference(s): " + str(has_acl),    # n ~ Numerator
+        "d" : "Support (num interfaces): " + str(num_ifaces)   # d ~ Denominator 
+    }
+    if num_ifaces != 0:
+        rule["c"]="Confidence: " + str(has_acl/num_ifaces)
+    rules.append(rule)
+
+    # C(interface has 'in' access list => interface has 'out' access list) 
+    in_acl_ref, both_acl_ref = assoc_acl_directions("in", IfaceIp2AppliedAclNames)
+    rule = {
+        "message" : "C('in' access list -> 'out' access list)",
+        "n" : "Interfaces with 'in' & 'out' access lists: " + str(both_acl_ref),
+        "d" : "Support (num interfaces with 'in' access list): " + str(in_acl_ref)
+    }
+    if in_acl_ref != 0:
+        rule["c"]="Confidence: " + str(both_acl_ref/in_acl_ref)
+    rules.append(rule)
+
+    # C(interface has 'out' access list => interface has 'in' access list) 
+    out_acl_ref, both_acl_ref = assoc_acl_directions("out", IfaceIp2AppliedAclNames)
+    rule = {
+        "message" : "C('out' access list -> 'in' access list)",
+        "n": "Interfaces with 'in' & 'out' access lists: " + str(both_acl_ref),
+        "d": "Support (num interfaces with 'out' access list): " + str(out_acl_ref)
+    }
+    if out_acl_ref != 0:
+        rule["c"]="Confidence: " + str(both_acl_ref/out_acl_ref)
+    rules.append(rule)
+
     two_way_references, total_ACL_IP_refs= ACL_Interface(AclName2IpsInRules, IfaceIp2AppliedAclNames)
 
     fourth_association(AclName2IpsInRules, IfaceIp2AppliedAclNames)
 
-    write_to_outfile(IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref, outfile, two_way_references, total_ACL_IP_refs)
+    write_to_outfile(IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, num_ifaces, out_acl_ref, in_acl_ref, both_acl_ref, outfile, two_way_references, total_ACL_IP_refs, rules[0], rules[1], rules[2])
 
 
 #computes confidence (same as the old write to outfile)
 #retuns 3 dicts a,b,c
-def data_computation(IfaceName2AppliedAclNames, total_num_interfaces, out_acl_ref, in_acl_ref, two_way_references, total_ACL_IP_refs):
-
-    a={}
-    a["message"]="C(Interface -> Have ACL references)"
-    a["n"]="Interfaces with ACL reference(s): " + str(len(IfaceName2AppliedAclNames))    # n ~ Numerator
-    a["d"]="Support (num interfaces): " + str(total_num_interfaces)   # d ~ Denominator 
-    if total_num_interfaces != 0:
-        a["c"]="Confidence: " + str(len(IfaceName2AppliedAclNames)/total_num_interfaces) # c ~ Confidence
-    b={}
-    b["message"]="C('in' access list -> 'out' access list)"
-    both_acl_ref = 0
-    for iface, acls in IfaceName2AppliedAclNames.items():
-        if len(acls) == 2:
-            both_acl_ref += 1
-        else:
-            print(iface)
-    b["n"]="Interfaces with 'in' & 'out' access lists: " + str(both_acl_ref) 
-    b["d"]="Support (num interfaces with 'in' access list): " + str(in_acl_ref) 
-    if in_acl_ref != 0:
-        b["c"]="Confidence: " + str(both_acl_ref/in_acl_ref)
-    b2={}
-    b2["message"]="C('out' access list -> 'in' access list)"
-    b2["n"]="Interfaces with 'in' & 'out' access lists: " + str(both_acl_ref) 
-    b2["d"]="Support (num interfaces with 'out' access list): " + str(out_acl_ref) 
-    if out_acl_ref != 0:
-        b2["c"]="Confidence: " + str(both_acl_ref/out_acl_ref)
+def data_computation(two_way_references, total_ACL_IP_refs):
     c={}
     c["message"]= "C(ACL covers interfaces IP -> interface has that ACL applied"
     c["n"]="Two way ACL-Interface references: " + str(two_way_references)
@@ -74,17 +85,41 @@ def data_computation(IfaceName2AppliedAclNames, total_num_interfaces, out_acl_re
     if total_ACL_IP_refs != 0:
         c["c"]="Confidence: " + str(two_way_references/total_ACL_IP_refs)
 
-    return a,b,b2,c
+    return c
 
 
 #writes confidence/support for association rules as well as IToACL dictionary  
 #contents to argument file
-def write_to_outfile(IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref, filename, two_way_references, total_ACL_IP_refs):
+def write_to_outfile(IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref, both_acl_ref, filename, two_way_references, total_ACL_IP_refs, a, b, b2):
     with open(filename, 'w') as outfile:
-        a,b,b2,c=data_computation(IfaceName2AppliedAclNames, total_num_interfaces, out_acl_ref, in_acl_ref, two_way_references, total_ACL_IP_refs)
+        c=data_computation(two_way_references, total_ACL_IP_refs)
         to_dump= [a,b,b2,c,IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref]                          # single json dump in list
         json.dump(to_dump, outfile, indent=4, sort_keys=True)
     return   
+
+"""Calculate support for an interface having an ACL"""
+def assoc_iface_has_acl(IfaceName2AppliedAclNames):
+    has_acl = 0
+    for acls in IfaceName2AppliedAclNames.values():
+        if len(acls) >= 1:
+            has_acl += 1
+    num_ifaces = len(IfaceName2AppliedAclNames)
+    return num_ifaces, has_acl
+
+"""Calculate the support for an interface having an ACL applied in one direction (e.g., in) => the interface has an ACL applied in the opposite direction (e.g., out)"""
+def assoc_acl_directions(direction, IfaceName2AppliedAclNames):
+    both_acl_ref = 0
+    one_acl_ref = 0
+    for acls in IfaceName2AppliedAclNames.values():
+        print(acls)
+        if direction in acls:
+            print("one")
+            one_acl_ref += 1
+        if len(acls) == 2:
+            print("both")
+            both_acl_ref += 1
+
+    return one_acl_ref, both_acl_ref
 
 #constructs and returns network object
 def make_network_obj(min_ip, wildcard_mask):
@@ -215,36 +250,23 @@ def intraconfig_refs(cfile):
     with open(cfile, "r") as infile:
         config = json.load(infile)
 
-    #iterating over each line in file
-    total_num_interfaces = 0
-    out_acl_ref = 0
-    in_acl_ref = 0
-
     # Iterate over interfaces
     for iface in config["interfaces"].values():
-        total_num_interfaces += 1
         iName = iface["name"]
-        references = []
-        found_ref = False
+        references = {}
         found_ip = False
         # Extract ACL references
         if iface["in_acl"] is not None:
-            found_ref = True
-            references.append(iface["in_acl"])
-            in_acl_ref += 1
+            references["in"] = iface["in_acl"]
         if iface["out_acl"] is not None:
-            found_ref = True
-            references.append(iface["out_acl"])
-            out_acl_ref += 1
+            references["out"] = iface["out_acl"]
         # Extract IP address
         if iface["address"] is not None:
             found_ip = True
             IP_address = iface["address"].split("/")[0]
-        #at least one reference
-        if found_ref:
-            IfaceName2AppliedAclNames[iName] = references
+        IfaceName2AppliedAclNames[iName] = references
         #interface ip address and reference(s) exists 
-        if found_ip and found_ref:
+        if found_ip:
             IfaceIp2AppliedAclNames[IP_address] = references
 
     # Iterate over ACLs
@@ -257,7 +279,7 @@ def intraconfig_refs(cfile):
         if (len(references) > 0):
             AclName2IpsInRules[ACLName] = references
 
-    return IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref 
+    return IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules 
 
 def main():
     #parsing command-line arguments
