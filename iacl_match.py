@@ -34,9 +34,8 @@ def analyze_configuration(infile, outfile):
 
     rules = []
 
-
     # C(is interface => interface has ACL reference(s))
-    num_ifaces, has_acl = assoc_iface_has_acl(IfaceIp2AppliedAclNames)
+    num_ifaces, has_acl = assoc_iface_has_acl(IfaceName2AppliedAclNames)
     rule = {
         "message": "C(Interface -> Have ACL references)",
         "n" : "Interfaces with ACL reference(s): " + str(has_acl),    # n ~ Numerator
@@ -68,33 +67,25 @@ def analyze_configuration(infile, outfile):
         rule["c"]="Confidence: " + str(both_acl_ref/out_acl_ref)
     rules.append(rule)
 
+    # C(ACL covers interface's IP => interface has that ACL applied) 
     two_way_references, total_ACL_IP_refs= ACL_Interface(AclName2IpsInRules, IfaceIp2AppliedAclNames)
+    rule = {
+        "message" : "C(ACL covers interfaces IP -> interface has that ACL applied",
+        "n" : "Two way ACL-Interface references: " + str(two_way_references),
+        "d" : "Support (num IP addresses covered in ACL): " + str(total_ACL_IP_refs)
+    }
+    if total_ACL_IP_refs != 0:
+        rule["c"]="Confidence: " + str(two_way_references/total_ACL_IP_refs)
+    rules.append(rule)
 
     fourth_association(AclName2IpsInRules, IfaceIp2AppliedAclNames)
 
-    write_to_outfile(IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, num_ifaces, out_acl_ref, in_acl_ref, both_acl_ref, outfile, two_way_references, total_ACL_IP_refs, rules[0], rules[1], rules[2])
+    write_to_outfile(outfile, rules)
 
-
-#computes confidence (same as the old write to outfile)
-#retuns 3 dicts a,b,c
-def data_computation(two_way_references, total_ACL_IP_refs):
-    c={}
-    c["message"]= "C(ACL covers interfaces IP -> interface has that ACL applied"
-    c["n"]="Two way ACL-Interface references: " + str(two_way_references)
-    c["d"]="Support (num IP addresses covered in ACL): " + str(total_ACL_IP_refs)
-    if total_ACL_IP_refs != 0:
-        c["c"]="Confidence: " + str(two_way_references/total_ACL_IP_refs)
-
-    return c
-
-
-#writes confidence/support for association rules as well as IToACL dictionary  
-#contents to argument file
-def write_to_outfile(IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref, both_acl_ref, filename, two_way_references, total_ACL_IP_refs, a, b, b2):
+"""Writes confidence/support for association rules to JSON file"""
+def write_to_outfile(filename, rules):
     with open(filename, 'w') as outfile:
-        c=data_computation(two_way_references, total_ACL_IP_refs)
-        to_dump= [a,b,b2,c,IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref]                          # single json dump in list
-        json.dump(to_dump, outfile, indent=4, sort_keys=True)
+        json.dump(rules, outfile, indent=4, sort_keys=True)
     return   
 
 """Calculate support for an interface having an ACL"""
@@ -111,12 +102,9 @@ def assoc_acl_directions(direction, IfaceName2AppliedAclNames):
     both_acl_ref = 0
     one_acl_ref = 0
     for acls in IfaceName2AppliedAclNames.values():
-        print(acls)
         if direction in acls:
-            print("one")
             one_acl_ref += 1
         if len(acls) == 2:
-            print("both")
             both_acl_ref += 1
 
     return one_acl_ref, both_acl_ref
