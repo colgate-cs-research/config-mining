@@ -177,7 +177,7 @@ def interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames):
         #print("interface acls: " + str(interfaceIP[interface]))
         #print("acl: " + ACL)
         #print()
-        for acl in IfaceIp2AppliedAclNames[interface]:
+        for acl in IfaceIp2AppliedAclNames[interface].values():
             if acl == ACL:
                 ilist.append(interface)
     return ilist

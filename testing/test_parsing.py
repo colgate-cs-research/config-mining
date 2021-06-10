@@ -10,14 +10,14 @@ testing_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.dirname(testing_dir))
 import iacl_match
 
-def test_acls():
+def test_acls_iacl_match():
     configs_dir = os.path.join(testing_dir, "parsing", "configs_json")
     config_file = os.path.join(configs_dir, "acls.json") 
-    expected_dir = os.path.join(testing_dir, "parsing", "expected")
-    expected_file = os.path.join(expected_dir, "acls.out") 
+    expected_dir = os.path.join(testing_dir, "parsing", "expected", "iacl_match")
+    expected_file = os.path.join(expected_dir, "acls.json") 
     out_dir = tempfile.mkdtemp()
-    out_file = os.path.join(out_dir, "acls.out")
-    iacl_match.intraconfig_refs(config_file, out_file)
+    out_file = os.path.join(out_dir, "acls.json")
+    iacl_match.analyze_configuration(config_file, out_file)
 
     with open(out_file, 'r') as out:
         out_lines = out.readlines()

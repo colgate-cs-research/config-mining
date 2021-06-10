@@ -1,0 +1,50 @@
+[
+    {
+        "c": "Confidence: 0.75",
+        "d": "Support (num interfaces): 4",
+        "message": "C(Interface -> Have ACL references)",
+        "n": "Interfaces with ACL reference(s): 3"
+    },
+    {
+        "c": "Confidence: 0.5",
+        "d": "Support (num interfaces with 'in' access list): 2",
+        "message": "C('in' access list -> 'out' access list)",
+        "n": "Interfaces with 'in' & 'out' access lists: 1"
+    },
+    {
+        "c": "Confidence: 0.5",
+        "d": "Support (num interfaces with 'out' access list): 2",
+        "message": "C('out' access list -> 'in' access list)",
+        "n": "Interfaces with 'in' & 'out' access lists: 1"
+    },
+    {
+        "c": "Confidence: None",
+        "d": "Support (num IP addresses covered in ACL): 0",
+        "message": "C(ACL covers interfaces IP -> interface has that ACL applied",
+        "n": "Two way ACL-Interface references: 0"
+    },
+    {
+        "c": "Confidence: 1.0",
+        "d": "Support (num interfaces in range ['10.0.2.1', '10.0.2.1']): 1",
+        "message": "C(interface's IP falls within a range => ACL aclA applied to the interface",
+        "n": "Num interfaces in range with ACL aclA applied : 1"
+    },
+    {
+        "c": "Confidence: 1.0",
+        "d": "Support (num interfaces in range ['10.0.3.1', '10.0.3.1']): 1",
+        "message": "C(interface's IP falls within a range => ACL aclB applied to the interface",
+        "n": "Num interfaces in range with ACL aclB applied : 1"
+    },
+    {
+        "c": "Confidence: 1.0",
+        "d": "Support (num interfaces in range ['10.0.4.1', '10.0.4.1']): 1",
+        "message": "C(interface's IP falls within a range => ACL aclC applied to the interface",
+        "n": "Num interfaces in range with ACL aclC applied : 1"
+    },
+    {
+        "c": "Confidence: 1.0",
+        "d": "Support (num interfaces in range ['10.0.4.1', '10.0.4.1']): 1",
+        "message": "C(interface's IP falls within a range => ACL aclD applied to the interface",
+        "n": "Num interfaces in range with ACL aclD applied : 1"
+    }
+]
