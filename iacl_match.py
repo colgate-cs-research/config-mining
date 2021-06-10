@@ -11,20 +11,32 @@ def is_regex_match(pattern, line):
     iList = p.findall(line)
     return (len(iList) > 0)
 
+"""Analyze a single configuration or a directory of configurations"""
 def check_path(path,outfile):
     print("going into check_path")
     print("INPUT: "+path+" OUTPUT: "+outfile)
     if os.path.isfile(path):
         print("Input is a file")
-        intraconfig_refs(path, outfile)
+        analyze_configuration(path, outfile)
     else:
         if os.path.isdir(outfile):
             files = glob.glob(path + '/**/*.json', recursive=True)
             for file in files:
                 print("CUrrent working FILE:   "+file)
-                intraconfig_refs(file,outfile+"output_"+os.path.basename(file))
+                analyze_configuration(file, os.path.join(outfile, os.path.basename(file)))
         else:
             print("Input Path is a Directory; output Path is not directory ")
+
+"""Analyze a single configuration"""
+def analyze_configuration(infile, outfile):
+    # Extract relevant details
+    IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref = intraconfig_refs(infile)
+    
+    two_way_references, total_ACL_IP_refs= ACL_Interface(AclName2IpsInRules, IfaceIp2AppliedAclNames)
+
+    fourth_association(AclName2IpsInRules, IfaceIp2AppliedAclNames)
+
+    write_to_outfile(IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref, outfile, two_way_references, total_ACL_IP_refs)
 
 
 #computes confidence (same as the old write to outfile)
@@ -194,10 +206,10 @@ def fourth_association(ACL, interfaceIP):
 
 #creates and returns a dictionary representing intra-config references between
 #interfaces (keys) and ACLs (values) in argument config file
-def intraconfig_refs(cfile, writetofile):
-    IToACL = {} #dictionary in form of {interface name: [ACL references]}
-    ACLNametoIpsInRules = {} #dictionary in form of {ACL name: [interface names]}
-    InterfaceIptoAppliedACLNames = {} #dictionary in form of {interface IP: [ACL references]}
+def intraconfig_refs(cfile):
+    IfaceName2AppliedAclNames = {} #dictionary in form of {interface name: [ACL references]}
+    AclName2IpsInRules = {} #dictionary in form of {ACL name: [interface names]}
+    IfaceIp2AppliedAclNames = {} #dictionary in form of {interface IP: [ACL references]}
 
     # Load config
     with open(cfile, "r") as infile:
@@ -230,10 +242,10 @@ def intraconfig_refs(cfile, writetofile):
             IP_address = iface["address"].split("/")[0]
         #at least one reference
         if found_ref:
-            IToACL[iName] = references
+            IfaceName2AppliedAclNames[iName] = references
         #interface ip address and reference(s) exists 
         if found_ip and found_ref:
-            InterfaceIptoAppliedACLNames[IP_address] = references
+            IfaceIp2AppliedAclNames[IP_address] = references
 
     # Iterate over ACLs
     for acl in config["acls"].values():
@@ -243,15 +255,10 @@ def intraconfig_refs(cfile, writetofile):
             for line in acl["lines"]:
                 references.extend(getAclLineIps(line))
         if (len(references) > 0):
-            ACLNametoIpsInRules[ACLName] = references
+            AclName2IpsInRules[ACLName] = references
 
-    two_way_references, total_ACL_IP_refs= ACL_Interface(ACLNametoIpsInRules, InterfaceIptoAppliedACLNames)
 
-    fourth_association(ACLNametoIpsInRules, InterfaceIptoAppliedACLNames)
-
-    write_to_outfile(IToACL, InterfaceIptoAppliedACLNames, ACLNametoIpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref, writetofile, two_way_references, total_ACL_IP_refs)
-
-    return IToACL
+    return IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref 
 
 def main():
     #parsing command-line arguments
