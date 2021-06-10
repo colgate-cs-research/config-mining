@@ -144,15 +144,10 @@ def ACL_Interface(AclName2IpsInRules, IfaceIp2AppliedAclNames):
 ##argument interface_ip is a string representation of an ip address  
 #argument ip_list is a list of strings representing a range in the form [min address, max address]           
 def is_in_range(interface_ip, ip_list):
-    start = ip_list[0].split(".")
-    end = ip_list[1].split(".")
-    currIP = interface_ip.split(".")
-    
-    for i in range(len(currIP)):
-        if (int(currIP[i]) < int(start[i]) or int(currIP[i]) > int(end[i])):
-            return False
-
-    return True
+    start = ipaddress.IPv4Address(ip_list[0])
+    end = ipaddress.IPv4Address(ip_list[1])
+    currIP = ipaddress.IPv4Address(interface_ip)
+    return start <= currIP <= end
 
 #returns a list of ip address(es)/network(s) in an ACL line
 def getAclLineIps(line):
