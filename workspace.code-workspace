@@ -4,7 +4,10 @@
 			"path": "."
 		},
 		{
-			"path": "../../../shared/configs/northwestern"
+			"path": "/shared/configs/northwestern"
+		},
+		{
+			"path": "/shared/configs/uwmadison/2014-10-core"
 		}
 	],
 	"settings": {}
