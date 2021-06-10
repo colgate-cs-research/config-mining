@@ -41,18 +41,18 @@ def analyze_configuration(infile, outfile):
 
 #computes confidence (same as the old write to outfile)
 #retuns 3 dicts a,b,c
-def data_computation(IToACL, total_num_interfaces, out_acl_ref, in_acl_ref, two_way_references, total_ACL_IP_refs):
+def data_computation(IfaceName2AppliedAclNames, total_num_interfaces, out_acl_ref, in_acl_ref, two_way_references, total_ACL_IP_refs):
 
     a={}
     a["message"]="C(Interface -> Have ACL references)"
-    a["n"]="Interfaces with ACL reference(s): " + str(len(IToACL))    # n ~ Numerator
+    a["n"]="Interfaces with ACL reference(s): " + str(len(IfaceName2AppliedAclNames))    # n ~ Numerator
     a["d"]="Support (num interfaces): " + str(total_num_interfaces)   # d ~ Denominator 
     if total_num_interfaces != 0:
-        a["c"]="Confidence: " + str(len(IToACL)/total_num_interfaces) # c ~ Confidence
+        a["c"]="Confidence: " + str(len(IfaceName2AppliedAclNames)/total_num_interfaces) # c ~ Confidence
     b={}
     b["message"]="C('in' access list -> 'out' access list)"
     both_acl_ref = 0
-    for iface, acls in IToACL.items():
+    for iface, acls in IfaceName2AppliedAclNames.items():
         if len(acls) == 2:
             both_acl_ref += 1
         else:
@@ -79,10 +79,10 @@ def data_computation(IToACL, total_num_interfaces, out_acl_ref, in_acl_ref, two_
 
 #writes confidence/support for association rules as well as IToACL dictionary  
 #contents to argument file
-def write_to_outfile(IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref, in_acl_ref, filename, two_way_references, total_ACL_IP_refs):
+def write_to_outfile(IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref, filename, two_way_references, total_ACL_IP_refs):
     with open(filename, 'w') as outfile:
-        a,b,b2,c=data_computation(IToACL, total_num_interfaces, out_acl_ref, in_acl_ref, two_way_references, total_ACL_IP_refs)
-        to_dump= [a,b,b2,c,IToACL, interfaceIP, ACLtoI, total_num_interfaces, out_acl_ref]                          # single json dump in list
+        a,b,b2,c=data_computation(IfaceName2AppliedAclNames, total_num_interfaces, out_acl_ref, in_acl_ref, two_way_references, total_ACL_IP_refs)
+        to_dump= [a,b,b2,c,IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref]                          # single json dump in list
         json.dump(to_dump, outfile, indent=4, sort_keys=True)
     return   
 
@@ -99,11 +99,11 @@ def make_network_obj(min_ip, wildcard_mask):
     return ipaddress.IPv4Network(network_str)
 
 #Calculates and returns number of two-way interface-ACL references (numerator in confidence calc)
-def ACL_Interface(ACLNametoIpsInRules, InterfaceIptoAppliedAclNames):
+def ACL_Interface(AclName2IpsInRules, IfaceIp2AppliedAclNames):
     two_way = 0
     one_way = 0
-    for (ACL, ips) in ACLNametoIpsInRules.items():
-        for (interface_ip, ACL_list) in InterfaceIptoAppliedAclNames.items():
+    for (ACL, ips) in AclName2IpsInRules.items():
+        for (interface_ip, ACL_list) in IfaceIp2AppliedAclNames.items():
             #single ip address
             #if (ip_list[1] == "0.0.0.0"): 
             #    if (ip_list[0] in InterfaceIptoAppliedAclNames): 
@@ -152,14 +152,14 @@ def getAclLineIps(line):
 #find all interfaces with ACL applied
 #iterate through interfaces and create a range
 #return LIST of interfaces
-def interfaces_with_ACL(ACL, interfaceIP):
+def interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames):
     ilist = []
     #print(interfaceIP)
-    for interface in interfaceIP:
+    for interface in IfaceIp2AppliedAclNames:
         #print("interface acls: " + str(interfaceIP[interface]))
         #print("acl: " + ACL)
         #print()
-        for acl in interfaceIP[interface]:
+        for acl in IfaceIp2AppliedAclNames[interface]:
             if acl == ACL:
                 ilist.append(interface)
     return ilist
@@ -177,10 +177,10 @@ def compute_range(ilist):
 #3
 #takes access control list and range
 #finds all interfaces within this range (confidence denominator)
-def interfaces_in_range(interfaceIP, IPrange):
+def interfaces_in_range(IfaceIp2AppliedAclNames, IPrange):
     ilist = []
     #print("given/calculated range: ", IPrange)
-    for interface in interfaceIP:
+    for interface in IfaceIp2AppliedAclNames:
         if is_in_range(str(interface), IPrange):
             ilist.append(interface)
     #print("interfaces in range: ", ilist)
@@ -194,12 +194,12 @@ def compute_confidence(numerator, denominator):
 #4
 # fourth association rule:    
 #Specific ACL applied to an interface => interface's IP falls within a range
-def fourth_association(ACL, interfaceIP):
-    ilist = interfaces_with_ACL(ACL, interfaceIP)
+def fourth_association(ACL, IfaceIp2AppliedAclNames):
+    ilist = interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames)
     if len(ilist) == 0:
         return 0
     irange = compute_range(ilist)
-    itotal = interfaces_in_range(interfaceIP, irange)
+    itotal = interfaces_in_range(IfaceIp2AppliedAclNames, irange)
     if len(itotal) == 0:
         return 0
     return len(ilist), len(itotal)
@@ -256,7 +256,6 @@ def intraconfig_refs(cfile):
                 references.extend(getAclLineIps(line))
         if (len(references) > 0):
             AclName2IpsInRules[ACLName] = references
-
 
     return IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules, total_num_interfaces, out_acl_ref, in_acl_ref 
 
