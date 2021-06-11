@@ -28,7 +28,7 @@ def get_common_keywords(keywords, stanza, threshold=10): #stanza="interfaces"
 
     common_words = []
     for word, count in all_words.items():
-        if count > threshold: #FIXME: take threshold as argument
+        if count >= threshold:
             common_words.append(word)
 
     return sorted(common_words)
