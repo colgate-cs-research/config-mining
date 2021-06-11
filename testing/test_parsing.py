@@ -8,7 +8,7 @@ import difflib
 # Load code to test
 testing_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.dirname(testing_dir))
-import iacl_match
+import analyze_refs
 
 def test_acls_iacl_match():
     configs_dir = os.path.join(testing_dir, "parsing", "configs_json")
@@ -17,7 +17,7 @@ def test_acls_iacl_match():
     expected_file = os.path.join(expected_dir, "acls.json") 
     out_dir = tempfile.mkdtemp()
     out_file = os.path.join(out_dir, "acls.json")
-    iacl_match.analyze_configuration(config_file, out_file)
+    analyze_refs.analyze_configuration(config_file, out_file)
 
     with open(out_file, 'r') as out:
         out_lines = out.readlines()

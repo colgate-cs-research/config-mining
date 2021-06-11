@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from iacl_match import intraconfig_refs
+from analyze_refs import intraconfig_refs
 
 #returns a list of keywords
 def load_keywords(file):

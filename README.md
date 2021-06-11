@@ -26,8 +26,8 @@ After the Batfish service is running, you can parse configurations using the `pa
 # Computing confidence
 
 
-# iacl_match.py
-Traverses a single file or a directory of files and evaluates confidence of four association rules (defined in third slide of "2021-05-25.pdf" notes)
+## Intra-config references
+`analyze_refs.py` traverses a single file or a directory of files and evaluates confidence of four association rules (defined in third slide of "2021-05-25.pdf" notes).
 
 arguments: 
 * path to a file or directory 
@@ -39,14 +39,12 @@ arguments:
 
 example command for single file traversal (in this case the filename is "core1.json"):
 ```bash
-python3 iacl_match.py /shared/configs/sample/configs_json/core1.json output/sample.json
+python3 analyze_refs.py /shared/configs/sample/configs_json/core1.json output/sample.json
 ```
 example command for directory traversal: 
 ```bash
-python3 iacl_match.py "/shared/configs/sample/configs_json/" "output/sample/"
+python3 analyze_refs.py /shared/configs/sample/configs_json/ output/sample/
 ```
 
-## keywords.py
-Traverses a single file or a directory of files and extracts keywords relating to interfaces and ACLs
-
-Takes the same arguments as `iacl_match.py`
+## Keywords
+`extract_keywords.py` traverses a single file or a directory of files and extracts keywords relating to interfaces and ACLs. It takes the same command line arguments as `analyze_refs.py`.

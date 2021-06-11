@@ -1,7 +1,7 @@
 import json
 import glob
 import os
-from iacl_match import ACL_Interface, data_computation, is_regex_match
+from analyze_refs import ACL_Interface, data_computation, is_regex_match
 
 
 def compile_all_dicts(dict_list):
