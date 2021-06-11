@@ -20,31 +20,31 @@
     {
         "c": "Confidence: 0.333",
         "d": "Support (num IP addresses covered in ACL): 3",
-        "message": "C(ACL covers interfaces IP -> interface has that ACL applied",
+        "message": "C(ACL covers interfaces IP -> interface has that ACL applied)",
         "n": "Two way ACL-Interface references: 1"
     },
     {
         "c": "Confidence: 1.0",
         "d": "Support (num interfaces in range ['10.0.2.1', '10.0.2.1']): 1",
-        "message": "C(interface's IP falls within a range => ACL aclA applied to the interface",
+        "message": "C(interface's IP falls within a range => ACL aclA applied to the interface)",
         "n": "Num interfaces in range with ACL aclA applied : 1"
     },
     {
         "c": "Confidence: 0.75",
         "d": "Support (num interfaces in range ['10.0.3.1', '20.0.2.1']): 4",
-        "message": "C(interface's IP falls within a range => ACL aclB applied to the interface",
+        "message": "C(interface's IP falls within a range => ACL aclB applied to the interface)",
         "n": "Num interfaces in range with ACL aclB applied : 3"
     },
     {
         "c": "Confidence: 1.0",
         "d": "Support (num interfaces in range ['10.0.4.1', '10.0.5.1']): 2",
-        "message": "C(interface's IP falls within a range => ACL aclC applied to the interface",
+        "message": "C(interface's IP falls within a range => ACL aclC applied to the interface)",
         "n": "Num interfaces in range with ACL aclC applied : 2"
     },
     {
         "c": "Confidence: 1.0",
         "d": "Support (num interfaces in range ['10.0.4.1', '10.0.4.1']): 1",
-        "message": "C(interface's IP falls within a range => ACL aclD applied to the interface",
+        "message": "C(interface's IP falls within a range => ACL aclD applied to the interface)",
         "n": "Num interfaces in range with ACL aclD applied : 1"
     }
 ]
