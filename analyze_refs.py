@@ -66,7 +66,7 @@ def analyze_configuration(infile, outfile):
     # C(ACL covers interface's IP => interface has that ACL applied) 
     two_way_references, total_ACL_IP_refs= ACL_Interface(AclName2IpsInRules, IfaceIp2AppliedAclNames)
     rule = {
-        "message" : "C(ACL covers interfaces IP -> interface has that ACL applied",
+        "message" : "C(ACL covers interfaces IP -> interface has that ACL applied)",
         "n" : "Two way ACL-Interface references: " + str(two_way_references),
         "d" : "Support (num IP addresses covered in ACL): " + str(total_ACL_IP_refs),
         "c": "Confidence: " + str(compute_confidence(two_way_references, total_ACL_IP_refs))
@@ -76,7 +76,7 @@ def analyze_configuration(infile, outfile):
     for acl_name in AclName2IpsInRules:
         ifaces_with_acl, ifaces_in_range, irange = fourth_association(acl_name, IfaceIp2AppliedAclNames)
         rule = {
-            "message" : "C(interface's IP falls within a range => ACL " + acl_name + " applied to the interface",
+            "message" : "C(interface's IP falls within a range => ACL " + acl_name + " applied to the interface)",
             "n" : "Num interfaces in range with ACL " + acl_name + " applied : " + str(ifaces_with_acl),
             "d" : "Support (num interfaces in range " + str(irange) + "): " + str(ifaces_in_range),
             "c": "Confidence: " + str(compute_confidence(ifaces_with_acl, ifaces_in_range))

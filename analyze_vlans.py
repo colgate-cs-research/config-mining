@@ -2,9 +2,6 @@ import argparse
 import glob
 import json
 import os
-import nltk
-from nltk.corpus import stopwords
-import re
 
 def main():
     #parsing command-line arguments
@@ -13,7 +10,6 @@ def main():
     parser.add_argument('out_path', help='Name of file (or directory) to write JSON file(s) containing vlan confidence values')
 
     arguments = parser.parse_args()
-    nltk.download('stopwords')
     process_configs(arguments.config_path,arguments.out_path)
 
 
@@ -63,16 +59,32 @@ def generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq):
     return
 
 
-
-def write_to_outfile(filename, vlan_pair_freq, single_vlan_freq):
-    with open(filename, 'w') as outfile:
-        outfile.write("Vlan dict")
-        json.dump(single_vlan_freq, outfile, indent=4, sort_keys=True)
-        outfile.write("\n\nVlan Pair dict")
-        json.dump(vlan_pair_freq, outfile, indent=4, sort_keys=True)
+'''Writes confidence/support for association rules to JSON file'''
+def write_to_outfile(filename, rules):
+    with open(filename, 'w') as outfile:         
+        json.dump(rules, outfile, indent=4, sort_keys=True)
     return   
 
 
+def format_confidence_ouput(vlan_pair_freq, single_vlan_freq):
+    rules = []
+    for (vpair, freq) in vlan_pair_freq.items():
+        vlans = vpair.split(", ")
+        for vlan in vlans:
+            rule = {
+                "message" : "C(interface accepts vlan " + str(vlan) + "-> interface accepts both vlans "+ str(vpair) + ")",
+                "n" : "Num interfaces that accept both vlans "+ str(vpair) + ": " + str(freq),
+                "d" : "Num interfaces that accept vlan " + str(vlan) + ": " + str(single_vlan_freq[int(vlan)]),
+                "c": "Confidence: " + str(compute_confidence(freq, single_vlan_freq[int(vlan)]))
+            }
+            rules.append(rule)
+    return rules
+
+#compute percentage of interfaces that are in range and have ACL applied
+def compute_confidence(numerator, denominator):
+    if (denominator > 0):
+        return round(numerator / denominator, 3)
+    return None
 
 '''returns a dictionary with {vlan pair [x,y] : frequency accepted in an interface}'''
 def get_iface_accepted_vlans(file, outfile):
@@ -87,8 +99,10 @@ def get_iface_accepted_vlans(file, outfile):
         if properties["switchport"] == "trunk" and properties["allowed_vlans"] is not None:
             vlan_list = properties["allowed_vlans"]
             generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq)
-            
-    write_to_outfile(outfile, vlan_pair_freq, single_vlan_freq)
+    #print(single_vlan_freq)
+    rules = format_confidence_ouput(vlan_pair_freq, single_vlan_freq)
+    write_to_outfile(outfile, rules)
+
     return 
 
 
