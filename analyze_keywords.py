@@ -122,10 +122,14 @@ def main():
     interface_to_ACLnames = interface_to_applied_ACLs(arguments.config_path)
     keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary)
 
-    print(keyword_dictionary)
+    print(common_iface_words)
+    print()
+    print(keyword_interface_dictionary)
+    #print(keyword_ACL_dictionary)
+    #print(keyword_dictionary)
     #print(interface_to_ACLnames)
 
-    #print(keyword_ACL_dictionary)
+    
 
     #with open("output/analyze_keywords", 'w') as outfile:
         #keyword_ACL_dictionary
