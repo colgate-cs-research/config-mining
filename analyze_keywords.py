@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+import argparse
 import json
 from iacl_match import intraconfig_refs
 
@@ -104,11 +107,19 @@ def write_to_outfile(filename, keyword_interfaces):
 
 
 def main():
-    keywords = load_keywords("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json") # FIXME: Take command-line arguments "output/keywords.json"
-    common_iface_words = get_common_keywords(keywords, "interfaces", 10)
+    #parsing command-line arguments
+    parser = argparse.ArgumentParser(description='Perform keyword-based analysis')
+    parser.add_argument('keyword_path', help="Path for a file containing a JSON representation of keywords (produced by keywords.py)")
+    parser.add_argument('config_path', help="Path for a file containing a JSON representation of a configuration")
+    parser.add_argument("-t", "--threshold", type=int, help="Minimum number of types a keyword must occur", default=10)
+
+    arguments=parser.parse_args()
+
+    keywords = load_keywords(arguments.keyword_path)
+    common_iface_words = get_common_keywords(keywords, "interfaces", arguments.threshold)
     keyword_interface_dictionary = keyword_interfaces(common_iface_words, keywords)
     keyword_ACL_dictionary = keyword_ACLs(common_iface_words, keywords)
-    interface_to_ACLnames = interface_to_applied_ACLs("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
+    interface_to_ACLnames = interface_to_applied_ACLs(arguments.config_path)
     keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary)
 
     print(keyword_dictionary)
