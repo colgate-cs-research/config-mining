@@ -216,7 +216,7 @@ def fourth_association(ACL, IfaceIp2AppliedAclNames):
     itotal = interfaces_in_range(IfaceIp2AppliedAclNames, irange)
     return len(ilist), len(itotal), irange
 
-#creates and returns a dictionary representing intra-config references between
+#creates and returns four dictionaries representing intra-config references between
 #interfaces (keys) and ACLs (values) in argument config file
 def intraconfig_refs(cfile):
     IfaceName2AppliedAclNames = {} #dictionary in form of {interface name: [ACL references]}
