@@ -49,14 +49,16 @@ keywords = {
 
 def test_get_common_keywords_once():
     common = analyze_keywords.get_common_keywords(keywords, "interfaces", 1)
-    assert sorted(common) == sorted(["red", "yellow", "blue"])
+    expected = ["red", "yellow", "blue"]
+    assert sorted(common) == sorted(expected)
 
 def test_get_common_keywords_thrice():
     common = analyze_keywords.get_common_keywords(keywords, "interfaces", 3)
-    assert sorted(common) == sorted(["red", "yellow"])
+    expected = ["red", "yellow"]
+    assert sorted(common) == sorted(expected)
 
 def test_keyword_interfaces():
-    Keywords2IfaceNames = analyze_keywords.keyword_interfaces(["red", "yellow", "blue"], keywords)
+    Keywords2IfaceNames = analyze_keywords.keyword_stanza(["red", "yellow", "blue"], keywords, "interfaces")
     expected = {
         "red" : ["GigabitEthernet0/2", "GigabitEthernet0/3", "GigabitEthernet0/5"],
         "yellow" : ["GigabitEthernet0/3", "GigabitEthernet0/4", "GigabitEthernet0/5", "GigabitEthernet0/6"],
@@ -65,3 +67,14 @@ def test_keyword_interfaces():
     assert sorted(Keywords2IfaceNames.keys()) == sorted(expected.keys())
     for keyword in expected:
         assert sorted(Keywords2IfaceNames[keyword]) == sorted(expected[keyword])
+
+def test_keyword_acls():
+    Keywords2AclNames = analyze_keywords.keyword_stanza(["red", "yellow", "blue"], keywords, "acls")
+    expected = {
+        "red" : ["red"],
+        "yellow" : ["yellow"],
+        "blue" : []
+    }
+    assert sorted(Keywords2AclNames.keys()) == sorted(expected.keys())
+    for keyword in expected:
+        assert sorted(Keywords2AclNames[keyword]) == sorted(expected[keyword])

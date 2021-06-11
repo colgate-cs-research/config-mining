@@ -43,52 +43,41 @@ def get_common_keywords(keywords, stanza, threshold=10): #stanza="interfaces"
     #interface i has keyword k and ACL a has keyword k => interface i has ACL a
 
 # For each common keyword, find all interfaces that have that keyword CREATE DICTIONARY, list of interface names
+# For each common keyword, find all ACLs that have that keyword CREATE DICTIONARY
 # TEST TO SEE IF THIS WORKS BY MAKING OWN DICTIONARY WITH WORDS ETC...
-def keyword_interfaces(words, keywords):
-    keyword_interface_dict = {}
+def keyword_stanza(words, keywords, stanza):
+    keyword_item_dict = {}
     for word in words:
-        interface_list = []
-        for interface in keywords["interfaces"]:
-            for keyword in keywords["interfaces"][interface]:
-                if keyword == word and interface not in interface_list:
-                    interface_list.append(interface)
-        keyword_interface_dict[word] = interface_list
+        item_list = []
+        for item_name in keywords[stanza]:
+            for keyword in keywords[stanza][item_name]:
+                if keyword == word and item_name not in item_list:
+                    item_list.append(item_name)
+        keyword_item_dict[word] = item_list
     
-    return keyword_interface_dict
-
-# For each common keyword, find all ACLs that have that keyword CREATE DICTIONARY 
-def keyword_ACLs(words, keywords):
-    keyword_ACL_dict = {}
-    for keyword in words:
-        acl_list = []
-        for ACL in (keywords["acls"]):
-            for words in keywords["acls"][ACL]:
-                if keyword == words and ACL not in acl_list:
-                    acl_list.append(ACL)
-        keyword_ACL_dict[keyword] = acl_list
-
-    return keyword_ACL_dict
+    return keyword_item_dict 
 
 # call iacl_match.intraconfig_refs to get mapping from interface names to applied ACLs
 def interface_to_applied_ACLs(file):
-    interface_to_ACL = (intraconfig_refs(file))
+    interface_to_ACL, _, _ = (intraconfig_refs(file))
     return interface_to_ACL
 
 # For each common keyword, for each interface, check if that interface's ACL exists in list of ACLs with that keyword
-#keyword ---> interface keyword interface dictionary
-#that interface -----> ACLs interface to ACL dictionary
-#ACLs in ------> keyword_ACL dictionary
+#interface i has keyword k => interface i has ACL a
 def keyword_association(interface_to_ACL, keyword_interface_dict, keyword_ACL_dict):
     keyword_associations = {}
     #iterating by keyword
-    for word,interface in keyword_interface_dict.items():
-        keyword = word                                          #current keyword that we are working with
-        for interfaces in interface_to_ACL:                     #Finding the interface's list of ACL's
-            if interface == interfaces:                         #If the interfaces match
-                for ACL in interface_to_ACL[interfaces]:        #iterate through the list of ACL's
-                    for ACLs in keyword_ACL_dict[keyword]:      #iterate through the list of ACL's associated with the keyword
-                        if ACL == ACLs:                         #If the ACL is in the list of ACL's associated with the keyword
-                            keyword_associations[keyword].append[ACL]
+    for keyword,interfaces_with_keyword in keyword_interface_dict.items():
+        acls_with_keyword = keyword_ACL_dict[keyword]
+        for ACL in acls_with_keyword:  # Iterates number of ACLs with keyword k 
+            all_three = 0
+            antecedent = 0
+            for interface in interfaces_with_keyword:  # Iterates number of interfaces with keyword k              
+                antecedent += 1
+                if interface in interface_to_ACL and ACL in interface_to_ACL[interface].values(): 
+                    all_three += 1
+            keyword_associations[(keyword, ACL)] = (all_three, antecedent)
+           
     return keyword_associations
 
 def data_computation(keyword_interfaces):
@@ -117,17 +106,16 @@ def main():
 
     keywords = load_keywords(arguments.keyword_path)
     common_iface_words = get_common_keywords(keywords, "interfaces", arguments.threshold)
-    keyword_interface_dictionary = keyword_interfaces(common_iface_words, keywords)
-    keyword_ACL_dictionary = keyword_ACLs(common_iface_words, keywords)
+    keyword_interface_dictionary = keyword_stanza(common_iface_words, keywords, "interfaces")
+    keyword_ACL_dictionary = keyword_stanza(common_iface_words, keywords, "acls")
     interface_to_ACLnames = interface_to_applied_ACLs(arguments.config_path)
     keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary)
 
-    print(common_iface_words)
-    print()
-    print(keyword_interface_dictionary)
+    #print(common_iface_words)
+    #print(keyword_interface_dictionary)
     #print(keyword_ACL_dictionary)
-    #print(keyword_dictionary)
     #print(interface_to_ACLnames)
+    print(keyword_dictionary)
 
     
 

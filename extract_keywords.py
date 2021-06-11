@@ -8,6 +8,10 @@ import nltk
 from nltk.corpus import stopwords
 import re
 
+abbreviations = {
+    "mgmt" : "management"
+}
+
 def main():
     #parsing command-line arguments
     parser = argparse.ArgumentParser(description='Extract keywords for interfaces and ACLs')
@@ -37,6 +41,7 @@ def get_keywords(phrase, delims=[" "]):
     words = re.split("|".join(delims), phrase)
     words = [word.lower() for word in words]
     words = [word for word in words if not word in stopwords.words()]
+    words = [(abbreviations[word] if word in abbreviations else word) for word in words]
     return words
 
 """Add keywords to a specific entry in a dictionary"""
