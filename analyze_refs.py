@@ -12,6 +12,7 @@ def is_regex_match(pattern, line):
 
 """Analyze a single configuration"""
 def analyze_configuration(infile, outfile):
+    print("Current working FILE: "+infile)
     # Extract relevant details
     IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules = intraconfig_refs(infile)
 

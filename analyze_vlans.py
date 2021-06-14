@@ -12,34 +12,32 @@ def main():
     analyze.process_configs(arguments.config_path, arguments.out_path, analyze_configuration)
 
 '''adds vlan pair frequencies to corresponding dictionary value '''
-def generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq): 
+def generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq, freq=1): 
     if len(vlan_list) == 1:
         if (vlan_list[0] in single_vlan_freq):
-            single_vlan_freq[vlan_list[0]] += 1
+            single_vlan_freq[vlan_list[0]] += freq
         else:
-            single_vlan_freq[vlan_list[0]] = 1
+            single_vlan_freq[vlan_list[0]] = freq
         return
         
     for i in range(len(vlan_list)): #vlan1
         vlan1 = vlan_list[i]
         if vlan1 in single_vlan_freq:
-            single_vlan_freq[vlan1] += 1
+            single_vlan_freq[vlan1] += freq
         else:
-            single_vlan_freq[vlan1] = 1
+            single_vlan_freq[vlan1] = freq
 
         for j in range(i+1, len(vlan_list)): #vlan2
             vlan2 = vlan_list[j]
-            if vlan1 != vlan2:
-                pair = str(vlan_list[i]) + ", " + str(vlan_list[j])
-                reverse_pair = str(vlan_list[j]) + ", " + str(vlan_list[i])
-                #pair already in dict->increment
-                if (pair in vlan_pair_freq):
-                    vlan_pair_freq[pair] += 1
-                elif (reverse_pair in vlan_pair_freq):
-                    vlan_pair_freq[reverse_pair] += 1
-                #add pair to dict
-                else:
-                    vlan_pair_freq[pair] = 1
+            pair = (vlan_list[i], vlan_list[j])
+            if vlan_list[j] < vlan_list[i]:
+                pair = (pair[1], pair[0])
+            #pair already in dict->increment
+            if (pair in vlan_pair_freq):
+                vlan_pair_freq[pair] += freq
+            #add pair to dict
+            else:
+                vlan_pair_freq[pair] = freq
     return
 
 
@@ -53,13 +51,13 @@ def write_to_outfile(filename, rules):
 def format_confidence_ouput(vlan_pair_freq, single_vlan_freq):
     rules = []
     for (vpair, freq) in vlan_pair_freq.items():
-        vlans = vpair.split(", ")
+        vlans = vpair
         for vlan in vlans:
             rule = {
-                "message" : "C(interface accepts vlan " + str(vlan) + "-> interface accepts both vlans "+ str(vpair) + ")",
-                "n" : "Num interfaces that accept both vlans "+ str(vpair) + ": " + str(freq),
-                "d" : "Num interfaces that accept vlan " + str(vlan) + ": " + str(single_vlan_freq[int(vlan)]),
-                "c": "Confidence: " + str(compute_confidence(freq, single_vlan_freq[int(vlan)]))
+                "msg" : "C(iface accepts vlan " + str(vlan) + "-> iface accepts vlans "+ str(vpair) + ")",
+                "n" : freq,
+                "d" : str(single_vlan_freq[int(vlan)]),
+                "c": compute_confidence(freq, single_vlan_freq[int(vlan)])
             }
             rules.append(rule)
     return rules
@@ -72,17 +70,29 @@ def compute_confidence(numerator, denominator):
 
 '''returns a dictionary with {vlan pair [x,y] : frequency accepted in an interface}'''
 def analyze_configuration(file, outfile):
+    print("Current working FILE: "+file)
     vlan_pair_freq = {}
     single_vlan_freq = {}
     # Load config
     with open(file, "r") as infile:
         config = json.load(infile)
     
-    #iterate over interfaces
+    #iterate over interfaces to find unique sets of allowed VLANs
     for (iface, properties) in config["interfaces"].items():
         if properties["switchport"] == "trunk" and properties["allowed_vlans"] is not None:
             vlan_list = properties["allowed_vlans"]
+            if len(vlan_list) > 1024:
+                print("Skipping %s:%s which allows %d vlans"  % (config["name"], iface, len(vlan_list)))
+                continue
             generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq)
+            #if vlan_list in vlan_lists:
+            #    vlan_lists[vlan_list] += 1
+            #else:
+            #    vlan_lists[vlan_list] = 1
+    
+    # Iterate over VLAN lists
+    #for vlan_list, freq in vlan_lists.items():
+        #generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq, freq)
     #print(single_vlan_freq)
     rules = format_confidence_ouput(vlan_pair_freq, single_vlan_freq)
     write_to_outfile(outfile, rules)

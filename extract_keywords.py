@@ -38,6 +38,7 @@ def add_keywords(dictionary, key, words):
             dictionary[key].append(word)
 
 def analyze_configuration(file, outf):
+    print("Current working FILE: "+file)
     # Load config
     with open(file, "r") as infile:
         config = json.load(infile)

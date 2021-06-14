@@ -10,9 +10,8 @@ def process_configs(config_path,out_path, analyze_configuration):
     else:
         if os.path.isdir(out_path):
             files = glob.glob(config_path + '/**/*.json', recursive=True)
-            with ThreadPoolExecutor() as executor:
-                for file in files:
-                    print("Current working FILE: "+file)
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                for file in sorted(files):
                     executor.submit(analyze_configuration, file, os.path.join(out_path, os.path.basename(file)))
         else:
             print("ERROR: input path is a directory; output path is not a directory")

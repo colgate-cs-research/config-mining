@@ -26,8 +26,8 @@ def test_generate_vlan_pairs_two():
     single_vlan_freq = {}
     analyze_vlans.generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq)
     assert len(vlan_pair_freq) == 1
-    assert "20, 21" in vlan_pair_freq
-    assert vlan_pair_freq["20, 21"] == 1
+    assert (20, 21) in vlan_pair_freq
+    assert vlan_pair_freq[(20, 21)] == 1
     assert len(single_vlan_freq) == 2
     assert 20 in single_vlan_freq
     assert single_vlan_freq[20] == 1
@@ -40,12 +40,12 @@ def test_generate_vlan_pairs_three():
     single_vlan_freq = {}
     analyze_vlans.generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq)
     assert len(vlan_pair_freq) == 3
-    assert "30, 31" in vlan_pair_freq
-    assert vlan_pair_freq["30, 31"] == 1
-    assert "30, 32" in vlan_pair_freq
-    assert vlan_pair_freq["30, 32"] == 1
-    assert "31, 32" in vlan_pair_freq
-    assert vlan_pair_freq["31, 32"] == 1
+    assert (30, 31) in vlan_pair_freq
+    assert vlan_pair_freq[(30, 31)] == 1
+    assert (30, 32) in vlan_pair_freq
+    assert vlan_pair_freq[(30, 32)] == 1
+    assert (31, 32) in vlan_pair_freq
+    assert vlan_pair_freq[(31, 32)] == 1
     assert len(single_vlan_freq) == 3
     assert 30 in single_vlan_freq
     assert single_vlan_freq[30] == 1
@@ -56,16 +56,16 @@ def test_generate_vlan_pairs_three():
 
 def test_generate_vlan_pairs_update():
     vlan_list = [10, 20, 21]
-    vlan_pair_freq = { "20, 21" : 1 }
+    vlan_pair_freq = { (20, 21) : 1 }
     single_vlan_freq = { 10: 1, 20: 1, 21: 1}
     analyze_vlans.generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq)
     assert len(vlan_pair_freq) == 3
-    assert "10, 20" in vlan_pair_freq
-    assert vlan_pair_freq["10, 20"] == 1
-    assert "10, 21" in vlan_pair_freq
-    assert vlan_pair_freq["10, 21"] == 1
-    assert "20, 21" in vlan_pair_freq
-    assert vlan_pair_freq["20, 21"] == 2
+    assert (10, 20) in vlan_pair_freq
+    assert vlan_pair_freq[(10, 20)] == 1
+    assert (10, 21) in vlan_pair_freq
+    assert vlan_pair_freq[(10, 21)] == 1
+    assert (20, 21) in vlan_pair_freq
+    assert vlan_pair_freq[(20, 21)] == 2
     assert len(single_vlan_freq) == 3
     assert 10 in single_vlan_freq
     assert single_vlan_freq[10] == 2

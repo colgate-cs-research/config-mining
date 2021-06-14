@@ -1,38 +1,38 @@
 [
     {
-        "c": "Confidence: 1.0",
-        "d": "Num interfaces that accept vlan 100: 3",
-        "message": "C(interface accepts vlan 100-> interface accepts both vlans 100, 200)",
-        "n": "Num interfaces that accept both vlans 100, 200: 3"
+        "c": 1.0,
+        "d": "3",
+        "msg": "C(iface accepts vlan 100-> iface accepts vlans (100, 200))",
+        "n": 3
     },
     {
-        "c": "Confidence: 1.0",
-        "d": "Num interfaces that accept vlan 200: 3",
-        "message": "C(interface accepts vlan 200-> interface accepts both vlans 100, 200)",
-        "n": "Num interfaces that accept both vlans 100, 200: 3"
+        "c": 1.0,
+        "d": "3",
+        "msg": "C(iface accepts vlan 200-> iface accepts vlans (100, 200))",
+        "n": 3
     },
     {
-        "c": "Confidence: 0.333",
-        "d": "Num interfaces that accept vlan 100: 3",
-        "message": "C(interface accepts vlan 100-> interface accepts both vlans 100, 300)",
-        "n": "Num interfaces that accept both vlans 100, 300: 1"
+        "c": 0.333,
+        "d": "3",
+        "msg": "C(iface accepts vlan 100-> iface accepts vlans (100, 300))",
+        "n": 1
     },
     {
-        "c": "Confidence: 0.5",
-        "d": "Num interfaces that accept vlan 300: 2",
-        "message": "C(interface accepts vlan 300-> interface accepts both vlans 100, 300)",
-        "n": "Num interfaces that accept both vlans 100, 300: 1"
+        "c": 0.5,
+        "d": "2",
+        "msg": "C(iface accepts vlan 300-> iface accepts vlans (100, 300))",
+        "n": 1
     },
     {
-        "c": "Confidence: 0.333",
-        "d": "Num interfaces that accept vlan 200: 3",
-        "message": "C(interface accepts vlan 200-> interface accepts both vlans 200, 300)",
-        "n": "Num interfaces that accept both vlans 200, 300: 1"
+        "c": 0.333,
+        "d": "3",
+        "msg": "C(iface accepts vlan 200-> iface accepts vlans (200, 300))",
+        "n": 1
     },
     {
-        "c": "Confidence: 0.5",
-        "d": "Num interfaces that accept vlan 300: 2",
-        "message": "C(interface accepts vlan 300-> interface accepts both vlans 200, 300)",
-        "n": "Num interfaces that accept both vlans 200, 300: 1"
+        "c": 0.5,
+        "d": "2",
+        "msg": "C(iface accepts vlan 300-> iface accepts vlans (200, 300))",
+        "n": 1
     }
 ]
