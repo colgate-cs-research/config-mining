@@ -1,6 +1,6 @@
 {
     "acls": {
-        "green": {
+        "G": {
             "lines": [
                 {
                     "action": "PERMIT",
@@ -8,10 +8,10 @@
                     "srcIps": "0.0.0.0/0"
                 }
             ],
-            "name": "green",
-            "remarks": []
+            "name": "G",
+            "remarks": ["green"]
         },
-        "orange": {
+        "O": {
             "lines": [
                 {
                     "action": "PERMIT",
@@ -19,10 +19,10 @@
                     "srcIps": "0.0.0.0/0"
                 }
             ],
-            "name": "orange",
-            "remarks": []
+            "name": "O",
+            "remarks": ["orange"]
         },
-        "red": {
+        "R": {
             "lines": [
                 {
                     "action": "PERMIT",
@@ -30,10 +30,10 @@
                     "srcIps": "0.0.0.0/0"
                 }
             ],
-            "name": "red",
-            "remarks": []
+            "name": "R",
+            "remarks": ["red"]
         },
-        "yellow": {
+        "Y": {
             "lines": [
                 {
                     "action": "PERMIT",
@@ -41,8 +41,8 @@
                     "srcIps": "0.0.0.0/0"
                 }
             ],
-            "name": "yellow",
-            "remarks": []
+            "name": "Y",
+            "remarks": ["yellow"]
         }
     },
     "interfaces": {
@@ -61,7 +61,7 @@
             "address": null,
             "allowed_vlans": null,
             "description": "red",
-            "in_acl": "red",
+            "in_acl": "R",
             "name": "GigabitEthernet0/2",
             "out_acl": null,
             "switchport": null
@@ -73,7 +73,7 @@
             "description": "red yellow",
             "in_acl": null,
             "name": "GigabitEthernet0/3",
-            "out_acl": "orange",
+            "out_acl": "O",
             "switchport": null
         },
         "GigabitEthernet0/4": {
@@ -81,9 +81,9 @@
             "address": null,
             "allowed_vlans": null,
             "description": "yellow blue",
-            "in_acl": "yellow",
+            "in_acl": "Y",
             "name": "GigabitEthernet0/4",
-            "out_acl": "green",
+            "out_acl": "G",
             "switchport": null
         },
         "GigabitEthernet0/5": {
@@ -91,9 +91,9 @@
             "address": null,
             "allowed_vlans": null,
             "description": "red yellow",
-            "in_acl": "orange",
+            "in_acl": "O",
             "name": "GigabitEthernet0/5",
-            "out_acl": "yellow",
+            "out_acl": "Y",
             "switchport": null
         },
         "GigabitEthernet0/6": {
@@ -103,7 +103,7 @@
             "description": "yellow",
             "in_acl": null,
             "name": "GigabitEthernet0/6",
-            "out_acl": "yellow",
+            "out_acl": "Y",
             "switchport": null
         }
     },

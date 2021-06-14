@@ -2,7 +2,7 @@
 
 import argparse
 import json
-from analyze_refs import intraconfig_refs
+from analyze_refs import intraconfig_refs, interfaces_with_ACL, compute_range, interfaces_in_range, is_in_range
 
 #returns a list of keywords
 def load_keywords(file):
@@ -80,6 +80,70 @@ def keyword_association(interface_to_ACL, keyword_interface_dict, keyword_ACL_di
            
     return keyword_associations
 
+#Returns a dictionary of interfaces associated with their IP addresses
+#Returns a list of all the ip addresses from the interfaces within the file
+def interface_ip_dictionary(cfile):
+    IfaceName2address = {}
+    ip_list = []
+    with open(cfile, "r") as infile:
+        config = json.load(infile)
+    
+    for iface in config["interfaces"].values():
+        iName = iface["name"]
+        if iface["address"] is not None:
+            IP_address = iface["address"].split("/")[0]
+            IfaceName2address[iName] = IP_address
+            ip_list.append(IP_address)
+
+    return IfaceName2address, ip_list
+
+#RULE
+#interface's IP falls within a range => Specific keyword applied to an interface 
+
+#returns two dictionaries
+#keyword_range_dict{keyword: range of the IP's associated with the interfaces of that keyword}
+#keyword_ip_list_dict{keword: list of IP's associated with the interfaces of that keyword}
+def keyword_ipaddress_range(keyword_interface_dict, interface_IPaddress_dict):
+    keyword_range_dict = {}
+    keyword_ip_list_dict = {}
+
+    for keyword in keyword_interface_dict:
+        ilist = keyword_interface_dict[keyword]
+
+        ip_list = []
+        for interface in ilist:
+            for interfaces in interface_IPaddress_dict:
+                if interface == interfaces:
+                    ip_address = interface_IPaddress_dict[interface]
+                    ip_list.append(ip_address)
+
+        keyword_ip_list_dict[keyword] = ip_list
+        ip_range = compute_range(ip_list)
+        keyword_range_dict[keyword] = ip_range       
+        
+    return keyword_range_dict, keyword_ip_list_dict
+
+#Returns a dictionary displaying the confidences of each keyword
+def keyword_range_confidence(ip_list, keyword_range_dict, keyword_ip_list_dict):
+    keyword_range_confidence_dict = {}
+
+    for keyword in keyword_range_dict:
+        confidence = []
+        ip_range = keyword_range_dict[keyword]
+        #out of the total ip addresses in the file which are in range
+        interface_in_range = len(interfaces_in_range(ip_list, ip_range))
+        #know which ips are in range based on the ips in the dictionary associated with the keywords
+        for keywords in keyword_ip_list_dict:
+            if keyword == keywords:
+                keyword_interfaces_in_range = len(keyword_ip_list_dict[keyword])
+        
+        #attach a list of the two values to the keyword in a dictionary 
+        confidence.append(keyword_interfaces_in_range)
+        confidence.append(interface_in_range)
+        keyword_range_confidence_dict[keyword] = confidence
+
+    return keyword_range_confidence_dict
+
 def data_computation(keyword_interfaces):
     a={}
     a["message"]="C(Keyword ---> interface)"
@@ -96,6 +160,7 @@ def write_to_outfile(filename, keyword_interfaces):
 
 
 def main():
+    '''
     #parsing command-line arguments
     parser = argparse.ArgumentParser(description='Perform keyword-based analysis')
     parser.add_argument('keyword_path', help="Path for a file containing a JSON representation of keywords (produced by keywords.py)")
@@ -103,21 +168,33 @@ def main():
     parser.add_argument("-t", "--threshold", type=int, help="Minimum number of types a keyword must occur", default=10)
 
     arguments=parser.parse_args()
+    '''
 
-    keywords = load_keywords(arguments.keyword_path)
-    common_iface_words = get_common_keywords(keywords, "interfaces", arguments.threshold)
+    #keywords = load_keywords(arguments.keyword_path)
+    keywords = load_keywords("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
+    #common_iface_words = get_common_keywords(keywords, "interfaces", arguments.threshold)
+    common_iface_words = get_common_keywords(keywords, "interfaces", 10)
     keyword_interface_dictionary = keyword_stanza(common_iface_words, keywords, "interfaces")
     keyword_ACL_dictionary = keyword_stanza(common_iface_words, keywords, "acls")
-    interface_to_ACLnames = interface_to_applied_ACLs(arguments.config_path)
+    #interface_to_ACLnames = interface_to_applied_ACLs(arguments.config_path)
+    interface_to_ACLnames = interface_to_applied_ACLs("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
     keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary)
 
     #print(common_iface_words)
     #print(keyword_interface_dictionary)
     #print(keyword_ACL_dictionary)
     #print(interface_to_ACLnames)
-    print(keyword_dictionary)
+    #print(keyword_dictionary)
 
-    
+    #6/14 TESTING
+    interface_IPaddress_dict, _= interface_ip_dictionary("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
+    _, ip_list = interface_ip_dictionary("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
+
+    keyword_range, _= keyword_ipaddress_range(keyword_interface_dictionary, interface_IPaddress_dict)
+    _, keyword_ip_list = keyword_ipaddress_range(keyword_interface_dictionary, interface_IPaddress_dict)
+
+    dictionary = keyword_range_confidence(ip_list, keyword_range, keyword_ip_list)
+    print(dictionary)
 
     #with open("output/analyze_keywords", 'w') as outfile:
         #keyword_ACL_dictionary
