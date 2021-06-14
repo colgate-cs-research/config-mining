@@ -1,7 +1,6 @@
+import analyze
 import argparse
-import glob
 import json
-import os
 
 def main():
     #parsing command-line arguments
@@ -10,22 +9,7 @@ def main():
     parser.add_argument('out_path', help='Name of file (or directory) to write JSON file(s) containing vlan confidence values')
 
     arguments = parser.parse_args()
-    process_configs(arguments.config_path,arguments.out_path)
-
-
-def process_configs(config_path,out_path):
-    print("INPUT: "+config_path+" OUTPUT: "+out_path)
-    if os.path.isfile(config_path):
-        print("Input is a file")
-        get_iface_accepted_vlans(config_path, out_path)
-    else:
-        if os.path.isdir(out_path):
-            files = glob.glob(config_path + '/**/*.json', recursive=True)
-            for file in files:
-                print("Current working FILE: "+file)
-                get_iface_accepted_vlans(file,os.path.join(out_path, os.path.basename(file)))
-        else:
-            print("ERROR: input path is a directory; output path is not a directory")
+    analyze.process_configs(arguments.config_path, arguments.out_path, analyze_configuration)
 
 '''adds vlan pair frequencies to corresponding dictionary value '''
 def generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq): 
@@ -87,7 +71,7 @@ def compute_confidence(numerator, denominator):
     return None
 
 '''returns a dictionary with {vlan pair [x,y] : frequency accepted in an interface}'''
-def get_iface_accepted_vlans(file, outfile):
+def analyze_configuration(file, outfile):
     vlan_pair_freq = {}
     single_vlan_freq = {}
     # Load config

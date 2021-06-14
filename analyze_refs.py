@@ -1,30 +1,14 @@
 import re
 import json
 import argparse
+import analyze
 import ipaddress
-import glob
-import os
 
 #returns boolean indicating if argument regex pattern exists in argument string
 def is_regex_match(pattern, line):
     p = re.compile(pattern)
     iList = p.findall(line)
     return (len(iList) > 0)
-
-"""Analyze a single configuration or a directory of configurations"""
-def check_path(path,outfile):
-    print("INPUT: "+path+" OUTPUT: "+outfile)
-    if os.path.isfile(path):
-        print("Input is a file")
-        analyze_configuration(path, outfile)
-    else:
-        if os.path.isdir(outfile):
-            files = glob.glob(path + '/**/*.json', recursive=True)
-            for file in files:
-                print("CUrrent working FILE:   "+file)
-                analyze_configuration(file, os.path.join(outfile, os.path.basename(file)))
-        else:
-            print("Input Path is a Directory; output Path is not directory ")
 
 """Analyze a single configuration"""
 def analyze_configuration(infile, outfile):
@@ -269,8 +253,7 @@ def main():
     config_path = arguments.Path
     outfile = arguments.outfile
 
-
-    check_path(config_path,outfile)
+    analyze.process_configs(config_path, outfile, analyze_configuration)
 
 if __name__ == "__main__":
     main()

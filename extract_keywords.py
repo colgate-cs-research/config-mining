@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
-import glob
 import json
-import os
 import nltk
 from nltk.corpus import stopwords
 import re
+import analyze
 
 abbreviations = {
     "mgmt" : "management"
@@ -20,21 +19,7 @@ def main():
 
     arguments = parser.parse_args()
     nltk.download('stopwords')
-    process_configs(arguments.config_path,arguments.out_path)
-
-def process_configs(config_path,out_path):
-    print("INPUT: "+config_path+" OUTPUT: "+out_path)
-    if os.path.isfile(config_path):
-        print("Input is a file")
-        get_descriptions(config_path, out_path)
-    else:
-        if os.path.isdir(out_path):
-            files = glob.glob(config_path + '/**/*.json', recursive=True)
-            for file in files:
-                print("Current working FILE: "+file)
-                get_descriptions(file,os.path.join(out_path, os.path.basename(file)))
-        else:
-            print("ERROR: input path is a directory; output path is not a directory")
+    analyze.process_configs(arguments.config_path, arguments.out_path, analyze_configuration)
 
 """Get keywords from a phrase"""
 def get_keywords(phrase, delims=[" "]):
@@ -52,8 +37,7 @@ def add_keywords(dictionary, key, words):
         if word not in dictionary[key]:
             dictionary[key].append(word)
 
-#returns a dictionary with {interface name: [list of words in description]} 
-def get_descriptions(file, outf):
+def analyze_configuration(file, outf):
     # Load config
     with open(file, "r") as infile:
         config = json.load(infile)
