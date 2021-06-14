@@ -1,11 +1,77 @@
 #!/usr/bin/env python3
 
+import difflib
 import os
 import sys
+import tempfile
 
 # Load code to test
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+testing_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(1, os.path.dirname(testing_dir))
 import analyze_refs
+
+def test_intraconfig_refs_acls_IfaceName2AppliedAclNames():
+    configs_dir = os.path.join(testing_dir, "analysis", "configs_json")
+    actual, _, _ = analyze_refs.intraconfig_refs(os.path.join(configs_dir, "acls.json"))
+    expected = {
+        'GigabitEthernet0/1': {}, 
+        'GigabitEthernet0/2': {'in': 'aclA'}, 
+        'GigabitEthernet0/3': {'out': 'aclB'}, 
+        'GigabitEthernet0/4': {'in': 'aclC', 'out': 'aclD'}, 
+        'GigabitEthernet0/5': {'in': 'aclC', 'out': 'aclB'}, 
+        'GigabitEthernet0/6': {'out': 'aclB'}, 
+        'GigabitEthernet0/7': {}, 
+        'GigabitEthernet0/8': {}
+    }
+    assert actual == expected
+
+def test_intraconfig_refs_acls_IfaceIp2AppliedAclNames():
+    configs_dir = os.path.join(testing_dir, "analysis", "configs_json")
+    _, actual, _ = analyze_refs.intraconfig_refs(os.path.join(configs_dir, "acls.json"))
+    expected = {
+        '10.0.1.1': {}, 
+        '10.0.2.1': {'in': 'aclA'}, 
+        '10.0.3.1': {'out': 'aclB'}, 
+        '10.0.4.1': {'in': 'aclC', 'out': 'aclD'}, 
+        '10.0.5.1': {'in': 'aclC', 'out': 'aclB'}, 
+        '20.0.2.1': {'out': 'aclB'}, 
+        '20.0.3.1': {}, 
+        '20.0.4.1': {}
+    }
+    assert actual == expected
+
+def test_intraconfig_refs_acls_AclName2IpsInRules():
+    configs_dir = os.path.join(testing_dir, "analysis", "configs_json")
+    _, _, actual = analyze_refs.intraconfig_refs(os.path.join(configs_dir, "acls.json"))
+    expected = {
+        'aclA': [
+            ['20.0.1.128', '0.0.0.127'], 
+            ['20.0.1.0', '0.0.0.255']
+        ], 
+        'aclB': [
+            ['20.0.2.1', '0.0.0.0']
+        ], 
+        'aclC': [
+            ['20.0.3.0', '0.0.0.255'], 
+            ['20.0.4.1', '0.0.0.0'], 
+            ['20.0.5.0', '0.0.0.255'], 
+            ['20.0.6.1', '0.0.0.0'], 
+            ['20.0.7.0', '0.0.0.255'], 
+            ['20.0.8.0', '0.0.0.255'], 
+            ['20.0.9.1', '0.0.0.0'], 
+            ['20.0.10.1', '0.0.0.0'], 
+            ['20.0.11.0', '0.0.0.255'], 
+            ['20.0.12.1', '0.0.0.0'], 
+            ['20.0.13.1', '0.0.0.0'], 
+            ['20.0.14.0', '0.0.0.255']
+        ], 
+        'aclD': [
+            ['20.0.16.0', '0.0.0.255'], 
+            ['20.0.17.0', '0.0.0.255']
+        ]
+    }
+    assert actual == expected
+
 
 """is interface => interface has ACL reference(s)"""
 def test_rule1():
@@ -79,3 +145,22 @@ def test_rule4_continuous():
 def test_rule4_single():
     interfaceIP = {"10.0.0.1": {"in" : "aclA"}, "10.0.1.1" : {"in" : "aclB"}, "10.0.2.1": {"in" : "aclC"}} 
     assert analyze_refs.fourth_association("aclA", interfaceIP) == (1, 1, ["10.0.0.1", "10.0.0.1"])
+
+def test_analyze_configuration():
+    configs_dir = os.path.join(testing_dir, "analysis", "configs_json")
+    config_file = os.path.join(configs_dir, "acls.json") 
+    expected_dir = os.path.join(testing_dir, "analysis", "expected")
+    expected_file = os.path.join(expected_dir, "analyze_refs", "acls.json") 
+    out_dir = tempfile.mkdtemp()
+    out_file = os.path.join(out_dir, "acls.json")
+    analyze_refs.analyze_configuration(config_file, out_file)
+
+    with open(out_file, 'r') as out:
+        out_lines = out.readlines()
+
+    with open(expected_file, 'r') as expected:
+        expected_lines = expected.readlines()
+
+    diff = list(difflib.unified_diff(expected_lines, out_lines))
+    print(''.join(diff))
+    assert len(diff) == 0
