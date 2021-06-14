@@ -56,8 +56,8 @@ def format_confidence_ouput(vlan_pair_freq, single_vlan_freq):
             rule = {
                 "msg" : "C(iface accepts vlan " + str(vlan) + "-> iface accepts vlans "+ str(vpair) + ")",
                 "n" : freq,
-                "d" : str(single_vlan_freq[int(vlan)]),
-                "c": compute_confidence(freq, single_vlan_freq[int(vlan)])
+                "d" : single_vlan_freq[vlan],
+                "c": compute_confidence(freq, single_vlan_freq[vlan])
             }
             rules.append(rule)
     return rules
