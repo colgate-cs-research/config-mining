@@ -81,7 +81,7 @@ def test_get_iface_accepted_vlans():
     expected_file = os.path.join(expected_dir, "analyze_vlans", "vlans.json") 
     out_dir = tempfile.mkdtemp()
     out_file = os.path.join(out_dir, "vlans.json")
-    analyze_vlans.get_iface_accepted_vlans(config_file, out_file)
+    analyze_vlans.analyze_configuration(config_file, out_file)
 
     with open(out_file, 'r') as out:
         out_lines = out.readlines()
