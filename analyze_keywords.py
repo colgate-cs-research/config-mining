@@ -59,7 +59,7 @@ def keyword_stanza(words, keywords, stanza):
 
 # call iacl_match.intraconfig_refs to get mapping from interface names to applied ACLs
 def interface_to_applied_ACLs(file):
-    interface_to_ACL, _, _ = (intraconfig_refs(file))
+    interface_to_ACL, _, _ = intraconfig_refs(file)
     return interface_to_ACL
 
 # For each common keyword, for each interface, check if that interface's ACL exists in list of ACLs with that keyword
@@ -84,7 +84,6 @@ def keyword_association(interface_to_ACL, keyword_interface_dict, keyword_ACL_di
 #Returns a list of all the ip addresses from the interfaces within the file
 def interface_ip_dictionary(cfile):
     IfaceName2address = {}
-    ip_list = []
     with open(cfile, "r") as infile:
         config = json.load(infile)
     
@@ -93,9 +92,8 @@ def interface_ip_dictionary(cfile):
         if iface["address"] is not None:
             IP_address = iface["address"].split("/")[0]
             IfaceName2address[iName] = IP_address
-            ip_list.append(IP_address)
 
-    return IfaceName2address, ip_list
+    return IfaceName2address
 
 #RULE
 #interface's IP falls within a range => Specific keyword applied to an interface 
@@ -156,50 +154,38 @@ def write_to_outfile(filename, keyword_interfaces):
         a = data_computation(keyword_interfaces)
         to_dump= [a,keyword_interfaces]
         json.dump(to_dump, outfile, indent=4, sort_keys=True)
-    return 
+    return
 
+def analyze_configuration(config_path, keyword_path, output_path, threshold):
+    keywords = load_keywords(keyword_path)
+    common_iface_words = get_common_keywords(keywords, "interfaces", threshold)
+    keyword_interface_dictionary = keyword_stanza(common_iface_words, keywords, "interfaces")
+    keyword_ACL_dictionary = keyword_stanza(common_iface_words, keywords, "acls")
+    interface_to_ACLnames = interface_to_applied_ACLs(config_path)
+    keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary)
+    print(keyword_dictionary)
+
+    interface_IPaddress_dict = interface_ip_dictionary(config_path)
+    keyword_range, keyword_ip_list = keyword_ipaddress_range(keyword_interface_dictionary, interface_IPaddress_dict)
+    dictionary = keyword_range_confidence(interface_IPaddress_dict.values(), keyword_range, keyword_ip_list)
+    print(dictionary)
 
 def main():
-    '''
     #parsing command-line arguments
     parser = argparse.ArgumentParser(description='Perform keyword-based analysis')
     parser.add_argument('keyword_path', help="Path for a file containing a JSON representation of keywords (produced by keywords.py)")
     parser.add_argument('config_path', help="Path for a file containing a JSON representation of a configuration")
+    parser.add_argument('output_path', help="Path for a file containing a JSON representation of a configuration")
     parser.add_argument("-t", "--threshold", type=int, help="Minimum number of types a keyword must occur", default=10)
 
-    arguments=parser.parse_args()
-    '''
+    arguments = parser.parse_args()
 
-    #keywords = load_keywords(arguments.keyword_path)
-    keywords = load_keywords("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
-    #common_iface_words = get_common_keywords(keywords, "interfaces", arguments.threshold)
-    common_iface_words = get_common_keywords(keywords, "interfaces", 10)
-    keyword_interface_dictionary = keyword_stanza(common_iface_words, keywords, "interfaces")
-    keyword_ACL_dictionary = keyword_stanza(common_iface_words, keywords, "acls")
-    #interface_to_ACLnames = interface_to_applied_ACLs(arguments.config_path)
-    interface_to_ACLnames = interface_to_applied_ACLs("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
-    keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary)
-
-    #print(common_iface_words)
-    #print(keyword_interface_dictionary)
-    #print(keyword_ACL_dictionary)
-    #print(interface_to_ACLnames)
-    #print(keyword_dictionary)
-
-    #6/14 TESTING
-    interface_IPaddress_dict, _= interface_ip_dictionary("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
-    _, ip_list = interface_ip_dictionary("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
-
-    keyword_range, _= keyword_ipaddress_range(keyword_interface_dictionary, interface_IPaddress_dict)
-    _, keyword_ip_list = keyword_ipaddress_range(keyword_interface_dictionary, interface_IPaddress_dict)
-
-    dictionary = keyword_range_confidence(ip_list, keyword_range, keyword_ip_list)
-    print(dictionary)
+    analyze_configuration(arguments.config_path, arguments.keyword_path, arguments.output_path, arguments.threshold)
 
     #with open("output/analyze_keywords", 'w') as outfile:
         #keyword_ACL_dictionary
 
-    write_to_outfile("output/analyze_keywords", keyword_interface_dictionary)
+    #write_to_outfile("output/analyze_keywords", keyword_interface_dictionary)
 
 if __name__ == "__main__":
     main()
