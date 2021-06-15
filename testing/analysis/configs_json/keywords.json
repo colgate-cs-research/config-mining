@@ -9,7 +9,9 @@
                 }
             ],
             "name": "G",
-            "remarks": ["green"]
+            "remarks": [
+                "green"
+            ]
         },
         "O": {
             "lines": [
@@ -20,7 +22,9 @@
                 }
             ],
             "name": "O",
-            "remarks": ["orange"]
+            "remarks": [
+                "orange"
+            ]
         },
         "R": {
             "lines": [
@@ -31,7 +35,9 @@
                 }
             ],
             "name": "R",
-            "remarks": ["red"]
+            "remarks": [
+                "red"
+            ]
         },
         "Y": {
             "lines": [
@@ -42,13 +48,15 @@
                 }
             ],
             "name": "Y",
-            "remarks": ["yellow"]
+            "remarks": [
+                "yellow"
+            ]
         }
     },
     "interfaces": {
         "GigabitEthernet0/1": {
             "access_vlan": null,
-            "address": null,
+            "address": "10.0.1.1/24",
             "allowed_vlans": null,
             "description": "blue",
             "in_acl": null,
@@ -58,7 +66,7 @@
         },
         "GigabitEthernet0/2": {
             "access_vlan": null,
-            "address": null,
+            "address": "10.0.2.1/24",
             "allowed_vlans": null,
             "description": "red",
             "in_acl": "R",
@@ -68,7 +76,7 @@
         },
         "GigabitEthernet0/3": {
             "access_vlan": null,
-            "address": null,
+            "address": "10.0.3.1/24",
             "allowed_vlans": null,
             "description": "red yellow",
             "in_acl": null,
@@ -78,7 +86,7 @@
         },
         "GigabitEthernet0/4": {
             "access_vlan": null,
-            "address": null,
+            "address": "10.0.4.1/24",
             "allowed_vlans": null,
             "description": "yellow blue",
             "in_acl": "Y",
@@ -88,7 +96,7 @@
         },
         "GigabitEthernet0/5": {
             "access_vlan": null,
-            "address": null,
+            "address": "10.0.5.1/24",
             "allowed_vlans": null,
             "description": "red yellow",
             "in_acl": "O",
@@ -98,7 +106,7 @@
         },
         "GigabitEthernet0/6": {
             "access_vlan": null,
-            "address": null,
+            "address": "10.0.6.1/24",
             "allowed_vlans": null,
             "description": "yellow",
             "in_acl": null,
