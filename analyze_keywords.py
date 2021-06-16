@@ -60,17 +60,23 @@ def keyword_stanza(words, keywords, stanza):
 
 # call iacl_match.intraconfig_refs to get mapping from interface names to applied ACLs
 def interface_to_applied_ACLs(file):
-    interface_to_ACL, _, _ = intraconfig_refs(file)
-    return interface_to_ACL
+    IfaceName2AppliedAclNames, _, _ = intraconfig_refs(file)
+    used_acls = []
+    for acls in IfaceName2AppliedAclNames.values():
+        for acl in acls.values():
+            if acl not in used_acls:
+                used_acls.append(acl)
+    return IfaceName2AppliedAclNames, used_acls
 
 # For each common keyword, for each interface, check if that interface's ACL exists in list of ACLs with that keyword
 #interface i has keyword k => interface i has ACL a
-def keyword_association(interface_to_ACL, keyword_interface_dict, keyword_ACL_dict):
+def keyword_association(interface_to_ACL, keyword_interface_dict, keyword_ACL_dict, used_acls):
     keyword_associations = {}
     #iterating by keyword
     for keyword,interfaces_with_keyword in keyword_interface_dict.items():
         acls_with_keyword = keyword_ACL_dict[keyword]
-        for ACL in acls_with_keyword:  # Iterates number of ACLs with keyword k 
+        for ACL in used_acls: # Iterates over all used ACLs
+        #for ACL in acls_with_keyword:  # Iterates number of ACLs with keyword k 
             all_three = 0
             antecedent = 0
             for interface in interfaces_with_keyword:  # Iterates number of interfaces with keyword k              
@@ -145,20 +151,6 @@ def keyword_range_confidence(ip_list, keyword_range_dict, keyword_ip_list_dict):
 
     return keyword_range_confidence_dict
 
-def data_computation(keyword_interfaces):
-    a={}
-    a["message"]="C(Keyword ---> interface)"
-
-    b={}
-    b["message"]="C(Keyword ---> ACL)"
-
-def write_to_outfile(filename, keyword_interfaces):
-    with open(filename, 'w') as outfile:
-        a = data_computation(keyword_interfaces)
-        to_dump= [a,keyword_interfaces]
-        json.dump(to_dump, outfile, indent=4, sort_keys=True)
-    return
-
 def analyze_configuration(in_paths, out_path, threshold):
     print("Current working files: %s" % (in_paths))
     config_path, keyword_path = in_paths
@@ -169,8 +161,8 @@ def analyze_configuration(in_paths, out_path, threshold):
     common_iface_words = get_common_keywords(keywords, "interfaces", threshold)
     keyword_interface_dictionary = keyword_stanza(common_iface_words, keywords, "interfaces")
     keyword_ACL_dictionary = keyword_stanza(common_iface_words, keywords, "acls")
-    interface_to_ACLnames = interface_to_applied_ACLs(config_path)
-    keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary)
+    interface_to_ACLnames, used_acls = interface_to_applied_ACLs(config_path)
+    keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary, used_acls)
     for (keyword, acl), (numerator, denominator) in keyword_dictionary.items():
         message = "C(interface has keyword '%s' -> ACL %s applied to interface)" % (keyword, acl)
         rules.append(analyze.create_rule(message, numerator, denominator))
