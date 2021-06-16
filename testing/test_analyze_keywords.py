@@ -99,9 +99,20 @@ def test_keyword_association():
         "yellow" : ["Y"],
         "blue" : []
     }
-    associations = analyze_keywords.keyword_association(IfaceName2AppliedAclNames, Keywords2IfaceNames, Keywords2AclNames)
+    used_acls = ["R", "O", "Y", "G"]
+    associations = analyze_keywords.keyword_association(IfaceName2AppliedAclNames, Keywords2IfaceNames, Keywords2AclNames, used_acls)
     expected = {
+        ("blue", "G"): (1, 2),
+        ("blue", "O"): (0, 2),
+        ("blue", "R"): (0, 2),
+        ("blue", "Y"): (1, 2),
+        ("red", "G"): (0, 3),
+        ("red", "O"): (2, 3),
         ("red", "R"): (1, 3),
+        ("red", "Y"): (1, 3),
+        ("yellow", "G"): (1, 4),
+        ("yellow", "O"): (2, 4),
+        ("yellow", "R"): (0, 4),
         ("yellow", "Y"): (3, 4)
     }
     assert associations == expected
