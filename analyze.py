@@ -26,7 +26,7 @@ def process_configs(function, in_path, out_path, extra=None):
             function(in_path, out_path, extra)
     elif all_dirs:
         files = glob.glob((in_path[0] if isinstance(in_path, list) else in_path) + '/**/*.json', recursive=True)
-        with ThreadPoolExecutor(max_workers=4) as executor:
+        with ThreadPoolExecutor(max_workers=1) as executor:
             for file in sorted(files):
                 # Compute paths for specific file
                 filename = os.path.basename(file)
