@@ -40,33 +40,14 @@ def generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq, freq=1):
                 vlan_pair_freq[pair] = freq
     return
 
-
-'''Writes confidence/support for association rules to JSON file'''
-def write_to_outfile(filename, rules):
-    with open(filename, 'w') as outfile:         
-        json.dump(rules, outfile, indent=4, sort_keys=True)
-    return   
-
-
 def format_confidence_ouput(vlan_pair_freq, single_vlan_freq):
     rules = []
     for (vpair, freq) in vlan_pair_freq.items():
         vlans = vpair
         for vlan in vlans:
-            rule = {
-                "msg" : "C(iface accepts vlan " + str(vlan) + "-> iface accepts vlans "+ str(vpair) + ")",
-                "n" : freq,
-                "d" : single_vlan_freq[vlan],
-                "c": compute_confidence(freq, single_vlan_freq[vlan])
-            }
-            rules.append(rule)
+            message = "C(iface accepts vlan " + str(vlan) + "-> iface accepts vlans "+ str(vpair) + ")" 
+            rules.append(analyze.create_rule(message, freq, single_vlan_freq[vlan]))
     return rules
-
-#compute percentage of interfaces that are in range and have ACL applied
-def compute_confidence(numerator, denominator):
-    if (denominator > 0):
-        return round(numerator / denominator, 3)
-    return None
 
 '''returns a dictionary with {vlan pair [x,y] : frequency accepted in an interface}'''
 def analyze_configuration(file, outfile):
@@ -95,7 +76,7 @@ def analyze_configuration(file, outfile):
         #generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq, freq)
     #print(single_vlan_freq)
     rules = format_confidence_ouput(vlan_pair_freq, single_vlan_freq)
-    write_to_outfile(outfile, rules)
+    analyze.write_to_outfile(outfile, rules)
 
     return 
 

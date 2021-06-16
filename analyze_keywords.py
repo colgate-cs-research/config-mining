@@ -3,7 +3,7 @@
 import argparse
 import json
 import analyze
-from analyze_refs import intraconfig_refs, interfaces_with_ACL, compute_range, interfaces_in_range, is_in_range
+from analyze_refs import intraconfig_refs, compute_range, interfaces_in_range
 
 #returns a list of keywords
 def load_keywords(file):
@@ -162,20 +162,28 @@ def write_to_outfile(filename, keyword_interfaces):
 def analyze_configuration(in_paths, out_path, threshold):
     print("Current working files: %s" % (in_paths))
     config_path, keyword_path = in_paths
+
+    rules = []
+
     keywords = load_keywords(keyword_path)
     common_iface_words = get_common_keywords(keywords, "interfaces", threshold)
     keyword_interface_dictionary = keyword_stanza(common_iface_words, keywords, "interfaces")
     keyword_ACL_dictionary = keyword_stanza(common_iface_words, keywords, "acls")
     interface_to_ACLnames = interface_to_applied_ACLs(config_path)
     keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary)
-    keyword_dictionary = { ",".join(key):value for key,value in keyword_dictionary.items() }
+    for (keyword, acl), (numerator, denominator) in keyword_dictionary.items():
+        message = "C(interface has keyword '%s' -> ACL %s applied to interface)" % (keyword, acl)
+        rules.append(analyze.create_rule(message, numerator, denominator))
 
     interface_IPaddress_dict = interface_ip_dictionary(config_path)
     keyword_range, keyword_ip_list = keyword_ipaddress_range(keyword_interface_dictionary, interface_IPaddress_dict)
     dictionary = keyword_range_confidence(interface_IPaddress_dict.values(), keyword_range, keyword_ip_list)
+    for keyword, (numerator, denominator) in dictionary.items():
+        ip_range = keyword_range[keyword]
+        message = "C(interface's IP falls within range %s => ACL %s applied to the interface)" % (ip_range, keyword)
+        rules.append(analyze.create_rule(message, numerator, denominator))
 
-    with open(out_path, 'w') as outfile:
-        json.dump([keyword_dictionary, dictionary], outfile, indent=4)
+    analyze.write_to_outfile(out_path, rules)
 
 def main():
     #parsing command-line arguments

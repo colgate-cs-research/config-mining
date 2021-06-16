@@ -1,4 +1,5 @@
 import glob
+import json
 import os
 from concurrent.futures import ThreadPoolExecutor
 
@@ -43,3 +44,23 @@ def process_configs(function, in_path, out_path, extra=None):
                     executor.submit(function, in_filepath, out_filepath, extra)
     else:
         print("ERROR: input path(s) and output path is a mix of files and directories")
+
+
+def compute_confidence(numerator, denominator):
+    if (denominator > 0):
+        return round(numerator / denominator, 3)
+    return None 
+
+def create_rule(message, numerator, denominator):
+    return {
+        "msg" : message,
+        "n" : numerator,
+        "d" : denominator,
+        "c": compute_confidence(numerator, denominator)
+    }
+
+'''Writes confidence/support for association rules to JSON file'''
+def write_to_outfile(filename, rules):
+    with open(filename, 'w') as outfile:         
+        json.dump(rules, outfile, indent=4, sort_keys=True)
+    return
