@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import analyze
 from analyze_refs import intraconfig_refs, interfaces_with_ACL, compute_range, interfaces_in_range, is_in_range
 
 #returns a list of keywords
@@ -117,6 +118,8 @@ def keyword_ipaddress_range(keyword_interface_dict, interface_IPaddress_dict):
 
         keyword_ip_list_dict[keyword] = ip_list
         ip_range = compute_range(ip_list)
+        if (ip_range is None):
+            continue
         keyword_range_dict[keyword] = ip_range       
         
     return keyword_range_dict, keyword_ip_list_dict
@@ -156,36 +159,35 @@ def write_to_outfile(filename, keyword_interfaces):
         json.dump(to_dump, outfile, indent=4, sort_keys=True)
     return
 
-def analyze_configuration(config_path, keyword_path, output_path, threshold):
+def analyze_configuration(in_paths, out_path, threshold):
+    print("Current working files: %s" % (in_paths))
+    config_path, keyword_path = in_paths
     keywords = load_keywords(keyword_path)
     common_iface_words = get_common_keywords(keywords, "interfaces", threshold)
     keyword_interface_dictionary = keyword_stanza(common_iface_words, keywords, "interfaces")
     keyword_ACL_dictionary = keyword_stanza(common_iface_words, keywords, "acls")
     interface_to_ACLnames = interface_to_applied_ACLs(config_path)
     keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary)
-    print(keyword_dictionary)
+    keyword_dictionary = { ",".join(key):value for key,value in keyword_dictionary.items() }
 
     interface_IPaddress_dict = interface_ip_dictionary(config_path)
     keyword_range, keyword_ip_list = keyword_ipaddress_range(keyword_interface_dictionary, interface_IPaddress_dict)
     dictionary = keyword_range_confidence(interface_IPaddress_dict.values(), keyword_range, keyword_ip_list)
-    print(dictionary)
+
+    with open(out_path, 'w') as outfile:
+        json.dump([keyword_dictionary, dictionary], outfile, indent=4)
 
 def main():
     #parsing command-line arguments
     parser = argparse.ArgumentParser(description='Perform keyword-based analysis')
-    parser.add_argument('keyword_path', help="Path for a file containing a JSON representation of keywords (produced by keywords.py)")
     parser.add_argument('config_path', help="Path for a file containing a JSON representation of a configuration")
+    parser.add_argument('keyword_path', help="Path for a file containing a JSON representation of keywords (produced by keywords.py)")
     parser.add_argument('output_path', help="Path for a file containing a JSON representation of a configuration")
     parser.add_argument("-t", "--threshold", type=int, help="Minimum number of types a keyword must occur", default=10)
 
     arguments = parser.parse_args()
 
-    analyze_configuration(arguments.config_path, arguments.keyword_path, arguments.output_path, arguments.threshold)
-
-    #with open("output/analyze_keywords", 'w') as outfile:
-        #keyword_ACL_dictionary
-
-    #write_to_outfile("output/analyze_keywords", keyword_interface_dictionary)
+    analyze.process_configs(analyze_configuration, [arguments.config_path, arguments.keyword_path], arguments.output_path, arguments.threshold)
 
 if __name__ == "__main__":
     main()

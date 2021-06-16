@@ -9,7 +9,7 @@ def main():
     parser.add_argument('out_path', help='Name of file (or directory) to write JSON file(s) containing vlan confidence values')
 
     arguments = parser.parse_args()
-    analyze.process_configs(arguments.config_path, arguments.out_path, analyze_configuration)
+    analyze.process_configs(analyze_configuration, arguments.config_path, arguments.out_path)
 
 '''adds vlan pair frequencies to corresponding dictionary value '''
 def generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq, freq=1): 

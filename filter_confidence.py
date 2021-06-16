@@ -14,7 +14,7 @@ def main():
     parser.add_argument("-d", "--denominator", type=int, default=1, help='Minimum denominator')
 
     arguments = parser.parse_args()
-    analyze.process_configs(arguments.confidence_path, arguments.out_path, filter_confidence, arguments)
+    analyze.process_configs(filter_confidence, arguments.confidence_path, arguments.out_path, arguments)
 
 def filter_confidence(infile_path, outfile_path, arguments):
     print("Current working FILE: "+infile_path)

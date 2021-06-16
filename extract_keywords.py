@@ -19,7 +19,7 @@ def main():
 
     arguments = parser.parse_args()
     nltk.download('stopwords')
-    analyze.process_configs(arguments.config_path, arguments.out_path, analyze_configuration)
+    analyze.process_configs(analyze_configuration, arguments.config_path, arguments.out_path)
 
 """Get keywords from a phrase"""
 def get_keywords(phrase, delims=[" "]):

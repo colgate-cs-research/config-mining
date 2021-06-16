@@ -166,11 +166,9 @@ def interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames):
 #computes a RANGE for argument list
 #returns a list with first element = min and last = max
 def compute_range(ilist):
-    ip_range = []
-    #print("ilist in range: " + str(ilist))
-    ip_range.append(min(ilist))
-    ip_range.append(max(ilist))
-    return ip_range
+    if len(ilist) == 0:
+        return None
+    return [min(ilist), max(ilist)]
 
 #3
 #takes access control list and range
@@ -195,9 +193,9 @@ def compute_confidence(numerator, denominator):
 #Specific ACL applied to an interface => interface's IP falls within a range
 def fourth_association(ACL, IfaceIp2AppliedAclNames):
     ilist = interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames)
-    if len(ilist) == 0:
-        return 0, 0, None
     irange = compute_range(ilist)
+    if irange is None:
+        return 0, 0, None
     itotal = interfaces_in_range(IfaceIp2AppliedAclNames, irange)
     return len(ilist), len(itotal), irange
 
@@ -254,7 +252,7 @@ def main():
     config_path = arguments.Path
     outfile = arguments.outfile
 
-    analyze.process_configs(config_path, outfile, analyze_configuration)
+    analyze.process_configs(analyze_configuration, config_path, outfile)
 
 if __name__ == "__main__":
     main()
