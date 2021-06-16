@@ -8,7 +8,9 @@ import re
 import analyze
 
 abbreviations = {
-    "mgmt" : "management"
+    "bldg" : "building",
+    "mgmt" : "management",
+    "pub" : "public"
 }
 
 def main():
@@ -25,10 +27,19 @@ def main():
 def get_keywords(phrase, delims=[" "]):
     words = re.split("|".join(delims), phrase)
     words = [word.lower() for word in words]
-    words = [word for word in words if not word in stopwords.words()]
-    words = [(abbreviations[word] if word in abbreviations else word) for word in words]
-    return words
 
+    # Skip stop words
+    words = [word for word in words if not word in stopwords.words()]
+
+    # Skip single-character words
+    words = [word for word in words if len(word) > 1]
+
+    # Replace abbreviations
+    for i in range(len(words)):
+        word = words[i]
+        if word in abbreviations:
+            words[i] = abbreviations[word]
+    return words
 """Add keywords to a specific entry in a dictionary"""
 def add_keywords(dictionary, key, words):
     if key not in dictionary:
@@ -54,7 +65,7 @@ def analyze_configuration(file, outf):
     # Iterate over VLANs
     for vlan in config["vlans"].values():
         iName = "Vlan%d" % vlan["num"]
-        add_keywords(iface_dict, iName, get_keywords(vlan["name"], delims=[" ", "-"]))
+        add_keywords(iface_dict, iName, get_keywords(vlan["name"], delims=[" ", "-", "_"]))
 
     # Iterate over ACL names
     for name in config["acls"]:
