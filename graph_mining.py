@@ -38,7 +38,7 @@ def make_edges(group, edges, graph, file):
 def main():
     config = load_file("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
     graph = nx.Graph() 
-    edges = [ "access_vlan", "address", "description"]
+    edges = ["access_vlan",  "address", "description"]
     fill_graph(edges, config, graph)
     #print(graph.nodes())
     print(graph.edges())
