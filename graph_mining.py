@@ -9,12 +9,20 @@ def load_file(file):
         config = json.load(infile)
     return config
 
-#node is what the vertice is if it is interfaces or acl etc.
-def make_nodes(node, file):
-    graph = nx.Graph()
-    for stanza in file[node]:
-        graph.add_node(stanza)
-    return graph
+
+#constructs a node in 
+def fill_graph(edges, file, graph):
+    for interface in file["interfaces"]:
+        graph.add_node(interface, type="interface")
+        for edge in edges:
+            node_type = edge[:-1]
+            if file["interfaces"][interface][edge] is not None:
+                graph.add_node(file["interfaces"][interface][edge], type=node_type)
+                graph.add_edge(interface, file["interfaces"][interface][edge])
+    return 
+
+    #file[access_name] == file["interfaces"]
+    #file[vlans == file["vlans"]] ---> file[interfaces][vlans]
 
 def make_edges(group, edges, graph, file):
     for stanza in list(graph):
@@ -29,12 +37,13 @@ def make_edges(group, edges, graph, file):
 
 def main():
     config = load_file("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
-    graph = make_nodes("interfaces", config)
-    make_edges("interfaces", "allowed_vlans", graph, config)
-    #print("Nodes of graph: ")
+    graph = nx.Graph() 
+    edges = [ "access_vlan", "address", "description"]
+    fill_graph(edges, config, graph)
     #print(graph.nodes())
-    #print("edges of graph: ")
     print(graph.edges())
+
+    #make_edges("interfaces", "allowed_vlans", graph, config)
 
 if __name__ == "__main__":
     main()
