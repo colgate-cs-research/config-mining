@@ -23,7 +23,7 @@ def filter_confidence(infile_path, outfile_path, arguments):
 
     selected = []
     for result in all:
-        if (result["c"] >= arguments.confidence
+        if (result["c"] is not None and result["c"] >= arguments.confidence
             and result["n"] >= arguments.numerator
             and result["d"] >= arguments.denominator):
             selected.append(result)
