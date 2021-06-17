@@ -27,6 +27,7 @@ def process_configs(function, in_path, out_path, extra=None):
     elif all_dirs:
         files = glob.glob((in_path[0] if isinstance(in_path, list) else in_path) + '/**/*.json', recursive=True)
         with ThreadPoolExecutor(max_workers=1) as executor:
+            futures = []
             for file in sorted(files):
                 # Compute paths for specific file
                 filename = os.path.basename(file)
@@ -39,9 +40,17 @@ def process_configs(function, in_path, out_path, extra=None):
 
                 # Call function
                 if (extra is None):
-                    executor.submit(function, in_filepath, out_filepath)
+                    future = executor.submit(function, in_filepath, out_filepath)
                 else:
-                    executor.submit(function, in_filepath, out_filepath, extra)
+                    future = executor.submit(function, in_filepath, out_filepath, extra)
+                futures.append(future)
+
+            # Get results from functions to catch any exceptions
+            for future in futures:
+                result = future.result()
+                if (result is not None):
+                    print(result)
+
     else:
         print("ERROR: input path(s) and output path is a mix of files and directories")
 
