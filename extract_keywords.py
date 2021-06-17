@@ -76,7 +76,8 @@ def analyze_configuration(file, outf):
 
     aggregate = {
         "interfaces" : iface_dict,
-        "acls" : acl_dict
+        "acls" : acl_dict,
+        "name" : config["name"]
     }
 
     with open(outf, 'w') as outfile:

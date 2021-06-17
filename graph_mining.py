@@ -17,12 +17,13 @@ def make_nodes(node, file):
     return graph
 
 def make_edges(group, edges, graph, file):
-    for iface in list(graph):
-        allowed_vlans = file[group][iface][edges]
-        if allowed_vlans is not None:
-            for vlan in allowed_vlans:
-                graph.add_node(vlan)
-                graph.add_edge(iface, vlan)
+    for stanza in list(graph):
+        if file[group][stanza][edges] is not None:
+            for newnode in file[group][stanza][edges]:
+                graph.add_node(newnode)
+                graph.add_edge(stanza, newnode)
+                #add more attributes to the nodes like the name alonged with it
+                #set node attributes
     return graph
 
 
@@ -30,10 +31,10 @@ def main():
     config = load_file("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
     graph = make_nodes("interfaces", config)
     make_edges("interfaces", "allowed_vlans", graph, config)
-   # print("Nodes of graph: ")
+    #print("Nodes of graph: ")
     #print(graph.nodes())
     #print("edges of graph: ")
-    #print(graph.edges())
+    print(graph.edges())
 
 if __name__ == "__main__":
     main()

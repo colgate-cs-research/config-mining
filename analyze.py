@@ -3,7 +3,7 @@ import json
 import os
 from concurrent.futures import ThreadPoolExecutor
 
-def process_configs(function, in_path, out_path, extra=None):
+def process_configs(function, in_path, out_path, extra=None, wrap=False):
     print("INPUT: %s OUTPUT: %s" % (in_path, out_path))
 
     # Check if all arguments are files
@@ -20,6 +20,8 @@ def process_configs(function, in_path, out_path, extra=None):
         all_dirs = all_dirs and os.path.isdir(in_path)
 
     if all_files:
+        if wrap:
+            in_path = [in_path]
         if (extra is None):
             function(in_path, out_path)
         else:
@@ -39,6 +41,8 @@ def process_configs(function, in_path, out_path, extra=None):
                 out_filepath = os.path.join(out_path, filename)
 
                 # Call function
+                if wrap:
+                    in_filepath = [in_filepath]
                 if (extra is None):
                     future = executor.submit(function, in_filepath, out_filepath)
                 else:

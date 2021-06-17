@@ -57,12 +57,16 @@ IfaceName2AppliedAclNames = {
 }
 
 def test_get_common_keywords_once():
-    common = analyze_keywords.get_common_keywords(keywords, "interfaces", 1)
+    counts = {}
+    analyze_keywords.count_keywords(keywords, "interfaces", counts)
+    common = analyze_keywords.get_common_keywords(counts, 1)
     expected = ["red", "yellow", "blue"]
     assert sorted(common) == sorted(expected)
 
 def test_get_common_keywords_thrice():
-    common = analyze_keywords.get_common_keywords(keywords, "interfaces", 3)
+    counts = {}
+    analyze_keywords.count_keywords(keywords, "interfaces", counts)
+    common = analyze_keywords.get_common_keywords(counts, 3)
     expected = ["red", "yellow"]
     assert sorted(common) == sorted(expected)
 
@@ -89,18 +93,13 @@ def test_keyword_stanza_acls():
         assert sorted(Keywords2AclNames[keyword]) == sorted(expected[keyword])
 
 def test_keyword_association():
-    Keywords2IfaceNames = {
+    Keywords2IfaceNames = { "device" : {
         "red" : ["GigabitEthernet0/2", "GigabitEthernet0/3", "GigabitEthernet0/5"],
         "yellow" : ["GigabitEthernet0/3", "GigabitEthernet0/4", "GigabitEthernet0/5", "GigabitEthernet0/6"],
         "blue" : ["GigabitEthernet0/1", "GigabitEthernet0/4"]
-    }
-    Keywords2AclNames = {
-        "red" : ["R"],
-        "yellow" : ["Y"],
-        "blue" : []
-    }
+    }}
     used_acls = ["R", "O", "Y", "G"]
-    associations = analyze_keywords.keyword_association(IfaceName2AppliedAclNames, Keywords2IfaceNames, Keywords2AclNames, used_acls)
+    associations = analyze_keywords.keyword_association(["blue", "red", "yellow"], used_acls, {"device":IfaceName2AppliedAclNames}, Keywords2IfaceNames)
     expected = {
         ("blue", "G"): (1, 2, ["GigabitEthernet0/1"]),
         ("blue", "O"): (0, 2, ["GigabitEthernet0/1", "GigabitEthernet0/4"]),
