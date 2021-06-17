@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
+import analyze_refs
 import argparse
 import json
 import analyze
-from analyze_refs import intraconfig_refs, compute_range, interfaces_in_range
 
 #returns a list of keywords
 def load_keywords(file):
@@ -60,7 +60,7 @@ def keyword_stanza(words, keywords, stanza):
 
 # call iacl_match.intraconfig_refs to get mapping from interface names to applied ACLs
 def interface_to_applied_ACLs(file):
-    IfaceName2AppliedAclNames, _, _ = intraconfig_refs(file)
+    IfaceName2AppliedAclNames, _, _ = analyze_refs.intraconfig_refs(file)
     used_acls = []
     for acls in IfaceName2AppliedAclNames.values():
         for acl in acls.values():
@@ -112,18 +112,16 @@ def keyword_ipaddress_range(keyword_interface_dict, interface_IPaddress_dict):
     keyword_range_dict = {}
     keyword_ip_list_dict = {}
 
-    for keyword in keyword_interface_dict:
-        ilist = keyword_interface_dict[keyword]
-
+    # Iterate over all keywords and interfaces with those keywords
+    for keyword, ilist in keyword_interface_dict.items():
         ip_list = []
         for interface in ilist:
-            for interfaces in interface_IPaddress_dict:
-                if interface == interfaces:
-                    ip_address = interface_IPaddress_dict[interface]
-                    ip_list.append(ip_address)
+            if interface in interface_IPaddress_dict:
+                ip_address = interface_IPaddress_dict[interface]
+                ip_list.append(ip_address)
 
         keyword_ip_list_dict[keyword] = ip_list
-        ip_range = compute_range(ip_list)
+        ip_range = analyze_refs.compute_range(ip_list)
         if (ip_range is None):
             continue
         keyword_range_dict[keyword] = ip_range       
@@ -138,7 +136,7 @@ def keyword_range_confidence(ip_list, keyword_range_dict, keyword_ip_list_dict):
         confidence = []
         ip_range = keyword_range_dict[keyword]
         #out of the total ip addresses in the file which are in range
-        interface_in_range = len(interfaces_in_range(ip_list, ip_range))
+        interface_in_range = len(analyze_refs.interfaces_in_range(ip_list, ip_range))
         #know which ips are in range based on the ips in the dictionary associated with the keywords
         for keywords in keyword_ip_list_dict:
             if keyword == keywords:
@@ -172,7 +170,7 @@ def analyze_configuration(in_paths, out_path, threshold):
     dictionary = keyword_range_confidence(interface_IPaddress_dict.values(), keyword_range, keyword_ip_list)
     for keyword, (numerator, denominator) in dictionary.items():
         ip_range = keyword_range[keyword]
-        message = "C(interface's IP falls within range %s => ACL %s applied to the interface)" % (ip_range, keyword)
+        message = "C(interface's IP falls within range %s => interface has keyword '%s')" % (ip_range, keyword)
         rules.append(analyze.create_rule(message, numerator, denominator))
 
     analyze.write_to_outfile(out_path, rules)

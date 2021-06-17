@@ -137,7 +137,8 @@ def interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames):
 def compute_range(ilist):
     if len(ilist) == 0:
         return None
-    return [min(ilist), max(ilist)]
+    addrs = [ipaddress.IPv4Address(ip) for ip in ilist]
+    return [str(min(addrs)), str(max(addrs))]
 
 #3
 #takes access control list and range
@@ -155,12 +156,12 @@ def interfaces_in_range(IfaceIp2AppliedAclNames, IPrange):
 # fourth association rule:    
 #Specific ACL applied to an interface => interface's IP falls within a range
 def fourth_association(ACL, IfaceIp2AppliedAclNames):
-    ilist = interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames)
-    irange = compute_range(ilist)
+    ip_list = interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames)
+    irange = compute_range(ip_list)
     if irange is None:
         return 0, 0, None
     itotal = interfaces_in_range(IfaceIp2AppliedAclNames, irange)
-    return len(ilist), len(itotal), irange
+    return len(ip_list), len(itotal), irange
 
 #creates and returns four dictionaries representing intra-config references between
 #interfaces (keys) and ACLs (values) in argument config file
