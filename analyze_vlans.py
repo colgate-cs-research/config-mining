@@ -43,7 +43,7 @@ def generate_vlan_pairs(vlan_list, vlan_pair_freq, single_vlan_freq, freq=1):
 def format_confidence_ouput(vlan_pair_freq, single_vlan_freq):
     rules = []
     for (vpair, freq) in vlan_pair_freq.items():
-        vlans = vpair.split(", ")
+        vlans = vpair
         for i in range(2):
             vlan = vlans[i]
             otherv = vlans[(i+1)%2]
