@@ -60,13 +60,16 @@ def compute_confidence(numerator, denominator):
         return round(numerator / denominator, 3)
     return None 
 
-def create_rule(message, numerator, denominator):
-    return {
+def create_rule(message, numerator, denominator, exceptions=None):
+    rule = {
         "msg" : message,
         "n" : numerator,
         "d" : denominator,
         "c": compute_confidence(numerator, denominator)
     }
+    if exceptions is not None:
+        rule["except"] = exceptions
+    return rule
 
 '''Writes confidence/support for association rules to JSON file'''
 def write_to_outfile(filename, rules):

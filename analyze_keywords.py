@@ -79,11 +79,14 @@ def keyword_association(interface_to_ACL, keyword_interface_dict, keyword_ACL_di
         #for ACL in acls_with_keyword:  # Iterates number of ACLs with keyword k 
             all_three = 0
             antecedent = 0
+            exceptions = []
             for interface in interfaces_with_keyword:  # Iterates number of interfaces with keyword k              
                 antecedent += 1
                 if interface in interface_to_ACL and ACL in interface_to_ACL[interface].values(): 
                     all_three += 1
-            keyword_associations[(keyword, ACL)] = (all_three, antecedent)
+                else:
+                    exceptions.append(interface)
+            keyword_associations[(keyword, ACL)] = (all_three, antecedent, exceptions)
            
     return keyword_associations
 
@@ -161,9 +164,9 @@ def analyze_configuration(in_paths, out_path, threshold):
     keyword_ACL_dictionary = keyword_stanza(common_iface_words, keywords, "acls")
     interface_to_ACLnames, used_acls = interface_to_applied_ACLs(config_path)
     keyword_dictionary = keyword_association(interface_to_ACLnames, keyword_interface_dictionary, keyword_ACL_dictionary, used_acls)
-    for (keyword, acl), (numerator, denominator) in keyword_dictionary.items():
+    for (keyword, acl), (numerator, denominator, exceptions) in keyword_dictionary.items():
         message = "C(interface has keyword '%s' -> ACL %s applied to interface)" % (keyword, acl)
-        rules.append(analyze.create_rule(message, numerator, denominator))
+        rules.append(analyze.create_rule(message, numerator, denominator, exceptions))
 
     interface_IPaddress_dict = interface_ip_dictionary(config_path)
     keyword_range, keyword_ip_list = keyword_ipaddress_range(keyword_interface_dictionary, interface_IPaddress_dict)
