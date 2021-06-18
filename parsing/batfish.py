@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import ipaddress
 import json
 import os
 import pandas as pd
@@ -55,7 +56,7 @@ def main():
         with open(os.path.join(json_path, node + ".json"), 'w') as json_file:
             json.dump(parts, json_file, indent=4, sort_keys=True)
 
-# Check for parsing errors
+"""Check for parsing errors"""
 def check_parsing(verbose=False):
     # Determine which files did not completely parse
     parse_status = bfq.fileParseStatus().answer().frame()
@@ -115,7 +116,8 @@ def extract_node(node, raw_lines):
         "name" : node,
         "interfaces" : extract_interfaces(node),
         "acls" : extract_acls(node),
-        "vlans" : extract_vlans(raw_lines)
+        "vlans" : extract_vlans(raw_lines),
+        "ospf" : extract_ospf(node, raw_lines)
     }
     extract_acl_remarks(parts, raw_lines)
     resolve_acls_aliases(parts["acls"])
@@ -279,5 +281,71 @@ def extract_vlans(raw_lines):
 
     return vlans
 
+"""Extract OSPF information on a node"""
+def extract_ospf(node, raw_lines):
+    processes = {}
+    
+    data = bfq.ospfProcessConfiguration(nodes=node).answer().frame()
+
+    for _,row in data.iterrows():
+        process = {
+            "name" : row["Process_ID"],
+            "vrf" : row["VRF"],
+            "areas" : {},
+            "interfaces" : []
+        }
+        processes[process["name"]] = process
+        
+    extract_ospf_areas(node, processes)
+    extract_ospf_raw(raw_lines, processes)
+
+    return processes
+
+"""Extract OSPF areas"""
+def extract_ospf_areas(node, processes):
+    data = bfq.ospfAreaConfiguration(nodes=node).answer().frame()
+
+    for _,row in data.iterrows():
+        area = {
+            "name" : row["Area"],
+            "type" : row["Area_Type"],
+            "networks" : []
+        }
+        processes[row["Process_ID"]]["areas"][area["name"]] = area
+
+"""Extract OSPF networks"""
+def extract_ospf_raw(raw_lines, processes):
+    i = 0
+    while i < len(raw_lines):
+        line = raw_lines[i].strip()
+        i += 1
+        if is_regex_match('^router ospf ', line):
+            process_name = line.split()[2]
+            process = processes[process_name]
+            line = raw_lines[i].strip()
+            i += 1
+            while (line != "!"):
+                if is_regex_match('^network ', line):
+                    parts = line.split()
+                    # Adjust mask to match expectations of Python IPv4Network constructor
+                    mask = parts[2]
+                    if mask == "0.0.0.0":
+                        mask = "255.255.255.255"
+                    elif mask == "255.255.255.255":
+                        mask = "0.0.0.0"
+                    network = str(ipaddress.IPv4Network("%s/%s" % (parts[1], mask)))
+                    area_name = parts[4]
+                    if area_name not in processes[process_name]["areas"]:
+                        print("Unknown area: %s" % (area_name))
+                    else:
+                        process["areas"][area_name]["networks"].append(network)
+                elif is_regex_match("^no passive-interface ", line):
+                    parts = line.split()
+                    interface_name = parts[2]
+                    process["interfaces"].append(interface_name)
+                line = raw_lines[i].strip()
+                i += 1
+
+        
 if __name__ == "__main__":
     main()
