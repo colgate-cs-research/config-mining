@@ -3,9 +3,7 @@ import json
 import os
 from concurrent.futures import ThreadPoolExecutor
 
-def process_configs(function, in_path, out_path, extra=None, wrap=False):
-    print("INPUT: %s OUTPUT: %s" % (in_path, out_path))
-
+def determine_path_types(in_path, out_path):
     # Check if all arguments are files
     if isinstance(in_path, list):
         all_files = all([os.path.isfile(i) for i in in_path])
@@ -19,45 +17,66 @@ def process_configs(function, in_path, out_path, extra=None, wrap=False):
     else:
         all_dirs = all_dirs and os.path.isdir(in_path)
 
+    return all_files, all_dirs
+
+def determine_filepaths(in_path, out_path):
+    in_filepaths = []
+    out_filepaths = []
+
+    all_files, all_dirs = determine_path_types(in_path, out_path)
+
     if all_files:
-        if wrap:
-            in_path = [in_path]
-        if (extra is None):
-            function(in_path, out_path)
-        else:
-            function(in_path, out_path, extra)
+        in_filepaths = [in_path]
+        out_filepaths = [out_path]
     elif all_dirs:
         files = glob.glob((in_path[0] if isinstance(in_path, list) else in_path) + '/**/*.json', recursive=True)
-        with ThreadPoolExecutor(max_workers=1) as executor:
-            futures = []
-            for file in sorted(files):
-                # Compute paths for specific file
-                filename = os.path.basename(file)
-                in_filepath = file
-                if isinstance(in_path, list):
-                    in_filepath = []
-                    for i in in_path:
-                        in_filepath.append(os.path.join(i, filename))
-                out_filepath = os.path.join(out_path, filename)
-
-                # Call function
-                if wrap:
-                    in_filepath = [in_filepath]
-                if (extra is None):
-                    future = executor.submit(function, in_filepath, out_filepath)
-                else:
-                    future = executor.submit(function, in_filepath, out_filepath, extra)
-                futures.append(future)
-
-            # Get results from functions to catch any exceptions
-            for future in futures:
-                result = future.result()
-                if (result is not None):
-                    print(result)
-
+        for file in sorted(files):
+            # Compute paths for specific file
+            filename = os.path.basename(file)
+            in_filepath = file
+            if isinstance(in_path, list):
+                in_filepath = []
+                for i in in_path:
+                    in_filepath.append(os.path.join(i, filename))
+            in_filepaths.append(in_filepath)
+            out_filepaths.append(os.path.join(out_path, filename))
     else:
         print("ERROR: input path(s) and output path is a mix of files and directories")
 
+    return in_filepaths, out_filepaths
+
+def process_configs(function, in_path, out_path, extra=None, wrap=False):
+    print("INPUT: %s OUTPUT: %s" % (in_path, out_path))
+
+    in_filepaths, out_filepaths = determine_filepaths(in_path, out_path)
+
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        futures = []
+        for i in range(len(in_filepaths)):
+            in_filepath = in_filepaths[i]
+            out_filepath = out_filepaths[i]
+
+            # Call function
+            if wrap:
+                in_filepath = [in_filepath]
+            if (extra is None):
+                future = executor.submit(function, in_filepath, out_filepath)
+            else:
+                future = executor.submit(function, in_filepath, out_filepath, extra)
+            futures.append(future)
+
+        if len(in_filepaths) > 1 and wrap:
+            out_filepath = os.path.join(out_path, "network.json") 
+            if (extra is None):
+                future = executor.submit(function, in_filepaths, out_filepath)
+            else:
+                future = executor.submit(function, in_filepaths, out_filepath, extra)
+
+        # Get results from functions to catch any exceptions
+        for future in futures:
+            result = future.result()
+            if (result is not None):
+                print(result)
 
 def compute_confidence(numerator, denominator):
     if (denominator > 0):

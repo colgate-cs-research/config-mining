@@ -91,7 +91,7 @@ def single_keyword_association(keyword, acl, interface_to_ACL, keyword_interface
             if interface in interface_to_ACL[device] and acl in interface_to_ACL[device][interface].values(): 
                 all_three += 1
             else:
-                exceptions.append(interface)
+                exceptions.append((device, interface))
 
     return (all_three, antecedent, exceptions)
 
@@ -196,7 +196,7 @@ def analyze_configuration(in_paths, out_path, threshold):
     
     for (keyword, acl), (numerator, denominator, exceptions) in keyword_dictionary.items():
         message = "C(interface has keyword '%s' -> ACL %s applied to interface)" % (keyword, acl)
-        rules.append(analyze.create_rule(message, numerator, denominator))
+        rules.append(analyze.create_rule(message, numerator, denominator, exceptions))
 
 #    interface_IPaddress_dict = interface_ip_dictionary(config_path)
 #    keyword_range, keyword_ip_list = keyword_ipaddress_range(keyword_interface_dictionary, interface_IPaddress_dict)

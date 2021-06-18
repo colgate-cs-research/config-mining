@@ -101,18 +101,18 @@ def test_keyword_association():
     used_acls = ["R", "O", "Y", "G"]
     associations = analyze_keywords.keyword_association(["blue", "red", "yellow"], used_acls, {"device":IfaceName2AppliedAclNames}, Keywords2IfaceNames)
     expected = {
-        ("blue", "G"): (1, 2, ["GigabitEthernet0/1"]),
-        ("blue", "O"): (0, 2, ["GigabitEthernet0/1", "GigabitEthernet0/4"]),
-        ("blue", "R"): (0, 2, ["GigabitEthernet0/1", "GigabitEthernet0/4"]),
-        ("blue", "Y"): (1, 2, ["GigabitEthernet0/1"]),
-        ("red", "G"): (0, 3, ["GigabitEthernet0/2", "GigabitEthernet0/3", "GigabitEthernet0/5"]),
-        ("red", "O"): (2, 3, ["GigabitEthernet0/2"]),
-        ("red", "R"): (1, 3, ["GigabitEthernet0/3", "GigabitEthernet0/5"]),
-        ("red", "Y"): (1, 3, ["GigabitEthernet0/2", "GigabitEthernet0/3"]),
-        ("yellow", "G"): (1, 4, ["GigabitEthernet0/3", "GigabitEthernet0/5", "GigabitEthernet0/6"]),
-        ("yellow", "O"): (2, 4, ["GigabitEthernet0/4", "GigabitEthernet0/6"]),
-        ("yellow", "R"): (0, 4, ["GigabitEthernet0/3", "GigabitEthernet0/4", "GigabitEthernet0/5", "GigabitEthernet0/6"]),
-        ("yellow", "Y"): (3, 4, ["GigabitEthernet0/3"])
+        ("blue", "G"): (1, 2, [("device", "GigabitEthernet0/1")]),
+        ("blue", "O"): (0, 2, [("device", "GigabitEthernet0/1"), ("device", "GigabitEthernet0/4")]),
+        ("blue", "R"): (0, 2, [("device", "GigabitEthernet0/1"), ("device", "GigabitEthernet0/4")]),
+        ("blue", "Y"): (1, 2, [("device", "GigabitEthernet0/1")]),
+        ("red", "G"): (0, 3, [("device", "GigabitEthernet0/2"), ("device", "GigabitEthernet0/3"), ("device", "GigabitEthernet0/5")]),
+        ("red", "O"): (2, 3, [("device", "GigabitEthernet0/2")]),
+        ("red", "R"): (1, 3, [("device", "GigabitEthernet0/3"), ("device", "GigabitEthernet0/5")]),
+        ("red", "Y"): (1, 3, [("device", "GigabitEthernet0/2"), ("device", "GigabitEthernet0/3")]),
+        ("yellow", "G"): (1, 4, [("device", "GigabitEthernet0/3"), ("device", "GigabitEthernet0/5"), ("device", "GigabitEthernet0/6")]),
+        ("yellow", "O"): (2, 4, [("device", "GigabitEthernet0/4"), ("device", "GigabitEthernet0/6")]),
+        ("yellow", "R"): (0, 4, [("device", "GigabitEthernet0/3"), ("device", "GigabitEthernet0/4"), ("device", "GigabitEthernet0/5"), ("device", "GigabitEthernet0/6")]),
+        ("yellow", "Y"): (3, 4, [("device", "GigabitEthernet0/3")])
     }
     assert associations == expected
 
