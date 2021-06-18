@@ -11,7 +11,7 @@ def is_regex_match(pattern, line):
     return (len(iList) > 0)
 
 """Analyze a single configuration"""
-def analyze_configuration(infile, outfile):
+def analyze_configuration(infile, outfile, extra=None):
     print("Current working FILE: "+infile)
     # Extract relevant details
     IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules = intraconfig_refs(infile)

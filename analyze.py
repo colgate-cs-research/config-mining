@@ -59,18 +59,12 @@ def process_configs(function, in_path, out_path, extra=None, wrap=False):
             # Call function
             if wrap:
                 in_filepath = [in_filepath]
-            if (extra is None):
-                future = executor.submit(function, in_filepath, out_filepath)
-            else:
-                future = executor.submit(function, in_filepath, out_filepath, extra)
+            future = executor.submit(function, in_filepath, out_filepath, extra)
             futures.append(future)
 
         if len(in_filepaths) > 1 and wrap:
             out_filepath = os.path.join(out_path, "network.json") 
-            if (extra is None):
-                future = executor.submit(function, in_filepaths, out_filepath)
-            else:
-                future = executor.submit(function, in_filepaths, out_filepath, extra)
+            future = executor.submit(function, in_filepaths, out_filepath, extra)
 
         # Get results from functions to catch any exceptions
         for future in futures:

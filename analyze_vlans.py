@@ -52,7 +52,7 @@ def format_confidence_ouput(vlan_pair_freq, single_vlan_freq):
     return rules
 
 '''returns a dictionary with {vlan pair [x,y] : frequency accepted in an interface}'''
-def analyze_configuration(file, outfile):
+def analyze_configuration(file, outfile, extra=None):
     print("Current working FILE: "+file)
     vlan_pair_freq = {}
     single_vlan_freq = {}
