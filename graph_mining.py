@@ -14,12 +14,13 @@ def load_file(file):
 
 
 #constructs nodes to fill in argument graph
-def fill_graph(edges, file, graph):
-    #for acl in file["acls"]:
+def fill_graph(file, graph):
+    for acl in file["acls"]:
+        graph.add_node(acl, type= "acl")
+        #print(graph.nodes[acl])
 
     regex = re.compile('Vlan\d+')
     for interface in file["interfaces"]:
-        #vlan
         if regex.match(interface):
             graph.add_node(interface, type="vlan")
         else:    
@@ -34,6 +35,12 @@ def fill_graph(edges, file, graph):
         if file["interfaces"][interface]["allowed_vlans"] is not None:
             for vlan in file["interfaces"][interface]["allowed_vlans"]:
                 graph.add_edge(interface, "Vlan" + str(vlan))
+
+        if file["interfaces"][interface]["in_acl"] is not None:
+            graph.add_edge(interface, file["interfaces"][interface]["in_acl"])
+        if file["interfaces"][interface]["out_acl"] is not None:
+            graph.add_edge(interface, file["interfaces"][interface]["out_acl"])
+
     return 
 
 #Adding individual keywords to each interface
@@ -45,27 +52,14 @@ def add_keywords(file, graph):
             graph.add_node(str(word), type="keyword")
             graph.add_edge(interface, str(word))
 
-''''
-def make_edges(group, edges, graph, file):
-    for stanza in list(graph):
-        if file[group][stanza][edges] is not None:
-            for newnode in file[group][stanza][edges]:
-                graph.add_node(newnode)
-                graph.add_edge(stanza, newnode)
-                #add more attributes to the nodes like the name alonged with it
-                #set node attributes
-    return graph
-'''
 
 def main():
-    config = load_file("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
+    config = load_file("/shared/configs/northwestern/configs_json/core1.json")
     graph = nx.Graph() 
-    edges = ["address", "description", "allowed_vlans"]
-    #fill_graph(edges, config, graph)
-    #print(graph.edges())
-    #make_edges("interfaces", "allowed_vlans", graph, config)
+    fill_graph(config, graph)
+    print(graph.edges())
 
-    add_keywords("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json", graph)
+    #add_keywords("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json", graph)
     
     #print(graph.edges())
     #print(graph.nodes())
