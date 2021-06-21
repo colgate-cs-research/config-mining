@@ -1,0 +1,111 @@
+{
+    "acls": {},
+    "interfaces": {
+        "GigabitEthernet0/1": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": [
+                100,
+                200,
+                300
+            ],
+            "description": null,
+            "in_acl": null,
+            "name": "GigabitEthernet0/1",
+            "out_acl": null,
+            "switchport": "trunk"
+        },
+        "GigabitEthernet0/2": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": [
+                300
+            ],
+            "description": null,
+            "in_acl": null,
+            "name": "GigabitEthernet0/2",
+            "out_acl": null,
+            "switchport": "trunk"
+        },
+        "GigabitEthernet0/3": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": [
+                100,
+                200
+            ],
+            "description": null,
+            "in_acl": null,
+            "name": "GigabitEthernet0/3",
+            "out_acl": null,
+            "switchport": "trunk"
+        },
+        "GigabitEthernet0/4": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": [
+                100,
+                200
+            ],
+            "description": null,
+            "in_acl": null,
+            "name": "GigabitEthernet0/4",
+            "out_acl": null,
+            "switchport": "trunk"
+        },
+        "GigabitEthernet0/5": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": [
+                400
+            ],
+            "description": null,
+            "in_acl": null,
+            "name": "GigabitEthernet0/5",
+            "out_acl": null,
+            "switchport": "trunk"
+        },
+        "Vlan100": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": null,
+            "description": "Red",
+            "in_acl": null,
+            "name": "Vlan100",
+            "out_acl": null,
+            "switchport": null
+        },
+        "Vlan200": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": null,
+            "description": "Orange",
+            "in_acl": null,
+            "name": "Vlan200",
+            "out_acl": null,
+            "switchport": null
+        },
+        "Vlan300": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": null,
+            "description": "Yellow",
+            "in_acl": null,
+            "name": "Vlan300",
+            "out_acl": null,
+            "switchport": null
+        },
+        "Vlan400": {
+            "access_vlan": null,
+            "address": null,
+            "allowed_vlans": null,
+            "description": "Green",
+            "in_acl": null,
+            "name": "Vlan400",
+            "out_acl": null,
+            "switchport": null
+        }
+    },
+    "name": "vlans",
+    "vlans": {}
+}

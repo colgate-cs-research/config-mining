@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 
 import argparse
-import glob
 import json
-import os
 import nltk
 from nltk.corpus import stopwords
 import re
+import analyze
+
+abbreviations = {
+    "bldg" : "building",
+    "mgmt" : "management",
+    "pub" : "public"
+}
 
 def main():
     #parsing command-line arguments
@@ -16,30 +21,25 @@ def main():
 
     arguments = parser.parse_args()
     nltk.download('stopwords')
-    process_configs(arguments.config_path,arguments.out_path)
+    analyze.process_configs(analyze_configuration, arguments.config_path, arguments.out_path)
 
-def process_configs(config_path,out_path):
-    print("INPUT: "+config_path+" OUTPUT: "+out_path)
-    if os.path.isfile(config_path):
-        print("Input is a file")
-        get_descriptions(config_path, out_path)
-    else:
-        if os.path.isdir(out_path):
-            files = glob.glob(config_path + '/**/*.json', recursive=True)
-            for file in files:
-                print("Current working FILE: "+file)
-                get_descriptions(file,os.path.join(out_path, os.path.basename(file)))
-        else:
-            print("ERROR: input path is a directory; output path is not a directory")
-
-<<<<<<< HEAD
 """Get keywords from a phrase"""
 def get_keywords(phrase, delims=[" "]):
     words = re.split("|".join(delims), phrase)
     words = [word.lower() for word in words]
-    words = [word for word in words if not word in stopwords.words()]
-    return words
 
+    # Skip stop words
+    words = [word for word in words if not word in stopwords.words()]
+
+    # Skip single-character words
+    words = [word for word in words if len(word) > 1]
+
+    # Replace abbreviations
+    for i in range(len(words)):
+        word = words[i]
+        if word in abbreviations:
+            words[i] = abbreviations[word]
+    return words
 """Add keywords to a specific entry in a dictionary"""
 def add_keywords(dictionary, key, words):
     if key not in dictionary:
@@ -47,26 +47,9 @@ def add_keywords(dictionary, key, words):
     for word in words:
         if word not in dictionary[key]:
             dictionary[key].append(word)
-=======
-#returns a list of keywords
-def get_keywords(file, outf):
-    # Load config
-    with open(file, "r") as infile:
-        config = json.load(infile)
-    keywords = []
 
-    for words in 
-
-
-
-
-
-#function that does this later
-#return dictionary with {keywords: [ACLs that the keywords are in]}
->>>>>>> Co-authored-by: Aaron Gember-Jacobson <agember@users.noreply.github.com>
-
-#returns a dictionary with {interface name: [list of words in description]} 
-def get_descriptions(file, outf):
+def analyze_configuration(file, outf):
+    print("Current working FILE: " + file)
     # Load config
     with open(file, "r") as infile:
         config = json.load(infile)
@@ -82,7 +65,7 @@ def get_descriptions(file, outf):
     # Iterate over VLANs
     for vlan in config["vlans"].values():
         iName = "Vlan%d" % vlan["num"]
-        add_keywords(iface_dict, iName, get_keywords(vlan["name"], delims=[" ", "-"]))
+        add_keywords(iface_dict, iName, get_keywords(vlan["name"], delims=[" ", "-", "_"]))
 
     # Iterate over ACL names
     for name in config["acls"]:
@@ -93,7 +76,8 @@ def get_descriptions(file, outf):
 
     aggregate = {
         "interfaces" : iface_dict,
-        "acls" : acl_dict
+        "acls" : acl_dict,
+        "name" : config["name"]
     }
 
     with open(outf, 'w') as outfile:

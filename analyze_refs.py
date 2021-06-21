@@ -1,9 +1,8 @@
 import re
 import json
 import argparse
+import analyze
 import ipaddress
-import glob
-import os
 
 #returns boolean indicating if argument regex pattern exists in argument string
 def is_regex_match(pattern, line):
@@ -11,23 +10,9 @@ def is_regex_match(pattern, line):
     iList = p.findall(line)
     return (len(iList) > 0)
 
-"""Analyze a single configuration or a directory of configurations"""
-def check_path(path,outfile):
-    print("INPUT: "+path+" OUTPUT: "+outfile)
-    if os.path.isfile(path):
-        print("Input is a file")
-        analyze_configuration(path, outfile)
-    else:
-        if os.path.isdir(outfile):
-            files = glob.glob(path + '/**/*.json', recursive=True)
-            for file in files:
-                print("CUrrent working FILE:   "+file)
-                analyze_configuration(file, os.path.join(outfile, os.path.basename(file)))
-        else:
-            print("Input Path is a Directory; output Path is not directory ")
-
 """Analyze a single configuration"""
-def analyze_configuration(infile, outfile):
+def analyze_configuration(infile, outfile, extra=None):
+    print("Current working FILE: "+infile)
     # Extract relevant details
     IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules = intraconfig_refs(infile)
 
@@ -35,61 +20,30 @@ def analyze_configuration(infile, outfile):
 
     # C(is interface => interface has ACL reference(s))
     num_ifaces, has_acl = assoc_iface_has_acl(IfaceName2AppliedAclNames)
-    rule = {
-        "message": "C(Interface -> Have ACL references)",
-        "n" : "Interfaces with ACL reference(s): " + str(has_acl),    # n ~ Numerator
-        "d" : "Support (num interfaces): " + str(num_ifaces),   # d ~ Denominator 
-        "c": "Confidence: " + str(compute_confidence(has_acl, num_ifaces))
-    }
-    rules.append(rule)
+    message = "C(interface => has ACL reference)"
+    rules.append(analyze.create_rule(message, has_acl, num_ifaces))
 
     # C(interface has 'in' access list => interface has 'out' access list) 
     in_acl_ref, both_acl_ref = assoc_acl_directions("in", IfaceIp2AppliedAclNames)
-    rule = {
-        "message" : "C('in' access list -> 'out' access list)",
-        "n" : "Interfaces with 'in' & 'out' access lists: " + str(both_acl_ref),
-        "d" : "Support (num interfaces with 'in' access list): " + str(in_acl_ref),
-        "c": "Confidence: " + str(compute_confidence(both_acl_ref, in_acl_ref))
-    }
-    rules.append(rule)
+    message = "C(interface has 'in' ACL applied => interface has 'out' ACL applied)"
+    rules.append(analyze.create_rule(message, both_acl_ref, in_acl_ref))
 
     # C(interface has 'out' access list => interface has 'in' access list) 
     out_acl_ref, both_acl_ref = assoc_acl_directions("out", IfaceIp2AppliedAclNames)
-    rule = {
-        "message" : "C('out' access list -> 'in' access list)",
-        "n": "Interfaces with 'in' & 'out' access lists: " + str(both_acl_ref),
-        "d": "Support (num interfaces with 'out' access list): " + str(out_acl_ref),
-        "c": "Confidence: " + str(compute_confidence(both_acl_ref, out_acl_ref))
-    }
-    rules.append(rule)
+    message = "C(interface has 'out' ACL applied => interface has 'in' ACL applied)"
+    rules.append(analyze.create_rule(message, both_acl_ref, out_acl_ref))
 
     # C(ACL covers interface's IP => interface has that ACL applied) 
     two_way_references, total_ACL_IP_refs= ACL_Interface(AclName2IpsInRules, IfaceIp2AppliedAclNames)
-    rule = {
-        "message" : "C(ACL covers interfaces IP -> interface has that ACL applied",
-        "n" : "Two way ACL-Interface references: " + str(two_way_references),
-        "d" : "Support (num IP addresses covered in ACL): " + str(total_ACL_IP_refs),
-        "c": "Confidence: " + str(compute_confidence(two_way_references, total_ACL_IP_refs))
-    }
-    rules.append(rule)
+    message = "C(ACL covers interface's IP => interface has that ACL applied)"
+    rules.append(analyze.create_rule(message, two_way_references, total_ACL_IP_refs))
 
     for acl_name in AclName2IpsInRules:
         ifaces_with_acl, ifaces_in_range, irange = fourth_association(acl_name, IfaceIp2AppliedAclNames)
-        rule = {
-            "message" : "C(interface's IP falls within a range => ACL " + acl_name + " applied to the interface",
-            "n" : "Num interfaces in range with ACL " + acl_name + " applied : " + str(ifaces_with_acl),
-            "d" : "Support (num interfaces in range " + str(irange) + "): " + str(ifaces_in_range),
-            "c": "Confidence: " + str(compute_confidence(ifaces_with_acl, ifaces_in_range))
-        }
-        rules.append(rule) 
+        message = "C(interface's IP falls within range %s => ACL %s applied to the interface)" % (irange, acl_name)
+        rules.append(analyze.create_rule(message, ifaces_with_acl, ifaces_in_range))
 
-    write_to_outfile(outfile, rules)
-
-"""Writes confidence/support for association rules to JSON file"""
-def write_to_outfile(filename, rules):
-    with open(filename, 'w') as outfile:
-        json.dump(rules, outfile, indent=4, sort_keys=True)
-    return   
+    analyze.write_to_outfile(outfile, rules)
 
 """Calculate support for an interface having an ACL"""
 def assoc_iface_has_acl(IfaceName2AppliedAclNames):
@@ -181,11 +135,10 @@ def interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames):
 #computes a RANGE for argument list
 #returns a list with first element = min and last = max
 def compute_range(ilist):
-    ip_range = []
-    #print("ilist in range: " + str(ilist))
-    ip_range.append(min(ilist))
-    ip_range.append(max(ilist))
-    return ip_range
+    if len(ilist) == 0:
+        return None
+    addrs = [ipaddress.IPv4Address(ip) for ip in ilist]
+    return [str(min(addrs)), str(max(addrs))]
 
 #3
 #takes access control list and range
@@ -199,24 +152,18 @@ def interfaces_in_range(IfaceIp2AppliedAclNames, IPrange):
     #print("interfaces in range: ", ilist)
     return ilist
 
-#compute percentage of interfaces that are in range and have ACL applied
-def compute_confidence(numerator, denominator):
-    if (denominator > 0):
-        return round(numerator / denominator, 3)
-    return None
- 
 #4
 # fourth association rule:    
 #Specific ACL applied to an interface => interface's IP falls within a range
 def fourth_association(ACL, IfaceIp2AppliedAclNames):
-    ilist = interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames)
-    if len(ilist) == 0:
+    ip_list = interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames)
+    irange = compute_range(ip_list)
+    if irange is None:
         return 0, 0, None
-    irange = compute_range(ilist)
     itotal = interfaces_in_range(IfaceIp2AppliedAclNames, irange)
-    return len(ilist), len(itotal), irange
+    return len(ip_list), len(itotal), irange
 
-#creates and returns a dictionary representing intra-config references between
+#creates and returns four dictionaries representing intra-config references between
 #interfaces (keys) and ACLs (values) in argument config file
 def intraconfig_refs(cfile):
     IfaceName2AppliedAclNames = {} #dictionary in form of {interface name: [ACL references]}
@@ -269,8 +216,7 @@ def main():
     config_path = arguments.Path
     outfile = arguments.outfile
 
-
-    check_path(config_path,outfile)
+    analyze.process_configs(analyze_configuration, config_path, outfile)
 
 if __name__ == "__main__":
     main()
