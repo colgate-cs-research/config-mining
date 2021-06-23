@@ -112,7 +112,6 @@ def interface_ip_dictionary(cfile):
 
 #RULE
 #interface's IP falls within a range => Specific keyword applied to an interface 
-
 #returns two dictionaries
 #keyword_range_dict{keyword: range of the IP's associated with the interfaces of that keyword}
 #keyword_ip_list_dict{keword: list of IP's associated with the interfaces of that keyword}
