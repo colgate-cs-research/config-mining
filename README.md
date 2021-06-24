@@ -23,6 +23,77 @@ See https://batfish.readthedocs.io/en/latest/getting_started.html for more detai
 
 After the Batfish service is running, you can parse configurations using the `parsing/batfish.py` script. This script requires a single command-line argument: the path to a directory containing a configuration snapshot (see https://batfish.readthedocs.io/en/latest/notebooks/interacting.html#Packaging-snapshot-data for the required directory structure).
 
+## Config JSON structure
+```json
+{
+    "acls" : {
+        acl_name : {
+            "name" : acl_name,
+            "lines" : [
+                {
+                    "action" : "DENY" | "PERMIT",
+                    "dstIps" : destination_network,
+                    "srcIps" : source_network
+                },
+                ...
+            ],
+            "remarks" : [
+                remark_string,
+                ...
+            ]
+        },
+        ...
+    },
+    "interfaces" : {
+        interface_name : {
+            "access_vlan" : vlan_number | null,
+            "address" : interface_address | null,
+            "allowed_vlans" : [
+                vlan_number,
+                ...
+            ],
+            "description" : description_string | null,
+            "in_acl" : acl_name | null,
+            "name" : interface_name,
+            "out_acl" : acl_name | null,
+            "switchport" : "access" | "trunk" | null
+        }
+        ...
+    },
+    "name" : device_name,
+    "ospf" :  {
+        ospf_instance_number : {
+            "areas" : {
+                area_number : {
+                    "name": area_number,
+                    "networks" : [
+                        network_address,
+                        ...
+                    ],
+                    "type" : "NONE" | "NSSA" | "STUB"
+                },
+                ...
+            },
+            "interfaces" : [
+                interface_name,
+                ...
+            ],
+            "name" : ospf_instance_number,
+            "vrf" : "default" | vrf_name
+        },
+        ...
+    },
+    "vlans" : {
+        vlan_number : {
+            "name": name_string,
+            "num" : vlan_number
+        },
+        ...
+    }
+}
+```
+
+
 # Computing confidence
 
 

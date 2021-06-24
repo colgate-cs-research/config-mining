@@ -1,7 +1,10 @@
 import argparse
 import json
+
+from networkx.algorithms.components.connected import connected_components, number_connected_components
 import analyze
 import networkx as nx
+import pydot
 import ipaddress
 import re
 from extract_keywords import get_keywords, add_keywords, analyze_configuration
@@ -52,17 +55,28 @@ def add_keywords(file, graph):
             graph.add_node(str(word), type="keyword")
             graph.add_edge(interface, str(word))
 
+#
+#def create_visual(graph):
+
 
 def main():
     config = load_file("/shared/configs/northwestern/configs_json/core1.json")
     graph = nx.Graph() 
     fill_graph(config, graph)
-    print(graph.edges())
-
+    #print(graph.edges())
+    print("\nComponents in graph: " + str(number_connected_components(graph)))
+    
+    #for component in connected_components(graph):
+    #    print(component)
     #add_keywords("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json", graph)
     
     #print(graph.edges())
     #print(graph.nodes())
+
+    #create_visual(graph)
+    pydot_graph = nx.drawing.nx_pydot.to_pydot(graph)
+    pydot_graph.write_png('output2.png')
+
 
 if __name__ == "__main__":
     main()

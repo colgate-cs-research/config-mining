@@ -121,11 +121,7 @@ def getAclLineIps(line):
 #return LIST of interfaces
 def interfaces_with_ACL(ACL, IfaceIp2AppliedAclNames):
     ilist = []
-    #print(interfaceIP)
     for interface in IfaceIp2AppliedAclNames:
-        #print("interface acls: " + str(interfaceIP[interface]))
-        #print("acl: " + ACL)
-        #print()
         for acl in IfaceIp2AppliedAclNames[interface].values():
             if acl == ACL:
                 ilist.append(interface)
@@ -145,11 +141,9 @@ def compute_range(ilist):
 #finds all interfaces within this range (confidence denominator)
 def interfaces_in_range(IfaceIp2AppliedAclNames, IPrange):
     ilist = []
-    #print("given/calculated range: ", IPrange)
     for interface in IfaceIp2AppliedAclNames:
         if is_in_range(str(interface), IPrange):
             ilist.append(interface)
-    #print("interfaces in range: ", ilist)
     return ilist
 
 #4
