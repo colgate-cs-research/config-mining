@@ -1,8 +1,9 @@
 import argparse
 import json
 from analyze_keywords import load_keywords, count_keywords, get_common_keywords, interface_ip_dictionary
-import analyze_refs
+import analyze_refs 
 import analyze
+import ipaddress
 
 
 def ospf_interfaces(config):
@@ -43,22 +44,19 @@ def keywords_to_ospf(config_file, keyword_file):
 
     return keywords_to_ospf_dict
 
-def make_ospf_interface_dictionary(config):
+def make_ospf_interface_dictionary(file):
+    with open(file, "r") as infile:
+        config = json.load(infile)
+
     ospf_interface_dictionary = {}
     for ospf in config["ospf"].values():
-        interfaces = ospf["interfaces"]
-        ospf_interface_dictionary[ospf["name"]] = interfaces
+        for interface in ospf["interfaces"]:
+            ospf_interface_dictionary[interface] = ospf["name"]
+        #interfaces = ospf["interfaces"]
+        #ospf_interface_dictionary[ospf["name"]] = interfaces
 
     return ospf_interface_dictionary
 
-'''
-def address_in_range_ospf(file):
-    iface_ipaddress_dictionary = interface_ip_dictionary(file)
-    ospf_dictionary = make_ospf_interface_dictionary(file)
-
-    range_dictionary,_ = keyword_ipaddress_range(ospf_interface_dict, interface_IPaddress_dict)
-    print(range_dictionary)
-'''
 def analyze_configuration(in_paths, out_path, extra=None):
     config_file, keyword_file = in_paths
     #config = load_keywords(file)
@@ -72,8 +70,31 @@ def analyze_configuration(in_paths, out_path, extra=None):
     #ip_dictionary = interface_ip_dictionary(file)
     #ospf_dictionary = make_ospf_interface_dictionary(config)
 
+#You use interfaces running OSPF to construct the range, then you compute:
+#Numerator = number of interfaces in range that run OSPF
+#Denominator = number of interfaces in range
+def address_in_range_ospf(file):
+    iface_ipaddress_dictionary = interface_ip_dictionary(file)
+    ospf_dictionary = make_ospf_interface_dictionary(file)
+    ip_list = []
+    for interface in ospf_dictionary:    
+        for iface, ip in iface_ipaddress_dictionary.items():
+            if interface == iface:
+                ip_list.append(ip)
+
+    ip_range = [min(ip_list), max(ip_list)]
+    interfaces_inrange_ospf = analyze_refs.interfaces_in_range(ip_list, ip_range)
+    numerator = len(interfaces_inrange_ospf)
+    denom = len(analyze_refs.interfaces_in_range(iface_ipaddress_dictionary.values(), ip_range))
+
+    return numerator, denom
+
 def main():
+    file = "/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json"
+    address_in_range_ospf(file)
+
     #parsing command-line arguments
+    '''
     parser = argparse.ArgumentParser(description='Analyze confidence for OSPF')
     parser.add_argument('config_path', help='Path for a file (or directory) containing a JSON representation of configuration(s)')
     parser.add_argument('keyword_path', help='Path for a file (or directory) containing a JSON representation of keyword(s)')
@@ -81,7 +102,7 @@ def main():
 
     arguments = parser.parse_args()
     analyze.process_configs(analyze_configuration, [arguments.config_path, arguments.keyword_path], arguments.out_path)
-    
+    '''
 
 
 
