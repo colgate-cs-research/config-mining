@@ -52,8 +52,6 @@ def make_ospf_interface_dictionary(file):
     for ospf in config["ospf"].values():
         for interface in ospf["interfaces"]:
             ospf_interface_dictionary[interface] = ospf["name"]
-        #interfaces = ospf["interfaces"]
-        #ospf_interface_dictionary[ospf["name"]] = interfaces
 
     return ospf_interface_dictionary
 

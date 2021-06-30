@@ -85,7 +85,8 @@ def compare_nodes(n1,n2,graph):
 
 
 #determines which nodes meet similarity threshold
-#returns a dict including similar node pairs {(n1,n2): [similarity of n1, similarity of n2]}
+#returns a list of nodes of ntype
+#Also returns a dict including similar node pairs {(n1,n2): [similarity of n1, similarity of n2]}
 def common_neighbors(graph, ntype, threshold):
     neighbor_dictionary = {}
     nodes = get_nodes(graph, ntype)
@@ -95,7 +96,7 @@ def common_neighbors(graph, ntype, threshold):
             if n1_similarity >= threshold and n2_similarity >= threshold and (n1_similarity != 1 or n2_similarity != 1):
                 node_list = (nodes[i], nodes[j])
                 neighbor_dictionary[node_list] = [n1_similarity, n2_similarity]
-    return neighbor_dictionary
+    return nodes, neighbor_dictionary
 
 
 #suggests links for common neighbors in graph
@@ -122,9 +123,40 @@ def suggest_links(neighbor_dictionary, graph):
     return sugg_dict
 
 
+#returns two floats indicating similarity of nodes' neighbors of ntype
+def similarity_proportions(n1, n2, graph, ntype):
+    type_list = get_nodes(graph, ntype)
+    n1_edges = graph.edges(n1) #returns a list of each pairing in a tuple
+    n2_edges = graph.edges(n2)
+    match = 0
+    total1 = len(n1_edges)
+    total2 = len(n2_edges)
 
+    for edges1 in n1_edges: 
+        node1 = edges1[1] #get neighbor
+        if node1 in type_list: #check type
+            for edges2 in n2_edges:
+                if edges1[1] == edges2[1]:
+                    match += 1
+
+    return match/total1, match/total2
+
+#returns a dictionary {interface pair: {type: proportion of the type within the interface, ...}}
+#Goes through all interfaces and finds the proportion of similarity between all the 
+#types (vlan, subnet, out_acl, in_acl)
+def get_similarity(neighbor_dict, graph, ntype_list):
+    similarity_dict = {}
+    for pair in neighbor_dict:
+        ntype_dictionary = {}
+        for ntype in ntype_list:
+            proportion = similarity_proportions(pair[0], pair[1], graph, ntype)
+            ntype_dictionary[ntype] = proportion
+        similarity_dict[pair] = ntype_dictionary
+    return similarity_dict
+    
 def main():
     config = load_file("/shared/configs/northwestern/configs_json/core1.json")
+    #config = load_file("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
     graph = nx.Graph() 
     fill_graph(config, graph)
     '''
@@ -141,9 +173,13 @@ def main():
     graph.add_edge("B", "sn1")
     graph.add_edge("B", "sn2")
     '''
-    neighbor_dict = common_neighbors(graph, "interface", 0.75)
+    nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
     suggested = suggest_links(neighbor_dict, graph)
-    print("suggested neighbors:",  suggested)
+    #print("suggested neighbors:",  suggested)
+    #print(neighbor_dict)
+    ntype_list = ["vlan", "in_acl", "out_acl", "subnet", "allowed_vlans"]
+    similarity_dict = get_similarity(neighbor_dict, graph, ntype_list)
+    print(similarity_dict)
 
     #print("\nComponents in graph: " + str(number_connected_components(graph)))
     
