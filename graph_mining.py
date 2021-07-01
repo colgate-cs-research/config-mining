@@ -159,6 +159,8 @@ def get_similarity(neighbor_dict, graph, ntype_list):
 def random_delete(graph, threshold):
     edges = graph.edges()
     edge_list = []
+    removed_edges = []
+
     for edge in edges:
         edge_list.append(edge)
 
@@ -170,9 +172,32 @@ def random_delete(graph, threshold):
         delete = edge_list[number]
         graph.remove_edge(delete[0], delete[1])
         edge_list.remove(delete)
+        removed_edges.append(delete)
         length -= 1
         count += 1
-    return
+    return edges, removed_edges
+
+#Calculates precision and recall for common neighbors
+def precision_recall(graph, threshold):
+    original_edge_list = graph.edges()
+    print("original edge list: ", original_edge_list)
+    nodes, neighbor_dict = common_neighbors(graph, "interface", 0.60)
+    new_edge_list,removed_edges = random_delete(graph, threshold)
+    print("new edge list: ", new_edge_list)
+    print("removed edges: ", removed_edges)
+    suggested = suggest_links(neighbor_dict, graph) #dictionary
+    print("suggested neighbors:",  suggested)
+    print()
+
+    removed_and_predicted = 0
+
+    #calculates number of removed edges that were predicted
+    for edge in removed_edges:
+        for node, values in suggested.items():
+            for value in values:
+                if edge[0] == node and edge[1] == value:
+                    removed_and_predicted += 1
+    print(removed_and_predicted)
     
 def main():
     config = load_file("/shared/configs/northwestern/configs_json/core1.json")
@@ -192,15 +217,9 @@ def main():
     graph.add_edge("A", "sn3")
     graph.add_edge("B", "sn1")
     graph.add_edge("B", "sn2")
+    
+    precision_recall(graph, 1)
 
-    random_delete(graph, 3)
-    #print(graph.edges())
-
-    #NEED THESE
-    #nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
-    #suggested = suggest_links(neighbor_dict, graph)
-    #print("suggested neighbors:",  suggested)
-    #print(neighbor_dict)
     #ntype_list = ["vlan", "in_acl", "out_acl", "subnet", "allowed_vlans"]
     #similarity_dict = get_similarity(neighbor_dict, graph, ntype_list)
     #print(similarity_dict)
