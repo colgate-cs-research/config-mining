@@ -8,6 +8,7 @@ import networkx as nx
 import ipaddress
 import re
 from extract_keywords import get_keywords, add_keywords, analyze_configuration
+import random
 
 def load_file(file):
     # Load config
@@ -153,13 +154,32 @@ def get_similarity(neighbor_dict, graph, ntype_list):
             ntype_dictionary[ntype] = proportion
         similarity_dict[pair] = ntype_dictionary
     return similarity_dict
+
+#Randomly deletes as many edges in a graph, threshold is how many edges user wants to delete
+def random_delete(graph, threshold):
+    edges = graph.edges()
+    edge_list = []
+    for edge in edges:
+        edge_list.append(edge)
+
+    count = 0
+    length = len(edge_list)
+
+    while count < threshold:
+        number = random.randint(0, length-1)
+        delete = edge_list[number]
+        graph.remove_edge(delete[0], delete[1])
+        edge_list.remove(delete)
+        length -= 1
+        count += 1
+    return
     
 def main():
     config = load_file("/shared/configs/northwestern/configs_json/core1.json")
     #config = load_file("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
     graph = nx.Graph() 
-    fill_graph(config, graph)
-    '''
+    #fill_graph(config, graph)
+    
     graph.add_node("A", type="interface")
     graph.add_node("B", type="interface")
     graph.add_node("C", type="interface")
@@ -172,14 +192,18 @@ def main():
     graph.add_edge("A", "sn3")
     graph.add_edge("B", "sn1")
     graph.add_edge("B", "sn2")
-    '''
-    nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
-    suggested = suggest_links(neighbor_dict, graph)
+
+    random_delete(graph, 3)
+    #print(graph.edges())
+
+    #NEED THESE
+    #nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
+    #suggested = suggest_links(neighbor_dict, graph)
     #print("suggested neighbors:",  suggested)
     #print(neighbor_dict)
-    ntype_list = ["vlan", "in_acl", "out_acl", "subnet", "allowed_vlans"]
-    similarity_dict = get_similarity(neighbor_dict, graph, ntype_list)
-    print(similarity_dict)
+    #ntype_list = ["vlan", "in_acl", "out_acl", "subnet", "allowed_vlans"]
+    #similarity_dict = get_similarity(neighbor_dict, graph, ntype_list)
+    #print(similarity_dict)
 
     #print("\nComponents in graph: " + str(number_connected_components(graph)))
     
