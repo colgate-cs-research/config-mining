@@ -101,7 +101,7 @@ def common_neighbors(graph, ntype, threshold):
 
 
 #suggests links for common neighbors in graph
-#return dict {node: {suggested neghbors}}
+#return dict {node: {suggested neighbors}}
 def suggest_links(neighbor_dictionary, graph):
     larger_copy = nx.Graph()
     smaller_copy = nx.Graph()
@@ -155,36 +155,13 @@ def get_similarity(neighbor_dict, graph, ntype_list):
         similarity_dict[pair] = ntype_dictionary
     return similarity_dict
 
-#Randomly deletes as many edges in a graph, threshold is how many edges user wants to delete
-def random_delete(graph, threshold):
-    edges = graph.edges()
-    edge_list = []
-    removed_edges = []
-
-    for edge in edges:
-        edge_list.append(edge)
-
-    count = 0
-    length = len(edge_list)
-
-    while count < threshold:
-        number = random.randint(0, length-1)
-        delete = edge_list[number]
-        graph.remove_edge(delete[0], delete[1])
-        edge_list.remove(delete)
-        removed_edges.append(delete)
-        length -= 1
-        count += 1
-    return edges, removed_edges
 
 #Calculates precision and recall for common neighbors
 def precision_recall(graph, threshold):
     original_edge_list = graph.edges()
     print("original edge list: ", original_edge_list)
     nodes, neighbor_dict = common_neighbors(graph, "interface", 0.60)
-    new_edge_list,removed_edges = random_delete(graph, threshold)
-    print("new edge list: ", new_edge_list)
-    print("removed edges: ", removed_edges)
+    removed_edges = rand_remove(graph, threshold)
     suggested = suggest_links(neighbor_dict, graph) #dictionary
     print("suggested neighbors:",  suggested)
     print()
@@ -199,6 +176,31 @@ def precision_recall(graph, threshold):
                     removed_and_predicted += 1
     print(removed_and_predicted)
     
+'''
+#arguments: a networkx graph, a dict of suggested links {node: {suggested neighbors}}
+#adds suggested neighbors in argument dicitonary to argument graph
+def add_suggested_links(graph, suggested):
+    for node, suggestions in suggested.items():
+
+    return 
+
+#determines the precision and recall of the link suggestion method 
+def prec_rec(graph, target_graph):
+
+    return
+'''
+
+#returns a copy of argsument graph with num randomly removed links
+def rand_remove(graph, num):
+    copy = graph.copy()
+    for i in range(num):
+        edges = list(copy.edges)
+        del_edge = random.choice(edges)
+        print(del_edge)
+        copy.remove_edge(del_edge[0], del_edge[1])
+    return copy
+
+
 def main():
     config = load_file("/shared/configs/northwestern/configs_json/core1.json")
     #config = load_file("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
@@ -208,22 +210,64 @@ def main():
     graph.add_node("A", type="interface")
     graph.add_node("B", type="interface")
     graph.add_node("C", type="interface")
-    graph.add_node("sn1", type="subnet")
-    graph.add_node("sn2", type="subnet")
-    graph.add_node("sn3", type="subnet")
+    graph.add_node("D", type="interface")
 
-    graph.add_edge("A", "sn1")
-    graph.add_edge("A", "sn2")
-    graph.add_edge("A", "sn3")
-    graph.add_edge("B", "sn1")
-    graph.add_edge("B", "sn2")
+    graph.add_node("v1", type="vlan")
+    graph.add_node("v2", type="vlan")
+    graph.add_node("v3", type="vlan")
+    graph.add_node("v4", type="vlan")
+    graph.add_node("v5", type="vlan")
+    graph.add_node("v6", type="vlan")
+    graph.add_node("v7", type="vlan")
+
+    graph.add_node("in", type="in_acl")
+    graph.add_node("outA", type="out_acl")
+    graph.add_node("outB", type="out_acl")
     
-    precision_recall(graph, 1)
+    #A
+    graph.add_edge("A", "in")
+    graph.add_edge("A", "outA")
+    graph.add_edge("A", "v1")
+    graph.add_edge("A", "v2")
 
-    #ntype_list = ["vlan", "in_acl", "out_acl", "subnet", "allowed_vlans"]
-    #similarity_dict = get_similarity(neighbor_dict, graph, ntype_list)
-    #print(similarity_dict)
+    #B
+    graph.add_edge("B", "in")
+    graph.add_edge("B", "outB")
+    graph.add_edge("B", "v1")
+    graph.add_edge("B", "v2")
 
+    #C
+    graph.add_edge("C", "v3")
+    graph.add_edge("C", "v4")
+    graph.add_edge("C", "v5")
+
+    #D
+    graph.add_edge("D", "v5")
+    graph.add_edge("D", "v6")
+    graph.add_edge("D", "v7")
+
+    og_graph = nx.drawing.nx_pydot.to_pydot(graph)
+    #og_graph.write_png('original.png')
+    #---------------------------------------------------
+    modified_graph = rand_remove(graph, 2)
+    modified = nx.drawing.nx_pydot.to_pydot(modified_graph)
+    modified.write_png('modified.png')
+    og_graph.write_png('original.png')
+    #---------------------------------------------------
+    #nodes, neighbor_dict = common_neighbors(modified_graph, "interface", 0.75)
+    #suggested = suggest_links(neighbor_dict, modified_graph)
+    #pydot_graph = nx.drawing.nx_pydot.to_pydot(graph)
+    #pydot_graph.write_png('original.png')
+    
+    #print("suggested neighbors:",  suggested)
+    #print(neighbor_dict)
+    '''
+    ntype_list = ["vlan", "in_acl", "out_acl", "subnet", "allowed_vlans"] #add keywords
+    similarity_dict = get_similarity(neighbor_dict, graph, ntype_list)
+    for key, val in similarity_dict.items():
+        print(key, val)
+        print()
+    '''
     #print("\nComponents in graph: " + str(number_connected_components(graph)))
     
     #for component in connected_components(graph):
