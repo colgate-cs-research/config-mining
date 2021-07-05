@@ -48,7 +48,7 @@ def add_keywords(dictionary, key, words):
         if word not in dictionary[key]:
             dictionary[key].append(word)
 
-def analyze_configuration(file, outf):
+def analyze_configuration(file, outf, extra=None):
     print("Current working FILE: " + file)
     # Load config
     with open(file, "r") as infile:
