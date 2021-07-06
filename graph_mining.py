@@ -160,14 +160,13 @@ def get_similarity(neighbor_dict, graph, ntype_list):
 def precision_recall(graph, threshold):
     original_edge_list = graph.edges()
     print("original edge list: ", original_edge_list)
-    nodes, neighbor_dict = common_neighbors(graph, "interface", 0.60)
-    removed_edges = rand_remove(graph, threshold)
-    suggested = suggest_links(neighbor_dict, graph) #dictionary
+    modified_graph, removed_edges = rand_remove(graph, threshold)
+    nodes, neighbor_dict = common_neighbors(modified_graph, "interface", 0.50)
+    suggested = suggest_links(neighbor_dict, modified_graph) #dictionary
+    print("removed edges:", removed_edges)
     print("suggested neighbors:",  suggested)
-    print()
-
+    
     removed_and_predicted = 0
-
     #calculates number of removed edges that were predicted
     for edge in removed_edges:
         for node, values in suggested.items():
@@ -176,29 +175,34 @@ def precision_recall(graph, threshold):
                     removed_and_predicted += 1
     print(removed_and_predicted)
     
-'''
+''' 
 #arguments: a networkx graph, a dict of suggested links {node: {suggested neighbors}}
 #adds suggested neighbors in argument dicitonary to argument graph
 def add_suggested_links(graph, suggested):
     for node, suggestions in suggested.items():
-
+        
+        graph.add_edge()
     return 
-
-#determines the precision and recall of the link suggestion method 
-def prec_rec(graph, target_graph):
-
-    return
-'''
+ '''
 
 #returns a copy of argsument graph with num randomly removed links
+#also draws original and modified graphs to separate png files
 def rand_remove(graph, num):
     copy = graph.copy()
+    removed_edges = []
     for i in range(num):
         edges = list(copy.edges)
         del_edge = random.choice(edges)
-        print(del_edge)
+        print("link", del_edge, "removed")
         copy.remove_edge(del_edge[0], del_edge[1])
-    return copy
+        removed_edges.append(del_edge)
+    #draw graphs in png files
+    og_graph = nx.drawing.nx_pydot.to_pydot(graph)
+    og_graph.write_png('original.png')
+    modified = nx.drawing.nx_pydot.to_pydot(copy)
+    modified.write_png('modified.png')
+
+    return copy, removed_edges
 
 
 def main():
@@ -246,13 +250,8 @@ def main():
     graph.add_edge("D", "v6")
     graph.add_edge("D", "v7")
 
-    og_graph = nx.drawing.nx_pydot.to_pydot(graph)
-    #og_graph.write_png('original.png')
     #---------------------------------------------------
-    modified_graph = rand_remove(graph, 2)
-    modified = nx.drawing.nx_pydot.to_pydot(modified_graph)
-    modified.write_png('modified.png')
-    og_graph.write_png('original.png')
+    precision_recall(graph, 2)
     #---------------------------------------------------
     #nodes, neighbor_dict = common_neighbors(modified_graph, "interface", 0.75)
     #suggested = suggest_links(neighbor_dict, modified_graph)
