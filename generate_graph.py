@@ -62,7 +62,7 @@ def generate_graph(json_path):
     config = load_file(json_path)
     #config = load_file("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json") 
     graph = make_graph(config)
-    #add_keywords("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json", graph)
+    #add_keywords(json_path, graph)
     
     #---------------------------------------------------
    
