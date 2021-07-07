@@ -1,61 +1,7 @@
-import argparse
-import json
-
-from networkx.algorithms.components.connected import connected_components, number_connected_components
-import analyze
 import networkx as nx
-#import pydot
-import ipaddress
-import re
-from extract_keywords import get_keywords, add_keywords, analyze_configuration
 import random
-
-def load_file(file):
-    # Load config
-    with open(file, "r") as infile:
-        config = json.load(infile)
-    return config
-
-#constructs nodes to fill in argument graph
-def fill_graph(file, graph):
-    for acl in file["acls"]:
-        graph.add_node(acl, type= "acl")
-        #print(graph.nodes[acl])
-
-    regex = re.compile('Vlan\d+')
-    for interface in file["interfaces"]:
-        if regex.match(interface):
-            graph.add_node(interface, type="vlan")
-        else:    
-            graph.add_node(interface, type="interface")
-        
-        if file["interfaces"][interface]["address"] is not None:
-            address = file["interfaces"][interface]["address"]
-            network_obj = ipaddress.IPv4Interface(address)
-            graph.add_node(str(network_obj.network), type="subnet")
-            graph.add_edge(interface, str(network_obj.network))
-
-        #added create node line (undefined allowed vlans???????)
-        if file["interfaces"][interface]["allowed_vlans"] is not None:
-            for vlan in file["interfaces"][interface]["allowed_vlans"]:
-                graph.add_node( "Vlan" + str(vlan), type="vlan")
-                graph.add_edge(interface, "Vlan" + str(vlan))
-
-        if file["interfaces"][interface]["in_acl"] is not None:
-            graph.add_edge(interface, file["interfaces"][interface]["in_acl"])
-        if file["interfaces"][interface]["out_acl"] is not None:
-            graph.add_edge(interface, file["interfaces"][interface]["out_acl"])
-
-    return 
-
-#Adding individual keywords to each interface
-def add_keywords(file, graph):
-    iface2keywords,_ = analyze_configuration(file, "output/testing.out")
-    for interface, keywords in iface2keywords.items():
-        graph.add_node(interface, type="interface")
-        for word in keywords:
-            graph.add_node(str(word), type="keyword")
-            graph.add_edge(interface, str(word))
+import json
+import generate_graph
 
 #returns list of all nodes of target_type in argument graph
 def get_nodes(graph, target_type):
@@ -158,22 +104,28 @@ def get_similarity(neighbor_dict, graph, ntype_list):
 
 #Calculates precision and recall for common neighbors
 def precision_recall(graph, threshold):
-    original_edge_list = graph.edges()
-    print("original edge list: ", original_edge_list)
     modified_graph, removed_edges = rand_remove(graph, threshold)
-    nodes, neighbor_dict = common_neighbors(modified_graph, "interface", 0.50)
+    nodes, neighbor_dict = common_neighbors(modified_graph, "interface", 0.90)
+    print("num common neighbors:", len(neighbor_dict))
+    print("neighbor_dict:", neighbor_dict)
+    print()
     suggested = suggest_links(neighbor_dict, modified_graph) #dictionary
     print("removed edges:", removed_edges)
+    print()
     print("suggested neighbors:",  suggested)
-    
+    print()
     removed_and_predicted = 0
     #calculates number of removed edges that were predicted
     for edge in removed_edges:
+        sugg_count = 0
         for node, values in suggested.items():
             for value in values:
+                sugg_count += 1
                 if edge[0] == node and edge[1] == value:
                     removed_and_predicted += 1
-    print(removed_and_predicted)
+    print("precision:", removed_and_predicted/sugg_count)
+    print("recall:", removed_and_predicted/len(removed_edges))
+    print()
     
 ''' 
 #arguments: a networkx graph, a dict of suggested links {node: {suggested neighbors}}
@@ -196,21 +148,20 @@ def rand_remove(graph, num):
         print("link", del_edge, "removed")
         copy.remove_edge(del_edge[0], del_edge[1])
         removed_edges.append(del_edge)
+    print()
     #draw graphs in png files
+    '''
     og_graph = nx.drawing.nx_pydot.to_pydot(graph)
     og_graph.write_png('original.png')
     modified = nx.drawing.nx_pydot.to_pydot(copy)
     modified.write_png('modified.png')
-
+    '''
     return copy, removed_edges
 
 
 def main():
-    config = load_file("/shared/configs/northwestern/configs_json/core1.json")
-    #config = load_file("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
-    graph = nx.Graph() 
-    #fill_graph(config, graph)
-    
+    graph = generate_graph.generate_graph("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
+    '''
     graph.add_node("A", type="interface")
     graph.add_node("B", type="interface")
     graph.add_node("C", type="interface")
@@ -249,34 +200,21 @@ def main():
     graph.add_edge("D", "v5")
     graph.add_edge("D", "v6")
     graph.add_edge("D", "v7")
-
+    '''
     #---------------------------------------------------
-    precision_recall(graph, 2)
+    precision_recall(graph, 20)
     #---------------------------------------------------
     #nodes, neighbor_dict = common_neighbors(modified_graph, "interface", 0.75)
     #suggested = suggest_links(neighbor_dict, modified_graph)
-    #pydot_graph = nx.drawing.nx_pydot.to_pydot(graph)
-    #pydot_graph.write_png('original.png')
-    
     #print("suggested neighbors:",  suggested)
     #print(neighbor_dict)
     '''
-    ntype_list = ["vlan", "in_acl", "out_acl", "subnet", "allowed_vlans"] #add keywords
+    ntype_list = ["vlan", "in_acl", "out_acl", "subnet"] #add keywords
     similarity_dict = get_similarity(neighbor_dict, graph, ntype_list)
     for key, val in similarity_dict.items():
         print(key, val)
         print()
-    '''
-    #print("\nComponents in graph: " + str(number_connected_components(graph)))
-    
-    #for component in connected_components(graph):
-    #print(component)
-    #add_keywords("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json", graph)
-    
-    #create_visual(graph)
-    #pydot_graph = nx.drawing.nx_pydot.to_pydot(graph)
-    #pydot_graph.write_png('output2.png')
-
+    '''    
 
 if __name__ == "__main__":
     main()
