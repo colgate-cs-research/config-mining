@@ -218,9 +218,9 @@ def main():
     graph.add_node("v6", type="vlan")
     graph.add_node("v7", type="vlan")
 
-    graph.add_node("in", type="in_acl")
-    graph.add_node("outA", type="out_acl")
-    graph.add_node("outB", type="out_acl")
+    graph.add_node("in", type="in")
+    graph.add_node("outA", type="out")
+    graph.add_node("outB", type="out")
     
     #A
     graph.add_edge("A", "in")

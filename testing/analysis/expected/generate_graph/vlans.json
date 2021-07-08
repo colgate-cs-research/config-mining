@@ -58,22 +58,27 @@
     ],
     "links": [
         {
+            "type": "allowed",
             "source": "GigabitEthernet0/1",
             "target": "Vlan100"
         },
         {
+            "type": "allowed",
             "source": "GigabitEthernet0/1",
             "target": "Vlan200"
         },
         {
+            "type": "allowed",
             "source": "GigabitEthernet0/1",
             "target": "Vlan300"
         },
         {
+            "type": "allowed",
             "source": "Vlan100",
             "target": "GigabitEthernet0/3"
         },
         {
+            "type": "allowed",
             "source": "Vlan100",
             "target": "GigabitEthernet0/4"
         },
@@ -82,10 +87,12 @@
             "target": "red"
         },
         {
+            "type": "allowed",
             "source": "Vlan200",
             "target": "GigabitEthernet0/3"
         },
         {
+            "type": "allowed",
             "source": "Vlan200",
             "target": "GigabitEthernet0/4"
         },
@@ -94,6 +101,7 @@
             "target": "orange"
         },
         {
+            "type": "allowed",
             "source": "Vlan300",
             "target": "GigabitEthernet0/2"
         },
@@ -102,6 +110,7 @@
             "target": "yellow"
         },
         {
+            "type": "allowed",
             "source": "GigabitEthernet0/5",
             "target": "Vlan400"
         },

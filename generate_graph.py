@@ -40,12 +40,12 @@ def make_graph(config):
         if config["interfaces"][interface]["allowed_vlans"] is not None:
             for vlan in config["interfaces"][interface]["allowed_vlans"]:
                 graph.add_node( "Vlan" + str(vlan), type="vlan")
-                graph.add_edge(interface, "Vlan" + str(vlan))
+                graph.add_edge(interface, "Vlan" + str(vlan), type="allowed")
 
         if config["interfaces"][interface]["in_acl"] is not None:
-            graph.add_edge(interface, config["interfaces"][interface]["in_acl"], type = "in_acl")
+            graph.add_edge(interface, config["interfaces"][interface]["in_acl"], type = "in")
         if config["interfaces"][interface]["out_acl"] is not None:
-            graph.add_edge(interface, config["interfaces"][interface]["out_acl"], type = "out_acl")
+            graph.add_edge(interface, config["interfaces"][interface]["out_acl"], type = "out")
 
     return graph
 

@@ -86,37 +86,37 @@
     ],
     "links": [
         {
-            "type": "in_acl",
+            "type": "in",
             "source": "aclA",
             "target": "GigabitEthernet0/2"
         },
         {
-            "type": "out_acl",
+            "type": "out",
             "source": "aclB",
             "target": "GigabitEthernet0/3"
         },
         {
-            "type": "out_acl",
+            "type": "out",
             "source": "aclB",
             "target": "GigabitEthernet0/5"
         },
         {
-            "type": "out_acl",
+            "type": "out",
             "source": "aclB",
             "target": "GigabitEthernet0/6"
         },
         {
-            "type": "in_acl",
+            "type": "in",
             "source": "aclC",
             "target": "GigabitEthernet0/4"
         },
         {
-            "type": "in_acl",
+            "type": "in",
             "source": "aclC",
             "target": "GigabitEthernet0/5"
         },
         {
-            "type": "out_acl",
+            "type": "out",
             "source": "aclD",
             "target": "GigabitEthernet0/4"
         },
