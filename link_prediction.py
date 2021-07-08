@@ -48,16 +48,19 @@ def similarity_proportions(n1, n2, graph, ntype=None):
     type_list = get_nodes(graph, ntype)
     n1_edges = get_edges(n1, graph, ntype) #returns a list of each pairing in a tuple
     n2_edges = get_edges(n2, graph, ntype)
+    print(type_list, n1_edges, n2_edges)
     match = 0
     total1 = len(n1_edges)
     total2 = len(n2_edges)
 
+    matches = []
     for edges1 in n1_edges: 
         node1 = edges1[1] #get neighbor
         if node1 in type_list: #check type
             for edges2 in n2_edges:
                 if edges1[1] == edges2[1]:
                     match += 1
+                    matches.append(node1)
 
     n1_similarity, n2_similarity = 0, 0
     if total1 > 0:
@@ -65,7 +68,7 @@ def similarity_proportions(n1, n2, graph, ntype=None):
     if total2 > 0:
         n2_similarity = match/total2
 
-    return n1_similarity, n2_similarity
+    return n1_similarity, n2_similarity, matches
 
 #determines which nodes meet similarity threshold
 #returns a list of nodes of ntype
@@ -124,7 +127,7 @@ def get_similarity(n1, n2, graph, ntype_list):
     n1_similarity = n2_similarity = 0
     ntype_dictionary = {}
     for ntype in ntype_list:
-        n1_proportion, n2_proportion = similarity_proportions(n1, n2, graph, ntype)
+        n1_proportion, n2_proportion, _ = similarity_proportions(n1, n2, graph, ntype)
         ntype_dictionary[ntype] = n1_proportion, n2_proportion
         weight = ntype_list[ntype]
         n1_similarity += n1_proportion * weight

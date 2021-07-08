@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 
-import difflib
 import json
 import networkx as nx
 import os
 import sys
 import tempfile
-
-from networkx.classes.function import edges
 
 # Load code to test
 testing_dir = os.path.dirname(os.path.abspath(__file__))
