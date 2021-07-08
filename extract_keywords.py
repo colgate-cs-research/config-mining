@@ -3,6 +3,7 @@
 import argparse
 import json
 import nltk
+nltk.download('stopwords')
 from nltk.corpus import stopwords
 import re
 import analyze
@@ -20,7 +21,6 @@ def main():
     parser.add_argument('out_path', help='Name of file (or directory) to write JSON file(s) containing keywords')
 
     arguments = parser.parse_args()
-    nltk.download('stopwords')
     analyze.process_configs(analyze_configuration, arguments.config_path, arguments.out_path)
 
 """Get keywords from a phrase"""
