@@ -137,8 +137,8 @@ def get_similarity(n1, n2, graph, ntype_list):
 #Calculates precision and recall for common neighbors
 def precision_recall(graph, num_remove, similarity_threshold):
     modified_graph, removed_edges = rand_remove(graph, num_remove)
-    #ntype_dict = {None : 1} # Consider all neighbors regardless of type
-    ntype_dict = {"vlan" : 1} # Only consider common VLANs
+    ntype_dict = {None : 1} # Consider all neighbors regardless of type
+    #ntype_dict = {"vlan" : 1} # Only consider common VLANs
     #ntype_dict = {"acl" : 1} # Only consider common ACLs
     #ntype_dict = {"subnet" : 1} # Only consider common subnets
     nodes, neighbor_dict = common_neighbors(modified_graph, "interface", similarity_threshold, ntype_dict)
@@ -201,7 +201,8 @@ def rand_remove(graph, num, seed="b"):
 def main():
     # Parse arguments
 
-    real_graph = generate_graph.generate_graph("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json")
+    real_graph = generate_graph.generate_graph("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json", 
+    "/shared/configs/uwmadison/2014-10-core/keywords/r-432nm-b3a-1-core.json")
     
     graph = nx.Graph()
     graph.add_node("A", type="interface")

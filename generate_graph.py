@@ -2,12 +2,11 @@ import argparse
 import json
 
 from networkx.algorithms.components.connected import connected_components, number_connected_components
-import analyze
 import networkx as nx
 #import pydot
 import ipaddress
 import re
-from extract_keywords import get_keywords, add_keywords, analyze_configuration
+from extract_keywords import analyze_configuration
 
 def load_file(file):
     # Load config
@@ -16,53 +15,55 @@ def load_file(file):
     return config
 
 #constructs graph based on argument config file
-def make_graph(file):
+def make_graph(config):
     graph = nx.Graph()
-    for acl in file["acls"]:
+    for acl in config["acls"]:
         graph.add_node(acl, type= "acl")
         #print(graph.nodes[acl])
 
-    regex = re.compile('Vlan\d+')
-    for interface in file["interfaces"]:
+    regex = re.compile(r'Vlan\d+')
+    for interface in config["interfaces"]:
         if regex.match(interface):
+            print(interface, "vlan")
             graph.add_node(interface, type="vlan")
         else:    
+            print(interface, "interface")
             graph.add_node(interface, type="interface")
         
-        if file["interfaces"][interface]["address"] is not None:
-            address = file["interfaces"][interface]["address"]
+        if config["interfaces"][interface]["address"] is not None:
+            address = config["interfaces"][interface]["address"]
             network_obj = ipaddress.IPv4Interface(address)
             graph.add_node(str(network_obj.network), type="subnet")
             graph.add_edge(interface, str(network_obj.network))
 
         #added create node line (undefined allowed vlans???????)
-        if file["interfaces"][interface]["allowed_vlans"] is not None:
-            for vlan in file["interfaces"][interface]["allowed_vlans"]:
+        if config["interfaces"][interface]["allowed_vlans"] is not None:
+            for vlan in config["interfaces"][interface]["allowed_vlans"]:
                 graph.add_node( "Vlan" + str(vlan), type="vlan")
                 graph.add_edge(interface, "Vlan" + str(vlan))
 
-        if file["interfaces"][interface]["in_acl"] is not None:
-            graph.add_edge(interface, file["interfaces"][interface]["in_acl"], type = "in_acl")
-        if file["interfaces"][interface]["out_acl"] is not None:
-            graph.add_edge(interface, file["interfaces"][interface]["out_acl"], type = "out_acl")
+        if config["interfaces"][interface]["in_acl"] is not None:
+            graph.add_edge(interface, config["interfaces"][interface]["in_acl"], type = "in_acl")
+        if config["interfaces"][interface]["out_acl"] is not None:
+            graph.add_edge(interface, config["interfaces"][interface]["out_acl"], type = "out_acl")
 
     return graph
 
 #Adding individual keywords to each interface
-def add_keywords(file, graph):
-    iface2keywords,_ = analyze_configuration(file, "output/testing.out")
-    for interface, keywords in iface2keywords.items():
-        graph.add_node(interface, type="interface")
+def add_keywords(keyword_path, graph):
+    with open(keyword_path, 'r') as keyword_file:
+        keyword_json = json.load(keyword_file)
+    for interface, keywords in keyword_json["interfaces"].items():
+        #graph.add_node(interface, type="interface")
         for word in keywords:
             graph.add_node(str(word), type="keyword")
             graph.add_edge(interface, str(word))
 
-
-def generate_graph(json_path):
-    config = load_file(json_path)
+def generate_graph(config_path, keyword_path):
+    config = load_file(config_path)
     #config = load_file("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json") 
     graph = make_graph(config)
-    add_keywords(json_path,graph)
+    add_keywords(keyword_path, graph)
     
     #---------------------------------------------------
    

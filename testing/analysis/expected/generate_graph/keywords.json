@@ -1,0 +1,180 @@
+{
+    "directed": false,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "type": "acl",
+            "id": "G"
+        },
+        {
+            "type": "acl",
+            "id": "O"
+        },
+        {
+            "type": "acl",
+            "id": "R"
+        },
+        {
+            "type": "acl",
+            "id": "Y"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/1"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.1.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/2"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.2.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/3"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.3.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/4"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.4.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/5"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.5.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/6"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.6.0/24"
+        },
+        {
+            "type": "keyword",
+            "id": "blue"
+        },
+        {
+            "type": "keyword",
+            "id": "red"
+        },
+        {
+            "type": "keyword",
+            "id": "yellow"
+        }
+    ],
+    "links": [
+        {
+            "type": "out_acl",
+            "source": "G",
+            "target": "GigabitEthernet0/4"
+        },
+        {
+            "type": "out_acl",
+            "source": "O",
+            "target": "GigabitEthernet0/3"
+        },
+        {
+            "type": "in_acl",
+            "source": "O",
+            "target": "GigabitEthernet0/5"
+        },
+        {
+            "type": "in_acl",
+            "source": "R",
+            "target": "GigabitEthernet0/2"
+        },
+        {
+            "type": "in_acl",
+            "source": "Y",
+            "target": "GigabitEthernet0/4"
+        },
+        {
+            "type": "out_acl",
+            "source": "Y",
+            "target": "GigabitEthernet0/5"
+        },
+        {
+            "type": "out_acl",
+            "source": "Y",
+            "target": "GigabitEthernet0/6"
+        },
+        {
+            "source": "GigabitEthernet0/1",
+            "target": "10.0.1.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/1",
+            "target": "blue"
+        },
+        {
+            "source": "GigabitEthernet0/2",
+            "target": "10.0.2.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/2",
+            "target": "red"
+        },
+        {
+            "source": "GigabitEthernet0/3",
+            "target": "10.0.3.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/3",
+            "target": "red"
+        },
+        {
+            "source": "GigabitEthernet0/3",
+            "target": "yellow"
+        },
+        {
+            "source": "GigabitEthernet0/4",
+            "target": "10.0.4.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/4",
+            "target": "yellow"
+        },
+        {
+            "source": "GigabitEthernet0/4",
+            "target": "blue"
+        },
+        {
+            "source": "GigabitEthernet0/5",
+            "target": "10.0.5.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/5",
+            "target": "red"
+        },
+        {
+            "source": "GigabitEthernet0/5",
+            "target": "yellow"
+        },
+        {
+            "source": "GigabitEthernet0/6",
+            "target": "10.0.6.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/6",
+            "target": "yellow"
+        }
+    ]
+}

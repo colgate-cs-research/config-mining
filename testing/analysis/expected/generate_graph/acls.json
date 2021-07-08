@@ -1,0 +1,156 @@
+{
+    "directed": false,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "type": "acl",
+            "id": "aclA"
+        },
+        {
+            "type": "acl",
+            "id": "aclB"
+        },
+        {
+            "type": "acl",
+            "id": "aclC"
+        },
+        {
+            "type": "acl",
+            "id": "aclD"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/1"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.1.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/2"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.2.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/3"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.3.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/4"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.4.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/5"
+        },
+        {
+            "type": "subnet",
+            "id": "10.0.5.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/6"
+        },
+        {
+            "type": "subnet",
+            "id": "20.0.2.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/7"
+        },
+        {
+            "type": "subnet",
+            "id": "20.0.3.0/24"
+        },
+        {
+            "type": "interface",
+            "id": "GigabitEthernet0/8"
+        },
+        {
+            "type": "subnet",
+            "id": "20.0.4.0/24"
+        }
+    ],
+    "links": [
+        {
+            "type": "in_acl",
+            "source": "aclA",
+            "target": "GigabitEthernet0/2"
+        },
+        {
+            "type": "out_acl",
+            "source": "aclB",
+            "target": "GigabitEthernet0/3"
+        },
+        {
+            "type": "out_acl",
+            "source": "aclB",
+            "target": "GigabitEthernet0/5"
+        },
+        {
+            "type": "out_acl",
+            "source": "aclB",
+            "target": "GigabitEthernet0/6"
+        },
+        {
+            "type": "in_acl",
+            "source": "aclC",
+            "target": "GigabitEthernet0/4"
+        },
+        {
+            "type": "in_acl",
+            "source": "aclC",
+            "target": "GigabitEthernet0/5"
+        },
+        {
+            "type": "out_acl",
+            "source": "aclD",
+            "target": "GigabitEthernet0/4"
+        },
+        {
+            "source": "GigabitEthernet0/1",
+            "target": "10.0.1.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/2",
+            "target": "10.0.2.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/3",
+            "target": "10.0.3.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/4",
+            "target": "10.0.4.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/5",
+            "target": "10.0.5.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/6",
+            "target": "20.0.2.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/7",
+            "target": "20.0.3.0/24"
+        },
+        {
+            "source": "GigabitEthernet0/8",
+            "target": "20.0.4.0/24"
+        }
+    ]
+}
