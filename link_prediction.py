@@ -1,3 +1,4 @@
+import argparse
 import networkx as nx
 import random
 import json
@@ -202,11 +203,22 @@ def rand_remove(graph, num, seed="b"):
 
 
 def main():
-    # Parse arguments
+    #Parse command-line arguments
+    parser = argparse.ArgumentParser(description='Commandline arguments')
+    parser.add_argument('config_path',type=str, help='Path for a file (or directory) containing a JSON representation of configuration(s)')
+    parser.add_argument('keyword_path',type=str,help='Path for a file (or directory) containing a JSON representation of keywords from config(s)')
+    parser.add_argument('threshold',type=float,help='threshold for common neighbor similarity')
+    arguments=parser.parse_args()
 
-    real_graph = generate_graph.generate_graph("/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json", 
-    "/shared/configs/uwmadison/2014-10-core/keywords/r-432nm-b3a-1-core.json")
-    
+    config_path = arguments.config_path
+    keyword_path = arguments.keyword_path
+    threshold = arguments.threshold
+
+    real_graph = generate_graph.generate_graph(config_path, keyword_path)
+    '''
+    config path: "/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json"
+    keyword path: "/shared/configs/uwmadison/2014-10-core/keywords/r-432nm-b3a-1-core.json"
+    '''
     graph = nx.Graph()
     graph.add_node("A", type="interface")
     graph.add_node("B", type="interface")
@@ -249,7 +261,7 @@ def main():
     
     
     #---------------------------------------------------
-    precision_recall(real_graph, 20, 0.9)
+    precision_recall(real_graph, 20, threshold)
     #---------------------------------------------------
     #nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
     #suggested = suggest_links(neighbor_dict, modified_graph)
@@ -262,6 +274,8 @@ def main():
         print(key, val)
         print()
     '''
+
+
 
 if __name__ == "__main__":
     main()
