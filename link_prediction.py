@@ -207,7 +207,7 @@ def main():
     parser = argparse.ArgumentParser(description='Commandline arguments')
     parser.add_argument('config_path',type=str, help='Path for a file (or directory) containing a JSON representation of configuration(s)')
     parser.add_argument('keyword_path',type=str,help='Path for a file (or directory) containing a JSON representation of keywords from config(s)')
-    parser.add_argument('threshold',type=float,help='threshold for common neighbor similarity')
+    parser.add_argument('-threshold',type=float,help='threshold for common neighbor similarity', default = 0.9)
     arguments=parser.parse_args()
 
     config_path = arguments.config_path
