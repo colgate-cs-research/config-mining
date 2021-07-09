@@ -1,11 +1,15 @@
 import argparse
+import json
 import networkx as nx
 import random
-import json
-import generate_graph
 
 get_nodes_cache = {}
 get_edges_cache = {}
+
+def clear_caches():
+    global get_nodes_cache, get_edges_cache
+    get_nodes_cache = {}
+    get_edges_cache = {}
 
 #returns list of all nodes of target_type in argument graph
 def get_nodes(graph, target_type=None):
@@ -42,7 +46,6 @@ def get_edges(node, graph, target_type=None):
         get_edges_cache[target_type] = {}
     get_edges_cache[target_type][node] = edge_list
     return edge_list
-
 
 #returns two floats indicating similarity of nodes' neighbors of ntype
 def similarity_proportions(n1, n2, graph, ntype=None):
@@ -139,13 +142,9 @@ def get_similarity(n1, n2, graph, ntype_list):
 
 
 #Calculates precision and recall for common neighbors
-def precision_recall(graph, num_remove, similarity_threshold):
+def precision_recall(graph, num_remove, similarity_threshold, common_neighbors_weights):
     modified_graph, removed_edges = rand_remove(graph, num_remove)
-    ntype_dict = {None : 1} # Consider all neighbors regardless of type
-    #ntype_dict = {"vlan" : 1} # Only consider common VLANs
-    #ntype_dict = {"acl" : 1} # Only consider common ACLs
-    #ntype_dict = {"subnet" : 1} # Only consider common subnets
-    nodes, neighbor_dict = common_neighbors(modified_graph, "interface", similarity_threshold, ntype_dict)
+    nodes, neighbor_dict = common_neighbors(modified_graph, "interface", similarity_threshold, common_neighbors_weights)
     print("num common neighbors:", len(neighbor_dict))
     print("neighbor_dict:", neighbor_dict)
     print()
@@ -201,24 +200,14 @@ def rand_remove(graph, num, seed="b"):
     '''
     return copy, removed_edges
 
+"""Load a graph from a JSON representation"""
+def load_graph(graph_path):
+    with open(graph_path, 'r') as graph_file:
+        graph_json = json.load(graph_file)
+    return nx.readwrite.json_graph.node_link_graph(graph_json)
 
-def main():
-    #Parse command-line arguments
-    parser = argparse.ArgumentParser(description='Commandline arguments')
-    parser.add_argument('config_path',type=str, help='Path for a file (or directory) containing a JSON representation of configuration(s)')
-    parser.add_argument('keyword_path',type=str,help='Path for a file (or directory) containing a JSON representation of keywords from config(s)')
-    parser.add_argument('-threshold',type=float,help='threshold for common neighbor similarity', default = 0.9)
-    arguments=parser.parse_args()
-
-    config_path = arguments.config_path
-    keyword_path = arguments.keyword_path
-    threshold = arguments.threshold
-
-    real_graph = generate_graph.generate_graph(config_path, keyword_path)
-    '''
-    config path: "/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json"
-    keyword path: "/shared/configs/uwmadison/2014-10-core/keywords/r-432nm-b3a-1-core.json"
-    '''
+"""Create a simple graph for testing purposes"""
+def generate_test_graph():
     graph = nx.Graph()
     graph.add_node("A", type="interface")
     graph.add_node("B", type="interface")
@@ -258,10 +247,29 @@ def main():
     graph.add_edge("D", "v5")
     graph.add_edge("D", "v6")
     graph.add_edge("D", "v7")
-    
+    return graph
+
+def main():
+    #Parse command-line arguments
+    parser = argparse.ArgumentParser(description='Commandline arguments')
+    parser.add_argument('graph_path',type=str, 
+            help='Path for a file (or directory) containing a JSON representation of graph(s); use "TEST" to generate a test graph instead')
+    parser.add_argument('-t', '--threshold',type=float,help='threshold for common neighbor similarity', default = 0.9)
+    parser.add_argument('-r', '--remove', type=int, help='number of links to randomly remove', default=20)
+    parser.add_argument('-c', '--common_neighbors_weights', type=json.loads, help='a dictionary of node types (key) and weights (value) to use when computing common neighbors', default={None : 1})
+    arguments=parser.parse_args()
+
+    if arguments.graph_path == "TEST":
+        graph = generate_test_graph()
+    else:
+        graph = load_graph(arguments.graph_path)
+    '''
+    config path: "/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json"
+    keyword path: "/shared/configs/uwmadison/2014-10-core/keywords/r-432nm-b3a-1-core.json"
+    '''
     
     #---------------------------------------------------
-    precision_recall(real_graph, 20, threshold)
+    precision_recall(graph, arguments.remove, arguments.threshold, arguments.common_neighbors_weights)
     #---------------------------------------------------
     #nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
     #suggested = suggest_links(neighbor_dict, modified_graph)
@@ -275,7 +283,10 @@ def main():
         print()
     '''
 
-
+    #from networkx.algorithms.components.connected import connected_components, number_connected_components
+    #print("\nComponents in graph: " + str(number_connected_components(graph)))
+    #for component in connected_components(graph):
+    #print(component)
 
 if __name__ == "__main__":
     main()
