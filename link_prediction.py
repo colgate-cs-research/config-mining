@@ -1,7 +1,9 @@
 import argparse
 import json
 import networkx as nx
+import node2vec
 import random
+import tqdm
 
 get_nodes_cache = {}
 get_edges_cache = {}
@@ -52,7 +54,6 @@ def similarity_proportions(n1, n2, graph, ntype=None):
     type_list = get_nodes(graph, ntype)
     n1_edges = get_edges(n1, graph, ntype) #returns a list of each pairing in a tuple
     n2_edges = get_edges(n2, graph, ntype)
-    print(type_list, n1_edges, n2_edges)
     match = 0
     total1 = len(n1_edges)
     total2 = len(n2_edges)
@@ -80,23 +81,34 @@ def similarity_proportions(n1, n2, graph, ntype=None):
 def common_neighbors(graph, ntype, threshold, ntype_dict):
     neighbor_dictionary = {}
     nodes = get_nodes(graph, ntype)
-    iterations = len(nodes) * (len(nodes)-1) / 2
-    update = iterations / 50
-    count = 0
-    print("Progress: ",end='', flush=True)
-    for i in range(len(nodes)):
+    pbar = tqdm.trange(len(nodes))
+    pbar.set_description("Computing common neighbors")
+    for i in pbar:
         for j in range(i+1, len(nodes)):
             n1_similarity, n2_similarity, per_type_similarity = get_similarity(nodes[i], nodes[j], graph, ntype_dict)
             if n1_similarity >= threshold and n2_similarity >= threshold:  #and (n1_similarity != 1 or n2_similarity != 1):
                 node_list = (nodes[i], nodes[j])
                 neighbor_dictionary[node_list] = [n1_similarity, n2_similarity]
-            count += 1
-            if count >= update:
-                print('#', end='', flush=True)
-                count = 0
-    print()
     return nodes, neighbor_dictionary
 
+def common_neighbors_node2vec(graph, ntype, threshold):
+    # Compute vectors
+    n2v = node2vec.Node2Vec(graph, dimensions=32, walk_length=30, num_walks=200, workers=5)
+    model = n2v.fit(window=10, min_count=1, batch_words=4)
+    
+    nodes = get_nodes(graph, ntype)
+    neighbor_dictionary = {}
+    pbar = tqdm.tqdm(nodes)
+    pbar.set_description("Computing common neighbors")
+    for n1 in pbar:
+        for n2, similarity in model.wv.most_similar(n1):
+            if similarity < threshold:
+                break
+            if n2 not in nodes:
+                continue
+            if (n2, n1) not in neighbor_dictionary:
+                neighbor_dictionary[(n1, n2)] = similarity 
+    return nodes, neighbor_dictionary
 
 #suggests links for common neighbors in graph
 #return dict {node: {suggested neighbors}}
@@ -142,9 +154,12 @@ def get_similarity(n1, n2, graph, ntype_list):
 
 
 #Calculates precision and recall for common neighbors
-def precision_recall(graph, num_remove, similarity_threshold, common_neighbors_weights):
+def precision_recall(graph, num_remove, similarity_threshold, common_neighbors_weights, use_node2vec):
     modified_graph, removed_edges = rand_remove(graph, num_remove)
-    nodes, neighbor_dict = common_neighbors(modified_graph, "interface", similarity_threshold, common_neighbors_weights)
+    if use_node2vec:
+        _, neighbor_dict = common_neighbors_node2vec(modified_graph, "interface", similarity_threshold)
+    else:
+        _, neighbor_dict = common_neighbors(modified_graph, "interface", similarity_threshold, common_neighbors_weights)
     print("num common neighbors:", len(neighbor_dict))
     print("neighbor_dict:", neighbor_dict)
     print()
@@ -256,7 +271,9 @@ def main():
             help='Path for a file (or directory) containing a JSON representation of graph(s); use "TEST" to generate a test graph instead')
     parser.add_argument('-t', '--threshold',type=float,help='threshold for common neighbor similarity', default = 0.9)
     parser.add_argument('-r', '--remove', type=int, help='number of links to randomly remove', default=20)
-    parser.add_argument('-c', '--common_neighbors_weights', type=json.loads, help='a dictionary of node types (key) and weights (value) to use when computing common neighbors', default={None : 1})
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-w', '--weights', type=json.loads, help='a dictionary of node types (key) and weights (value) to use when computing common neighbors', default={None : 1})
+    group.add_argument('-n', '--node2vec', action='store_true', help="Use node2vec for finding common neighbors")
     arguments=parser.parse_args()
 
     if arguments.graph_path == "TEST":
@@ -269,7 +286,7 @@ def main():
     '''
     
     #---------------------------------------------------
-    precision_recall(graph, arguments.remove, arguments.threshold, arguments.common_neighbors_weights)
+    precision_recall(graph, arguments.remove, arguments.threshold, arguments.weights, arguments.node2vec)
     #---------------------------------------------------
     #nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
     #suggested = suggest_links(neighbor_dict, modified_graph)

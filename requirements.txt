@@ -1,3 +1,5 @@
 networkx
 nltk
+node2vec
 pandas
+tqdm
