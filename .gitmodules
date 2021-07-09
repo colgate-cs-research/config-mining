@@ -1,0 +1,3 @@
+[submodule "libraries/contrast"]
+	path = libraries/contrast
+	url = https://github.com/colgate-cs-research/contrast.git
