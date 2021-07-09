@@ -36,11 +36,7 @@ def analyze_configuration(in_paths, out_path=None, generate_image=False):
     return graph
 
 def generate_graph(config_path, keyword_path):
-    #from networkx.algorithms.components.connected import connected_components, number_connected_components
-    #print("\nComponents in graph: " + str(number_connected_components(graph)))
-    #for component in connected_components(graph):
-    #print(component)
-    return analyze_configuration((config_path, keyword_path))
+    return analyze_configuration([config_path, keyword_path])
 
 def load_config(file):
     # Load config
