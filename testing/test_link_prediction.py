@@ -12,8 +12,7 @@ import link_prediction
 
 def load_graph(filename):
     # Flush caches
-    link_prediction.get_nodes_cache = {}
-    link_prediction.get_edges_cache = {}
+    link_prediction.clear_caches()
 
     graphs_path = os.path.join(testing_dir, "analysis", "expected", "generate_graph", filename)
     with open(graphs_path, 'r') as graph_file:
