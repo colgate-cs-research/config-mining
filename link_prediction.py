@@ -78,7 +78,7 @@ def similarity_proportions(n1, n2, graph, ntype=None):
 #determines which nodes meet similarity threshold
 #returns a list of nodes of ntype
 #Also returns a dict including similar node pairs {(n1,n2): [similarity of n1, similarity of n2]}
-def common_neighbors(graph, ntype, threshold, ntype_dict):
+def similarity_common_neighbors(graph, ntype, threshold, ntype_dict):
     neighbor_dictionary = {}
     nodes = get_nodes(graph, ntype)
     pbar = tqdm.trange(len(nodes))
@@ -91,9 +91,15 @@ def common_neighbors(graph, ntype, threshold, ntype_dict):
                 neighbor_dictionary[node_list] = [n1_similarity, n2_similarity]
     return nodes, neighbor_dictionary
 
-def common_neighbors_node2vec(graph, ntype, threshold):
+def similarity_node2vec(graph, ntype, threshold, options):
     # Compute vectors
-    n2v = node2vec.Node2Vec(graph, dimensions=32, walk_length=30, num_walks=200, workers=5)
+    if "dimensions" not in options:
+        options["dimensions"] = 64
+    if "walk_length" not in options:
+        options["walk_length"] = 30
+    if "num_walks" not in options:
+        options["num_walks"] = 200
+    n2v = node2vec.Node2Vec(graph, dimensions=options["dimensions"], walk_length=options["walk_length"], num_walks=options["num_walks"], workers=5)
     model = n2v.fit(window=10, min_count=1, batch_words=4)
     
     nodes = get_nodes(graph, ntype)
@@ -154,12 +160,9 @@ def get_similarity(n1, n2, graph, ntype_list):
 
 
 #Calculates precision and recall for common neighbors
-def precision_recall(graph, num_remove, similarity_threshold, common_neighbors_weights, use_node2vec):
+def precision_recall(graph, num_remove, similarity_threshold, similarity_options, similarity_function):
     modified_graph, removed_edges = rand_remove(graph, num_remove)
-    if use_node2vec:
-        _, neighbor_dict = common_neighbors_node2vec(modified_graph, "interface", similarity_threshold)
-    else:
-        _, neighbor_dict = common_neighbors(modified_graph, "interface", similarity_threshold, common_neighbors_weights)
+    _, neighbor_dict = similarity_function(modified_graph, "interface", similarity_threshold, similarity_options)
     print("num common neighbors:", len(neighbor_dict))
     print("neighbor_dict:", neighbor_dict)
     print()
@@ -271,9 +274,13 @@ def main():
             help='Path for a file (or directory) containing a JSON representation of graph(s); use "TEST" to generate a test graph instead')
     parser.add_argument('-t', '--threshold',type=float,help='threshold for common neighbor similarity', default = 0.9)
     parser.add_argument('-r', '--remove', type=int, help='number of links to randomly remove', default=20)
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('-w', '--weights', type=json.loads, help='a dictionary of node types (key) and weights (value) to use when computing common neighbors', default={None : 1})
-    group.add_argument('-n', '--node2vec', action='store_true', help="Use node2vec for finding common neighbors")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-c', '--common', type=json.loads, nargs="?", 
+        help="Use common neighbors when computing node similarity; optionally provide a dictionary of node types (key) and weights (value) to use when computing common neighbors", 
+        default={}, const={None : 1})
+    group.add_argument('-n', '--node2vec', type=json.loads, nargs="?",
+        help="Use node2vec when computing node similarity; optionally provide a dictionary of options",
+        default={}, const={"dimensions": 64, "walk_length": 30, "num_walks": 200})
     arguments=parser.parse_args()
 
     if arguments.graph_path == "TEST":
@@ -284,9 +291,19 @@ def main():
     config path: "/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json"
     keyword path: "/shared/configs/uwmadison/2014-10-core/keywords/r-432nm-b3a-1-core.json"
     '''
+
+    if len(arguments.common) > 0:
+        similarity_options = arguments.common
+        similarity_function = similarity_common_neighbors
+    elif len(arguments.node2vec) > 0:
+        similarity_options = arguments.node2vec
+        similarity_function = similarity_node2vec
+
+    print(similarity_options)
+    print(similarity_function)
     
     #---------------------------------------------------
-    precision_recall(graph, arguments.remove, arguments.threshold, arguments.weights, arguments.node2vec)
+    precision_recall(graph, arguments.remove, arguments.threshold, similarity_options, similarity_function)
     #---------------------------------------------------
     #nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
     #suggested = suggest_links(neighbor_dict, modified_graph)
