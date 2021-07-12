@@ -2,6 +2,7 @@ import argparse
 import json
 import networkx as nx
 import node2vec
+import pprint
 import random
 import tqdm
 
@@ -163,13 +164,17 @@ def get_similarity(n1, n2, graph, ntype_list):
 def precision_recall(graph, num_remove, similarity_threshold, similarity_options, similarity_function):
     modified_graph, removed_edges = rand_remove(graph, num_remove)
     _, neighbor_dict = similarity_function(modified_graph, "interface", similarity_threshold, similarity_options)
-    print("num common neighbors:", len(neighbor_dict))
-    print("neighbor_dict:", neighbor_dict)
+    print("num similar pairs:", len(neighbor_dict))
+    pp = pprint.PrettyPrinter(indent=4)
+    print("similar nodes:")
+    pp.pprint(neighbor_dict)
     print()
     suggested = suggest_links(neighbor_dict, modified_graph) #dictionary
-    print("removed edges:", removed_edges)
+    print("removed edges:")
+    pp.pprint(removed_edges)
     print()
-    print("suggested neighbors:",  suggested)
+    print("suggested links:")
+    pp.pprint(suggested)
     print()
     removed_and_predicted = 0
     #calculates number of removed edges that were predicted
@@ -205,7 +210,7 @@ def rand_remove(graph, num, seed="b"):
     for i in range(num):
         edges = list(copy.edges)
         del_edge = random.choice(edges)
-        print("link", del_edge, "removed")
+        #print("link", del_edge, "removed")
         copy.remove_edge(del_edge[0], del_edge[1])
         removed_edges.append(del_edge)
     print()
