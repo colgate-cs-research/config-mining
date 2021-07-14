@@ -174,7 +174,6 @@ def get_similarity(n1, n2, graph, ntype_list):
 #takes argument dict {node: {suggested neighbors}} which suggests links for similar nodes
 #returns ranked list of suggestions (higher key = higher priority suggestion)
 def rank_suggestions(suggested_links, graph):
-    largest_count = 0
     ranked_suggestions = {}
     for node, suggested in suggested_links.items():
         for suggestion in suggested:
@@ -185,14 +184,27 @@ def rank_suggestions(suggested_links, graph):
                 ranked_suggestions[count] = [link_suggestion]
             else:
                 ranked_suggestions[count].append(link_suggestion)
-            if count > largest_count:
-                largest_count = count
-    print(ranked_suggestions)
     return ranked_suggestions        
 
 
+#returns ranked list of top num suggestions in ranked_suggestions dict
+def get_top_suggestions(ranked_suggestions, num):
+    s_count = 0
+    top_suggestions = []
+    keys = sorted(ranked_suggestions)
+    #print("KEYS:", keys)
+    while len(keys) > 0 and s_count < num:
+        highest_key = keys.pop()
+        suggestions_list = ranked_suggestions[highest_key]
+        for suggestion in suggestions_list:
+            if s_count >= num:
+                break
+            top_suggestions.append(suggestion)
+            s_count += 1
+    return top_suggestions
+
 #Calculates precision and recall for common neighbors
-def precision_recall(graph, num_remove, similarity_threshold, similarity_options, similarity_function):
+def precision_recall(graph, num_remove, similarity_threshold, similarity_options, similarity_function, num_suggs):
     #modified_graph, removed_edges = rand_remove(graph, num_remove)
     _, neighbor_dict = similarity_function(graph, "interface", similarity_threshold, similarity_options) #change back to modified_graph
     print("num similar pairs:", len(neighbor_dict))
@@ -208,7 +220,13 @@ def precision_recall(graph, num_remove, similarity_threshold, similarity_options
     print("suggested links:")
     pp.pprint(suggested)
     print()
-    rank_suggestions(suggested, graph)
+    ranked_suggestions = rank_suggestions(suggested, graph)
+    pp.pprint(ranked_suggestions)
+    print()
+    top_suggestions = get_top_suggestions(ranked_suggestions, num_suggs)
+    print("TOP", num_suggs, "link suggestions:")
+    for suggestion in top_suggestions:
+        print(suggestion)
     '''
     removed_and_predicted = 0
     #calculates number of removed edges that were predicted
@@ -359,7 +377,7 @@ def main():
     print(similarity_function)
     
     #---------------------------------------------------
-    precision_recall(graph, arguments.remove, arguments.threshold, similarity_options, similarity_function)
+    precision_recall(graph, arguments.remove, arguments.threshold, similarity_options, similarity_function, 5)
     #---------------------------------------------------
     #nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
     #suggested = suggest_links(neighbor_dict, modified_graph)
