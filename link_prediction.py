@@ -347,8 +347,10 @@ def main():
     #optional
     parser.add_argument('-t', '--threshold',type=float,help='threshold for common neighbor similarity', default = 0.9)
     parser.add_argument('-r', '--remove', type=int, help='number of links to randomly remove', default=20)
-    group = parser.add_mutually_exclusive_group(required=True)
+    parser.add_argument('-sug', '--suggest', type=int, help='number of links to suggest', default=5)
+  
     #choose one
+    group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('-c', '--common', type=json.loads, nargs="?", 
         help="Use common neighbors when computing node similarity; optionally provide a dictionary of node types (key) and weights (value) to use when computing common neighbors", 
         default={}, const={None : 1})
@@ -377,7 +379,7 @@ def main():
     print(similarity_function)
     
     #---------------------------------------------------
-    precision_recall(graph, arguments.remove, arguments.threshold, similarity_options, similarity_function, 5)
+    precision_recall(graph, arguments.remove, arguments.threshold, similarity_options, similarity_function, arguments.suggest)
     #---------------------------------------------------
     #nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
     #suggested = suggest_links(neighbor_dict, modified_graph)
