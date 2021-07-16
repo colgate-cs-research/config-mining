@@ -128,7 +128,6 @@ def get_node_diff_between(larger, smaller, graph):
         larger_copy.add_node(edge[1])
     for edge in graph.edges(smaller):
         smaller_copy.add_node(edge[1])
-    #print("DIFF:", larger_copy.nodes() - smaller_copy.nodes())
     return larger_copy.nodes() - smaller_copy.nodes() 
 
 #suggests links for common neighbors in graph
@@ -165,34 +164,32 @@ def get_similarity(n1, n2, graph, ntype_list):
         ntype_dictionary[ntype] = n1_proportion, n2_proportion
         weight = ntype_list[ntype]
         n1_similarity += n1_proportion * weight
-        #print("n1_similarity:", n1_similarity)
         n2_similarity += n2_proportion * weight
-        #print("n2_similarity:", n2_similarity)
     return n1_similarity, n2_similarity, ntype_dictionary
 
 
 #takes argument dict {node: {suggested neighbors}} which suggests links for similar nodes
-#returns ranked list of suggestions (higher key = higher priority suggestion)
-def rank_suggestions(suggested_links, graph):
+#returns ranked list of suggestions {int representing # of connections to ifaces: [link suggestions]} (higher key = higher priority suggestion)
+def rank_suggestions_for_node(suggested_links, graph):
     ranked_suggestions = {}
-    for node, suggested in suggested_links.items():
-        for suggestion in suggested:
-            link_suggestion = [node, suggestion]
-            count = len(get_edges(suggestion, graph, "interface")) #returns a list of each pairing in a tuple 
-            #print(count)
-            if count not in ranked_suggestions:
-                ranked_suggestions[count] = [link_suggestion]
-            else:
-                ranked_suggestions[count].append(link_suggestion)
-    return ranked_suggestions        
+    for suggestion in suggested_links:
+        count = len(get_edges(suggestion, graph, "interface")) #returns a list of each pairing in a tuple 
+        if count not in ranked_suggestions:
+            ranked_suggestions[count] = [suggestion]
+        else:
+            ranked_suggestions[count].append(suggestion)
+    return ranked_suggestions
 
-
+def rank_suggestions(suggested_links, graph):
+    for iface in suggested_links:
+        suggested_links[iface] = rank_suggestions_for_node(suggested_links[iface], graph)
+    return
+    
 #returns ranked list of top num suggestions in ranked_suggestions dict
 def get_top_suggestions(ranked_suggestions, num):
     s_count = 0
     top_suggestions = []
     keys = sorted(ranked_suggestions)
-    #print("KEYS:", keys)
     while len(keys) > 0 and s_count < num:
         highest_key = keys.pop()
         suggestions_list = ranked_suggestions[highest_key]
@@ -205,8 +202,10 @@ def get_top_suggestions(ranked_suggestions, num):
 
 #Calculates precision and recall for common neighbors
 def precision_recall(graph, num_remove, similarity_threshold, similarity_options, similarity_function, num_suggs):
-    #modified_graph, removed_edges = rand_remove(graph, num_remove)
-    _, neighbor_dict = similarity_function(graph, "interface", similarity_threshold, similarity_options) #change back to modified_graph
+    modified_graph, removed_edges = rand_remove(graph, num_remove)
+    print("REMOVED EDGES")
+    print(removed_edges)
+    _, neighbor_dict = similarity_function(modified_graph, "interface", similarity_threshold, similarity_options) #change back to modified_graph
     print("num similar pairs:", len(neighbor_dict))
     pp = pprint.PrettyPrinter(indent=4)
     print("similar nodes:")
@@ -220,10 +219,12 @@ def precision_recall(graph, num_remove, similarity_threshold, similarity_options
     print("suggested links:")
     pp.pprint(suggested)
     print()
-    ranked_suggestions = rank_suggestions(suggested, graph)
-    pp.pprint(ranked_suggestions)
+    rank_suggestions(suggested, graph)
+    print("ranked suggested links:")
+    pp.pprint(suggested)
     print()
-    top_suggestions = get_top_suggestions(ranked_suggestions, num_suggs)
+    top_suggestions = get_top_suggestions(suggested, num_suggs)
+    '''
     print("TOP", num_suggs, "link suggestions:")
     for suggestion in top_suggestions:
         print(suggestion)
@@ -242,7 +243,7 @@ def precision_recall(graph, num_remove, similarity_threshold, similarity_options
     if len(removed_edges) > 0:
         print("recall:", removed_and_predicted/len(removed_edges))
     print()
-    '''
+
     
 ''' 
 #arguments: a networkx graph, a dict of suggested links {node: {suggested neighbors}}
@@ -254,21 +255,27 @@ def add_suggested_links(graph, suggested):
     return 
  '''
 
-#returns a copy of argument graph with num randomly removed links
+#returns a copy of argument graph with num randomly removed links (always connected to an iface)
 #also draws original and modified graphs to separate png files
 def rand_remove(graph, num, seed="b"):
     random.seed(seed)
     copy = graph.copy()
     removed_edges = []
+
+    #get all interface edges in graph
+    iface_edges = []
+    interface_nodes = get_nodes(graph, "interface")
+    for iface in interface_nodes:
+        iface_edges += get_edges(iface, graph)
+
     for i in range(num):
-        edges = list(copy.edges)
-        del_edge = random.choice(edges)
-        #print("link", del_edge, "removed")
-        copy.remove_edge(del_edge[0], del_edge[1])
+        del_edge = random.choice(iface_edges)
+        iface_edges.remove(del_edge)
         removed_edges.append(del_edge)
-    print()
-    #draw graphs in png files
+        copy.remove_edge(del_edge[0], del_edge[1])
+
     '''
+    #draw graphs in png files
     og_graph = nx.drawing.nx_pydot.to_pydot(graph)
     og_graph.write_png('original.png')
     modified = nx.drawing.nx_pydot.to_pydot(copy)
@@ -375,8 +382,8 @@ def main():
         similarity_options = arguments.node2vec
         similarity_function = similarity_node2vec
 
-    print(similarity_options)
-    print(similarity_function)
+    #print(similarity_options)
+    #print(similarity_function)
     
     #---------------------------------------------------
     precision_recall(graph, arguments.remove, arguments.threshold, similarity_options, similarity_function, arguments.suggest)
