@@ -377,6 +377,9 @@ def main():
 
     if len(arguments.common) > 0:
         similarity_options = arguments.common
+        if "none" in similarity_options:
+            similarity_options[None] = similarity_options["none"]
+            del similarity_options["none"]
         similarity_function = similarity_common_neighbors
     elif len(arguments.node2vec) > 0:
         similarity_options = arguments.node2vec
