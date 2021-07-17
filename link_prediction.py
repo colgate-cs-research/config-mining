@@ -1,7 +1,7 @@
 import argparse
 import json
 import networkx as nx
-#import node2vec
+import node2vec
 import pprint
 import random
 import tqdm
