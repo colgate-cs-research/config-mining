@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "/shared/configs/internet2/2021-06-16"
+		},
+		{
+			"path": "../../../../shared/config-mining/output"
 		}
 	],
 	"settings": {}

@@ -12,7 +12,7 @@ fi
 echo $NETWORK $DEVICE
 
 GRAPH="/shared/config-mining/output/$NETWORK/graphs/$DEVICE.json"
-OUTPUT_DIR="output/$NETWORK/link_prediction/$DEVICE"
+OUTPUT_DIR="/shared/config-mining/output/$NETWORK/link_prediction/$DEVICE"
 mkdir -p $OUTPUT_DIR
 
 for factor in "none" "vlan" "acl" "keyword"; do
