@@ -246,8 +246,12 @@ def precision_recall(graph, num_remove, similarity_threshold, similarity_options
                 removed_and_predicted += 1
     if sugg_count > 0:
         print("precision:", removed_and_predicted/sugg_count)
+    else:
+        print("precision: 0.0")
     if len(removed_edges) > 0:
         print("recall:", removed_and_predicted/len(removed_edges))
+    else:
+        print("recall: 0.0")
     print()
 
     
