@@ -3,7 +3,6 @@ import argparse
 import ipaddress
 import json
 import networkx as nx
-import re
 
 def main():
     #Parse command-line arguments
@@ -51,9 +50,8 @@ def make_graph(config):
         graph.add_node(acl, type= "acl")
         #print(graph.nodes[acl])
 
-    regex = re.compile(r'Vlan\d+')
     for interface in config["interfaces"]:
-        if regex.match(interface):
+        if interface.startswith("Vlan"):
             graph.add_node(interface, type="vlan")
         else:    
             graph.add_node(interface, type="interface")
@@ -85,9 +83,12 @@ def add_keywords(keyword_path, graph):
 
     # Add keyword nodes and edges
     for interface, keywords in keyword_json["interfaces"].items():
-        #graph.add_node(interface, type="interface")
+        if interface.startswith("Vlan"):
+            graph.add_node(interface, type="vlan")
+        else: 
+            graph.add_node(interface, type="interface")
         for word in keywords:
-            graph.add_node(str(word), type="keyword")
+            graph.add_node(word, type="keyword")
             graph.add_edge(interface, str(word))
 
 if __name__ == "__main__":
