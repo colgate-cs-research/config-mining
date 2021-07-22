@@ -17,18 +17,8 @@ def get_columns_csv(txt, title, variation=None):
     return title_list
 
 # Graphs the x and y coordinates as given
-def graph_data(x_values, y_values):
-    # grabbing titles of names list.name
-    plt.plot(x_values, y_values)
-    plt.xlabel(x_values.name)
-    plt.ylabel(y_values.name)
-
-    plt.savefig("graph.png")
-
-def main():
-    csv_file = "data_link_prediction.csv"
+def graph_data(csv_file):
     df = pd.read_csv(csv_file)
-    #print(df.head())
 
     #grab unique pairs of Hyperparam name and Similarity
     variants = df.loc[:,["Hyperparam name", "Similarity"]].drop_duplicates()
@@ -37,7 +27,6 @@ def main():
     for _, row in variants.iterrows():
         hyperparam = row["Hyperparam name"]
         similarity = row["Similarity"]
-        print(hyperparam, similarity)
 
         #isolating data for specific hyperparam and similarity
         filtered = df.loc[
@@ -63,6 +52,11 @@ def main():
         # Save graph
         filename = "output/graphs/graph_" + hyperparam + "_" + similarity + ".png"
         plt.savefig(filename)
+
+def main():
+    csv_file = "data_link_prediction.csv"
+    graph_data(csv_file)
+    
     #print(devices)
     #plt.plot(filtered["Hyperparam value"], filtered["Precision"], label="Precision")
 
