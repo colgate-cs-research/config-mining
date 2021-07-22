@@ -11,21 +11,20 @@ def separate_names(directories, network):
 
     f = open("data_link_prediction.csv", 'w')
     writer = csv.writer(f)
+    # Make title for columns in csv file
     writer.writerow(["Network", "Device", "Similarity", "Hyperparam name", "Hyperparam value", "Precision", "Recall"])
 
     for folder in os.listdir(link_prediction):
         device = os.path.join(link_prediction, folder)
         directory = folder
 
-
-        for files in os.listdi
-        r(device):
+        for files in os.listdir(device):
             items = files.split('_')
             similarity = items[0]
             hyperparam_name = items[1]
-            hyperparam_value = items[2].split('.')[0]
+            hyperparam_value = items[2][:-4]
 
-
+            # Opening csv files to read and grab precision and recall values
             file = os.path.join(device, files)
             file1 = open(file, 'r')
             lines = file1.readlines()
@@ -39,6 +38,7 @@ def separate_names(directories, network):
             else:
                 precision = precision_values[1]         
             
+            # Writes row with each attribute of the device
             writer.writerow([network, directory, similarity, hyperparam_name, hyperparam_value, precision, recall])
     
 def main():
@@ -49,17 +49,6 @@ def main():
     arguments = parser.parse_args()
 
     separate_names(arguments.directory, arguments.network)
-
-    #printing data
-    '''
-    print(network)
-    print(directory)
-    print(similarity)
-    print(hyperparam_name)
-    print(hyperparam_value)
-    print(precision)
-    print(recall)
-    '''
 
 if __name__ == "__main__":
     main()
