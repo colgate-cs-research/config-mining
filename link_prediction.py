@@ -170,19 +170,19 @@ def get_similarity(n1, n2, graph, ntype_list):
 
 #takes argument dict {node: {suggested neighbors}} which suggests links for similar nodes
 #returns ranked list of suggestions {int representing # of connections to ifaces: [link suggestions]} (higher key = higher priority suggestion)
-def rank_suggestions_for_node(suggested_links, graph):
+def rank_suggestions_for_node(suggested_links, graph, node_type):
     ranked_suggestions = {}
     for suggestion in suggested_links:
-        count = len(get_edges(suggestion, graph, "interface")) #returns a list of each pairing in a tuple 
+        count = len(get_edges(suggestion, graph, node_type)) #returns a list of each pairing in a tuple 
         if count not in ranked_suggestions:
             ranked_suggestions[count] = [suggestion]
         else:
             ranked_suggestions[count].append(suggestion)
     return ranked_suggestions
 
-def rank_suggestions(suggested_links, graph):
+def rank_suggestions(suggested_links, graph, node_type):
     for iface in suggested_links:
-        suggested_links[iface] = rank_suggestions_for_node(suggested_links[iface], graph)
+        suggested_links[iface] = rank_suggestions_for_node(suggested_links[iface], graph, node_type)
     return
     
 #returns ranked list of top num suggestions in ranked_suggestions dict
@@ -207,13 +207,13 @@ def get_top_suggestions(ranked_suggestions, num):
     return top_suggestions
 
 #Calculates precision and recall for common neighbors
-def precision_recall(graph, num_remove, similarity_threshold, similarity_options, similarity_function, num_suggs):
+def precision_recall(graph, num_remove, similarity_threshold, similarity_options, similarity_function, num_suggs, node_type):
     pp = pprint.PrettyPrinter(indent=4)
-    modified_graph, removed_edges = rand_remove(graph, num_remove)
+    modified_graph, removed_edges = rand_remove(graph, num_remove, node_type)
     print("removed edges:")
     pp.pprint(removed_edges)
     print()
-    _, neighbor_dict = similarity_function(modified_graph, "interface", similarity_threshold, similarity_options) #change back to modified_graph
+    _, neighbor_dict = similarity_function(modified_graph, node_type, similarity_threshold, similarity_options) #change back to modified_graph
     print("num similar pairs:", len(neighbor_dict))
     print("similar nodes:")
     pp.pprint(neighbor_dict)
@@ -223,7 +223,7 @@ def precision_recall(graph, num_remove, similarity_threshold, similarity_options
     print("suggested links:")
     pp.pprint(suggested)
     print()
-    rank_suggestions(suggested, modified_graph)
+    rank_suggestions(suggested, modified_graph, node_type)
     print("ranked suggested links:")
     pp.pprint(suggested)
     print()
@@ -254,33 +254,22 @@ def precision_recall(graph, num_remove, similarity_threshold, similarity_options
         print("recall: 0.0")
     print()
 
-    
-''' 
-#arguments: a networkx graph, a dict of suggested links {node: {suggested neighbors}}
-#adds suggested neighbors in argument dicitonary to argument graph
-def add_suggested_links(graph, suggested):
-    for node, suggestions in suggested.items():
-        
-        graph.add_edge()
-    return 
- '''
-
 #returns a copy of argument graph with num randomly removed links (always connected to an iface)
 #also draws original and modified graphs to separate png files
-def rand_remove(graph, num, seed="b"):
+def rand_remove(graph, num, node_type, seed="b"):
     random.seed(seed)
     copy = graph.copy()
     removed_edges = []
 
     #get all interface edges in graph
-    iface_edges = []
-    interface_nodes = get_nodes(graph, "interface")
-    for iface in interface_nodes:
-        iface_edges += get_edges(iface, graph)
+    nodetype_edges = []
+    nodetype_nodes = get_nodes(graph, node_type)
+    for node in nodetype_nodes:
+        nodetype_edges += get_edges(node, graph)
 
     for i in range(num):
-        del_edge = random.choice(iface_edges)
-        iface_edges.remove(del_edge)
+        del_edge = random.choice(nodetype_edges)
+        nodetype_edges.remove(del_edge)
         removed_edges.append(del_edge)
         copy.remove_edge(del_edge[0], del_edge[1])
 
@@ -365,6 +354,7 @@ def main():
     parser.add_argument('-t', '--threshold',type=float,help='threshold for common neighbor similarity', default = 0.9)
     parser.add_argument('-r', '--remove', type=int, help='number of links to randomly remove', default=20)
     parser.add_argument('-s', '--suggest', type=int, help='number of links to suggest', default=0)
+    parser.add_argument('-y', '--nodetype', choices=['interface', 'vlan', 'acl', 'keyword'], default='interface')
   
     #choose one
     group = parser.add_mutually_exclusive_group(required=True)
@@ -396,10 +386,10 @@ def main():
         similarity_function = similarity_node2vec
 
     #print(similarity_options)
-    #print(similarity_function)
+    #print(similarity_function) similarity_common_neighbors
     
     #---------------------------------------------------
-    precision_recall(graph, arguments.remove, arguments.threshold, similarity_options, similarity_function, arguments.suggest)
+    precision_recall(graph, arguments.remove, arguments.threshold, similarity_options, similarity_function, arguments.suggest, arguments.nodetype) #add arguments.nodetype
     #---------------------------------------------------
     #nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
     #suggested = suggest_links(neighbor_dict, modified_graph)
