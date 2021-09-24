@@ -46,32 +46,44 @@ def load_config(file):
 #constructs graph based on argument config file
 def make_graph(config):
     graph = nx.Graph()
+    device_name = config["name"]
     for acl in config["acls"]:
-        graph.add_node(acl, type= "acl")
-        #print(graph.nodes[acl])
-
+        device_acl = device_name +  "_" + acl
+        graph.add_node(device_acl, type= "acl")
+        for subnets in config["acls"][acl]["lines"]:
+            action = subnets["action"]
+            dst_address = ipaddress.IPv4Interface(subnets["dstIps"])
+            src_address = ipaddress.IPv4Interface(subnets["srcIps"])
+            graph.add_node(str(dst_address.network), type ="subnet")
+            graph.add_node(str(src_address.network), type ="subnet")
+            graph.add_edge(device_acl, str(dst_address.network), type=[action, "dst"])
+            graph.add_edge(device_acl, str(src_address.network), type=[action, "src"])
+    
     for interface in config["interfaces"]:
+        device_interface = device_name + "_" + interface
         if interface.startswith("Vlan"):
-            graph.add_node(interface, type="vlan")
+            graph.add_node(device_interface, type="vlan")
         else:    
-            graph.add_node(interface, type="interface")
+            graph.add_node(device_interface, type="interface")
         
         if config["interfaces"][interface]["address"] is not None:
             address = config["interfaces"][interface]["address"]
             network_obj = ipaddress.IPv4Interface(address)
             graph.add_node(str(network_obj.network), type="subnet")
-            graph.add_edge(interface, str(network_obj.network))
+            graph.add_edge(device_interface, str(network_obj.network))
 
         #added create node line (undefined allowed vlans???????)
         if config["interfaces"][interface]["allowed_vlans"] is not None:
             for vlan in config["interfaces"][interface]["allowed_vlans"]:
-                graph.add_node( "Vlan" + str(vlan), type="vlan")
-                graph.add_edge(interface, "Vlan" + str(vlan), type="allowed")
+                graph.add_node(device_name + "_" + "Vlan" + str(vlan), type="vlan")  #want allowed vlans to include device name??
+                graph.add_edge(device_interface, "Vlan" + str(vlan), type="allowed")
 
         if config["interfaces"][interface]["in_acl"] is not None:
-            graph.add_edge(interface, config["interfaces"][interface]["in_acl"], type = "in")
+            acl_name = device_name + "_" + config["interfaces"][interface]["in_acl"]
+            graph.add_edge(device_interface, acl_name, type = "in")
         if config["interfaces"][interface]["out_acl"] is not None:
-            graph.add_edge(interface, config["interfaces"][interface]["out_acl"], type = "out")
+            acl_name = device_name + "_" + config["interfaces"][interface]["out_acl"]
+            graph.add_edge(device_interface, acl_name, type = "out")
 
     return graph
 
@@ -80,16 +92,18 @@ def add_keywords(keyword_path, graph):
     # Load keywords
     with open(keyword_path, 'r') as keyword_file:
         keyword_json = json.load(keyword_file)
+    device = keyword_json["name"]
 
     # Add keyword nodes and edges
     for interface, keywords in keyword_json["interfaces"].items():
+        device_interface = device + "_" + interface
         if interface.startswith("Vlan"):
-            graph.add_node(interface, type="vlan")
+            graph.add_node(device_interface, type="vlan")
         else: 
-            graph.add_node(interface, type="interface")
+            graph.add_node(device_interface, type="interface")
         for word in keywords:
             graph.add_node(word, type="keyword")
-            graph.add_edge(interface, str(word))
+            graph.add_edge(device_interface, str(word))
 
 if __name__ == "__main__":
     main()
