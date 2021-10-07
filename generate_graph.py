@@ -75,8 +75,9 @@ def make_graph(config):
         #added create node line (undefined allowed vlans???????)
         if config["interfaces"][interface]["allowed_vlans"] is not None:
             for vlan in config["interfaces"][interface]["allowed_vlans"]:
-                graph.add_node(device_name + "_" + "Vlan" + str(vlan), type="vlan")  #want allowed vlans to include device name??
-                graph.add_edge(device_interface, "Vlan" + str(vlan), type="allowed")
+                vlan_name = device_name + "_" + "Vlan" + str(vlan)
+                graph.add_node(vlan_name, type="vlan")  #want allowed vlans to include device name??
+                graph.add_edge(device_interface, vlan_name, type="allowed")
 
         if config["interfaces"][interface]["in_acl"] is not None:
             acl_name = device_name + "_" + config["interfaces"][interface]["in_acl"]
