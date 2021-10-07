@@ -107,5 +107,6 @@
         }
     },
     "name": "vlans",
+    "ospf": {},
     "vlans": {}
 }

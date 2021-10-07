@@ -86,6 +86,11 @@
                 {
                     "action": "PERMIT",
                     "dstIps": "0.0.0.0/0",
+                    "srcIps": "20.0.15.0/24"
+                },
+                {
+                    "action": "PERMIT",
+                    "dstIps": "0.0.0.0/0",
                     "srcIps": "20.0.16.0/24"
                 },
                 {
@@ -183,5 +188,6 @@
         }
     },
     "name": "acls",
+    "ospf": {},
     "vlans": {}
 }

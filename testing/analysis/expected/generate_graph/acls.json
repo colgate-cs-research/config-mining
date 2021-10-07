@@ -149,6 +149,10 @@
         },
         {
             "type": "subnet",
+            "id": "20.0.15.0/24"
+        },
+        {
+            "type": "subnet",
             "id": "20.0.16.0/24"
         },
         {
@@ -286,6 +290,11 @@
             "type": "permit",
             "source": "acls_aclD",
             "target": "0.0.0.0/0"
+        },
+        {
+            "type": "permit",
+            "source": "acls_aclD",
+            "target": "20.0.15.0/24"
         },
         {
             "type": "permit",
