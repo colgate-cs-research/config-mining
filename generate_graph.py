@@ -50,13 +50,14 @@ def make_graph(config):
     for acl in config["acls"]:
         device_acl = device_name +  "_" + acl
         graph.add_node(device_acl, type= "acl")
-        for subnets in config["acls"][acl]["lines"]:
-            action = subnets["action"]
-            dst_address = ipaddress.IPv4Interface(subnets["dstIps"])
-            src_address = ipaddress.IPv4Interface(subnets["srcIps"])
-            graph.add_node(str(dst_address.network), type ="subnet")
+        for line in config["acls"][acl]["lines"]:
+            action = line["action"]
+            if "dstIps" in line:
+                dst_address = ipaddress.IPv4Interface(line["dstIps"])
+                graph.add_node(str(dst_address.network), type ="subnet")
+                graph.add_edge(device_acl, str(dst_address.network), type=[action, "dst"])
+            src_address = ipaddress.IPv4Interface(line["srcIps"])
             graph.add_node(str(src_address.network), type ="subnet")
-            graph.add_edge(device_acl, str(dst_address.network), type=[action, "dst"])
             graph.add_edge(device_acl, str(src_address.network), type=[action, "src"])
     
     for interface in config["interfaces"]:

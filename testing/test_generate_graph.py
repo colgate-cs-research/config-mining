@@ -25,8 +25,24 @@ def helper_test_graph(filename):
     with open(graph_path, 'r') as graph_file:
         graph_json = json.load(graph_file)
     expected = nx.readwrite.json_graph.node_link_graph(graph_json)
-    assert actual.nodes == expected.nodes
-    assert actual.edges == expected.edges
+    try:
+        assert actual.nodes == expected.nodes
+    except AssertionError as assert_error:
+        for node in actual.nodes:
+            if node not in expected.nodes:
+                raise AssertionError(str(node) + " not in expected")
+        for node in expected.nodes:
+            if node not in actual.nodes:
+                raise AssertionError(str(node) + " not in actual")
+    try:
+        assert actual.edges == expected.edges
+    except AssertionError as assert_error:
+        for edge in actual.edges:
+            if edge not in expected.edges:
+                raise AssertionError(str(edge) + " not in expected")
+        for edge in expected.edges:
+            if edge not in actual.edges:
+                raise AssertionError(str(edge) + " not in actual")
 
 def test_graph_acls():
     helper_test_graph("acls.json")

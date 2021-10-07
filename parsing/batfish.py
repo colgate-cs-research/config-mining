@@ -224,6 +224,7 @@ def extract_acl_lines(data, name):
         else:
             print(name, row)
             continue
+
         srcIps = None
         if "srcIps" in match and "ipWildcard" in match["srcIps"]:
             srcIps = match["srcIps"]["ipWildcard"]

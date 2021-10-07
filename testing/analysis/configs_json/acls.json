@@ -4,12 +4,10 @@
             "lines": [
                 {
                     "action": "DENY",
-                    "dstIps": "0.0.0.0/0",
                     "srcIps": "20.0.1.128/25"
                 },
                 {
                     "action": "PERMIT",
-                    "dstIps": "0.0.0.0/0",
                     "srcIps": "20.0.1.0/24"
                 }
             ],
