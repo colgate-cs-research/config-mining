@@ -108,9 +108,10 @@ def getAclLineIps(line):
     ret_val = []
     for criteria in ["srcIps", "dstIps"]:
         try:
-            net = ipaddress.IPv4Network(line[criteria])
-            if net.prefixlen > 0:
-                ret_val.append([str(net.network_address), str(net.hostmask)])
+            if criteria in line:
+                net = ipaddress.IPv4Network(line[criteria])
+                if net.prefixlen > 0:
+                    ret_val.append([str(net.network_address), str(net.hostmask)])
         except:
             print("ERROR parsing: "+line[criteria])
     return ret_val
