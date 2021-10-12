@@ -223,9 +223,21 @@ def col_octet(ip):
     
     # to return item.
     current_selection=binarized_remaining_octect_list#first_octet+second_octet+
+    
     return(current_selection)
 
+def col_prefixes(ip, startlen=20, endlen=31):
+    """
+    Generates prefixes of varying length from an IP address.
 
+    >>> col_prefixes("85.36.219.170", 20, 31)
+    ['85.36.208.0/20', '85.36.216.0/21', '85.36.216.0/22', '85.36.218.0/23', '85.36.219.0/24', '85.36.219.128/25', '85.36.219.128/26', '85.36.219.160/27', '85.36.219.160/28', '85.36.219.168/29', '85.36.219.168/30', '85.36.219.170/31']
+    """
+    prefixes = []
+    for prefixlen in range(startlen, endlen+1):
+        prefix = ipaddress.IPv4Network(ip + "/" + str(prefixlen), strict=False)
+        prefixes.append(str(prefix))
+    return prefixes
 
 def get_common_keywords(file):
     '''
