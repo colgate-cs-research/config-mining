@@ -20,6 +20,7 @@ def main():
     # Parse each configuration
     for filename in sorted(os.listdir(configs_path)):
         node = filename.replace(".colgate.edu.json", "")
+        print(node)
         with open(os.path.join(configs_path, filename), "r") as conf_file:
             conf = json.load(conf_file)
         parts = extract_node(node, conf)
@@ -80,13 +81,28 @@ def extract_acl_parts(acl_conf):
 
     for priority in sorted([int(prio) for prio in acl_conf.keys()]):
         line_conf = acl_conf[str(priority)]
-        line = {
-            "action" : (line_conf["action"] if "action" in line_conf else None),
-            "srcIps" : (str(ipaddress.ip_network(line_conf["src_ip"])) if "src_ip" in line_conf else None),
-            "dstIps" : (str(ipaddress.ip_network(line_conf["dst_ip"])) if "dst_ip" in line_conf else None),
-        }
 
-        if line["action"] is not None:
+        if "action" in line_conf:
+            srcIps = None
+            if "src_ip" in line_conf:
+                try:
+                    srcIps = str(ipaddress.ip_network(line_conf["src_ip"]))
+                except ValueError as err:
+                    print(err)
+
+            dstIps = None
+            if "dst_ip" in line_conf:
+                try:
+                    dstIps = str(ipaddress.ip_network(line_conf["dst_ip"]))
+                except ValueError as err:
+                    print(err)
+
+            line = {
+                "action" : (line_conf["action"] if "action" in line_conf else None),
+                "srcIps" : srcIps,
+                "dstIps" : dstIps,
+            }
+
             lines.append(line)
 
         if "comment" in line_conf:
@@ -100,7 +116,7 @@ def extract_vlans(conf):
     for vlan_conf in conf["VLAN"].values():
         vlan = {
             "num" : vlan_conf["id"],
-            "name" : vlan_conf["name"]
+            "name" : (vlan_conf["name"] if "name" in vlan_conf else None)
         }
         
         vlans[vlan["num"]] = vlan
