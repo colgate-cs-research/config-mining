@@ -189,8 +189,8 @@ def extract_acls(node):
 
     return acls
 
-"""Copy lines and remarks from one ACL to another when an ACL is an alias of another ACL"""
 def resolve_acls_aliases(acls):
+    """Copy lines and remarks from one ACL to another when an ACL is an alias of another ACL"""
     for acl in acls.values():
         if "alias" in acl:
             alias = acl["alias"]
@@ -198,8 +198,8 @@ def resolve_acls_aliases(acls):
                 acl["lines"] = acls[alias]["lines"]
                 acl["remarks"] = acls[alias]["remarks"]
 
-"""Extract match criteria for all lines in an ACL"""
 def extract_acl_lines(data, name):
+    """Extract match criteria for all lines in an ACL"""
     lines = []
 
     for row in data:

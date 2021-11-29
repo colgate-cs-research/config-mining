@@ -11,17 +11,22 @@ from analyze_refs import intraconfig_refs
 from analyze import write_to_outfile
 from itertools import chain
 import analyze
+import doctest
 
 
-'''
-Get octet from IP address string
-eg: IPaddr=> 121.23.45.678
-position=1 : 121
-postion=2 : 23
-...
-'''
 def get_octet(ip_address_string,position):
-    
+    """
+    Get octet from IP address string (one-based indexing)
+
+    >>> get_octet("121.23.45.67", 1)
+    '121'
+    >>> get_octet("121.23.45.67", 2)
+    '23'
+    >>> get_octet("121.23.45.67", 4)
+    '67'
+    >>> get_octet(None, 1)
+    'none'
+    """
     if ip_address_string is not None:
         ip_address_string = str(ipaddress.IPv4Interface(ip_address_string).network. network_address)
         return ip_address_string.split(".")[position-1]
@@ -29,7 +34,16 @@ def get_octet(ip_address_string,position):
         return 'none'
 
 def get_prefixlen(ip_address_string):
-    
+    """
+    >>> get_prefixlen("0.0.0.0/0")
+    '0'
+    >>> get_prefixlen("121.23.45.67/32")
+    '32'
+    >>> get_prefixlen("121.23.0.0/16")
+    '16'
+    >>> get_prefixlen(None)
+    'none'
+    """ 
     if ip_address_string is not None:
         return ip_address_string.split("/")[1]
     else:
@@ -143,22 +157,40 @@ def iterative_cumulative_bin_ip_list_gen(bin_ip_list):
     Name say it all. nuff said
     Input:['0','0','1','0']
     Output:['0','00','001','0010']
+
+    >>> iterative_cumulative_bin_ip_list_gen(list('00000000'))
+    ['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000']
+    >>> iterative_cumulative_bin_ip_list_gen(list('10101010'))
+    ['1', '10', '101', '1010', '10101', '101010', '1010101', '10101010']
+    >>> iterative_cumulative_bin_ip_list_gen(list('11011011'))
+    ['1', '11', '110', '1101', '11011', '110110', '1101101', '11011011']
     '''
     if 'n' not in bin_ip_list:
-        a=bin_ip_list[:1]
-        #print(a)
+        a = []
+        accum = ""
         for digit in bin_ip_list:
-            a.append(a[-1]+digit)
+            accum += digit
+            a.append(accum)
         return a
     else:
         return bin_ip_list
 
-
-
 def get_binary(octet):
     '''
-    INPUT: single octet (<255, str)
-    Convert input string into 8 digit binary output (str)
+    Convert a single octet (< 255, str) into 8 digit binary output (str)
+
+    >>> get_binary('0')
+    '00000000'
+    >>> get_binary('1')
+    '00000001'
+    >>> get_binary('13')
+    '00001101'
+    >>> get_binary('42')
+    '00101010'
+    >>> get_binary('254')
+    '11111110'
+    >>> get_binary('255')
+    '11111111'
     '''
     #print(octet)
     if octet != 'none':
@@ -173,6 +205,9 @@ def col_octet(ip):
     Generates a list of ip address octets broken down into binary form
     eg:-  the value for columns 'first octet', s'second octet' and 16 -> 1  
     column_list=['in_acl','out_acl','first_octet','second_octet','16','15','14','13','12','11','10','9','8','7','6','5','4','3','2','1']
+
+    >>> col_octet("85.36.219.170")
+    ['1', '10', '101', '1011', '10111', '101110', '1011101', '10111010', '101110101', '1011101010', '10111010101', '101110101010']
     '''
     
     first_octet=list(get_binary(get_octet(ip,1)))
@@ -181,16 +216,28 @@ def col_octet(ip):
     forth_octet=list(get_binary(get_octet(ip,4)))
 
     partial_prefix = "".join(first_octet+second_octet+third_octet[:4])
-    remaining_octet_list=third_octet[:4] + forth_octet
+    remaining_octet_list=third_octet[4:] + forth_octet
 
     # breaking down octets strings into individual chars
     binarized_remaining_octect_list=iterative_cumulative_bin_ip_list_gen(remaining_octet_list)  
     
     # to return item.
     current_selection=binarized_remaining_octect_list#first_octet+second_octet+
+    
     return(current_selection)
 
+def col_prefixes(ip, startlen=20, endlen=31):
+    """
+    Generates prefixes of varying length from an IP address.
 
+    >>> col_prefixes("85.36.219.170", 20, 31)
+    ['85.36.208.0/20', '85.36.216.0/21', '85.36.216.0/22', '85.36.218.0/23', '85.36.219.0/24', '85.36.219.128/25', '85.36.219.128/26', '85.36.219.160/27', '85.36.219.160/28', '85.36.219.168/29', '85.36.219.168/30', '85.36.219.170/31']
+    """
+    prefixes = []
+    for prefixlen in range(startlen, endlen+1):
+        prefix = ipaddress.IPv4Network(ip + "/" + str(prefixlen), strict=False)
+        prefixes.append(str(prefix))
+    return prefixes
 
 def get_common_keywords(file):
     '''
@@ -374,6 +421,6 @@ def main():
 
 
 
-
 if __name__ == "__main__":
+    doctest.testmod()
     main()
