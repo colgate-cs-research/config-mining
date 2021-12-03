@@ -11,16 +11,19 @@ def main():
     parser.add_argument('keyword_path',type=str,help='Path for a file (or directory) containing a JSON representation of keywords from config(s)')
     parser.add_argument('out_path',type=str,help='Path for a file (or directory) in which to store a JSON representation (and image) of the graph(s)')
     parser.add_argument('-i', '--images', action='store_true', default=False)
+    parser.add_argument('-a', '--aggregate', type=bool, default=False)
     arguments = parser.parse_args()
 
-    analyze.process_configs(analyze_configuration, [arguments.config_path, arguments.keyword_path], arguments.out_path, arguments.images)
+    analyze.process_configs(analyze_configuration, [arguments.config_path, arguments.keyword_path], arguments.out_path, arguments.images, arguments.aggregate)
 
 def analyze_configuration(in_paths, out_path=None, generate_image=False):
     print("Current working files: %s" % (in_paths))
-    config_path, keyword_path = in_paths
-    config = load_config(config_path)
-    graph = make_graph(config)
-    add_keywords(keyword_path, graph)
+    graph = nx.Graph()
+    for path in in_paths:
+        config_path, keyword_path = path
+        config = load_config(config_path)
+        make_graph(config, graph)
+        add_keywords(keyword_path, graph)
 
     # Save graph
     if out_path is not None:
@@ -44,8 +47,7 @@ def load_config(file):
     return config
 
 #constructs graph based on argument config file
-def make_graph(config):
-    graph = nx.Graph()
+def make_graph(config, graph):
     device_name = config["name"]
     for acl in config["acls"]:
         device_acl = device_name +  "_" + acl
