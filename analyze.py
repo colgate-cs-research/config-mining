@@ -11,11 +11,11 @@ def determine_path_types(in_path, out_path):
         all_files = os.path.isfile(in_path)
 
     # Check if all arguments are paths
-    all_dirs = os.path.isdir(out_path)
+    all_dirs = os.path.isdir(out_path) or (not os.path.exists(out_path))
     if isinstance(in_path, list):
-        all_dirs = all_dirs and all([os.path.isdir(i) for i in in_path])
+        all_dirs = all_dirs and all([os.path.isdir(i) or (not os.path.exists(out_path)) for i in in_path])
     else:
-        all_dirs = all_dirs and os.path.isdir(in_path)
+        all_dirs = all_dirs and (os.path.isdir(in_path) or (not os.path.exists(out_path)))
 
     return all_files, all_dirs
 
@@ -91,6 +91,9 @@ def create_rule(message, numerator, denominator, exceptions=None):
 
 '''Writes confidence/support for association rules to JSON file'''
 def write_to_outfile(filename, rules):
+    dirpath = os.path.dirname(filename)
+    if not os.path.exists(dirpath):
+        os.makedirs(dirpath)
     with open(filename, 'w') as outfile:         
         json.dump(rules, outfile, indent=4, sort_keys=True)
     return

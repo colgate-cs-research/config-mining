@@ -10,8 +10,8 @@ def main():
     parser.add_argument('config_path',type=str, help='Path for a file (or directory) containing a JSON representation of configuration(s)')
     parser.add_argument('keyword_path',type=str,help='Path for a file (or directory) containing a JSON representation of keywords from config(s)')
     parser.add_argument('out_path',type=str,help='Path for a file (or directory) in which to store a JSON representation (and image) of the graph(s)')
-    parser.add_argument('-i', '--images', action='store_true', default=False)
-    parser.add_argument('-a', '--aggregate', type=bool, default=False)
+    parser.add_argument('-i', '--images', action='store_true')
+    parser.add_argument('-a', '--aggregate', action='store_true')
     arguments = parser.parse_args()
 
     analyze.process_configs(analyze_configuration, [arguments.config_path, arguments.keyword_path], arguments.out_path, arguments.images, arguments.aggregate)
@@ -19,6 +19,8 @@ def main():
 def analyze_configuration(in_paths, out_path=None, generate_image=False):
     print("Current working files: %s" % (in_paths))
     graph = nx.Graph()
+    if not isinstance(in_paths[0], list):
+        in_paths = [in_paths]
     for path in in_paths:
         config_path, keyword_path = path
         config = load_config(config_path)

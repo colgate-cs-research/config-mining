@@ -23,7 +23,7 @@ for factor in "none" "vlan" "acl" "keyword"; do
     date
     python3 -u link_prediction.py $GRAPH -c "{\"$factor\" : 1}" | tee $OUTPUT_DIR/common_factor_$factor.log
 done
-
+exit
 # Consider various thresholds for declaring two nodes as similar
 for thresh in 0.5 0.6 0.7 0.8 0.9; do
     echo "***** THRESH $thresh (COMMON) *****"

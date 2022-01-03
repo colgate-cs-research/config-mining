@@ -1,0 +1,40 @@
+{
+    "interfaces": {
+        "GigabitEthernet0/1": [
+            "blue"
+        ],
+        "GigabitEthernet0/2": [
+            "red"
+        ],
+        "GigabitEthernet0/3": [
+            "red",
+            "yellow"
+        ],
+        "GigabitEthernet0/4": [
+            "yellow",
+            "blue"
+        ],
+        "GigabitEthernet0/5": [
+            "red",
+            "yellow"
+        ],
+        "GigabitEthernet0/6": [
+            "yellow"
+        ]
+    },
+    "acls": {
+        "G": [
+            "green"
+        ],
+        "O": [
+            "orange"
+        ],
+        "R": [
+            "red"
+        ],
+        "Y": [
+            "yellow"
+        ]
+    },
+    "name": "keywords"
+}
