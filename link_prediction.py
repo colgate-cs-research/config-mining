@@ -26,6 +26,9 @@ def get_nodes(graph, target_type=None):
         return get_nodes_cache[target_type]
 
     # Compute
+    global types_cache
+    if types_cache is None:
+        types_cache = nx.get_node_attributes(graph, "type")
     node_list = []
     for node in graph:
         if target_type is None or types_cache[node] == target_type:
@@ -42,6 +45,9 @@ def get_edges(node, graph, target_type=None):
         return get_edges_cache[target_type][node]
 
     # Compute
+    global types_cache
+    if types_cache is None:
+        types_cache = nx.get_node_attributes(graph, "type")
     edge_list = []
     for edge in graph.edges(node):
         if target_type is None or types_cache[edge[1]] == target_type:
@@ -62,6 +68,9 @@ def get_neighbors(node, graph, target_type=None):
         return get_neighbors_cache[target_type][node]
 
     # Compute
+    global types_cache
+    if types_cache is None:
+        types_cache = nx.get_node_attributes(graph, "type")
     all_neighbors = nx.neighbors(graph, node)
     if target_type is None:
         neighbor_list = set(all_neighbors)

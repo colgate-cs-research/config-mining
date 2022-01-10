@@ -66,9 +66,3 @@ def main():
     
 if __name__ == "__main__":
     main()
-
-        #precision_list = get_columns_csv("data_link_prediction.csv", "Precision")
-        #recall_list = get_columns_csv("data_link_prediction.csv", "Recall")
-        #hyperparam_name = get_columns_csv("data_link_prediction.csv", "Hyperparam name")
-
-  
