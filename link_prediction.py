@@ -1,6 +1,7 @@
 import argparse
 import json
 import networkx as nx
+from networkx.classes.function import non_edges
 import node2vec
 import pprint
 import random
@@ -8,11 +9,15 @@ import tqdm
 
 get_nodes_cache = {}
 get_edges_cache = {}
+get_neighbors_cache = {}
+types_cache = None
 
 def clear_caches():
-    global get_nodes_cache, get_edges_cache
+    global get_nodes_cache, get_edges_cache, get_neighbors_cache, types_cache
     get_nodes_cache = {}
     get_edges_cache = {}
+    get_neighbors_cache = {}
+    types_cache = None
 
 #returns list of all nodes of target_type in argument graph
 def get_nodes(graph, target_type=None):
@@ -21,10 +26,9 @@ def get_nodes(graph, target_type=None):
         return get_nodes_cache[target_type]
 
     # Compute
-    types = nx.get_node_attributes(graph, "type")
     node_list = []
     for node in graph:
-        if target_type is None or types[node] == target_type:
+        if target_type is None or types_cache[node] == target_type:
             node_list.append(node)
 
     # Cache and return result
@@ -38,10 +42,9 @@ def get_edges(node, graph, target_type=None):
         return get_edges_cache[target_type][node]
 
     # Compute
-    types = nx.get_node_attributes(graph, "type")
     edge_list = []
     for edge in graph.edges(node):
-        if target_type is None or types[edge[1]] == target_type:
+        if target_type is None or types_cache[edge[1]] == target_type:
             edge_list.append(edge)
 
     # Cache and return result
@@ -50,29 +53,59 @@ def get_edges(node, graph, target_type=None):
     get_edges_cache[target_type][node] = edge_list
     return edge_list
 
+"""
+Get a set of of node's neighbors of target_type
+"""
+def get_neighbors(node, graph, target_type=None):
+    # Check if previously computed
+    if target_type in get_neighbors_cache and node in get_neighbors_cache[target_type]:
+        return get_neighbors_cache[target_type][node]
+
+    # Compute
+    all_neighbors = nx.neighbors(graph, node)
+    if target_type is None:
+        neighbor_list = set(all_neighbors)
+    else:
+        neighbor_list = set()
+        for neighbor in all_neighbors:
+            if types_cache[neighbor] == target_type:
+                neighbor_list.add(neighbor)
+
+    # Cache and return result
+    if target_type not in get_neighbors_cache:
+        get_neighbors_cache[target_type] = {}
+    get_neighbors_cache[target_type][node] = neighbor_list
+    return neighbor_list
+
+"""
+Get a list of all common neighbors of target_type for pair of nodes
+"""
+def get_common_neighbors(node1, node2, graph, target_type=None):
+    # Compute common neighbors
+    all_neighbors = nx.common_neighbors(graph, node1, node2)
+    if target_type is None:
+        return all_neighbors
+
+    # Filter neighbors by type (if necessary)
+    filtered_neighbors = []
+    for neighbor in all_neighbors:
+        if types_cache[neighbor] == target_type:
+            filtered_neighbors.append(neighbor)
+    return filtered_neighbors
+
 #returns two floats indicating similarity of nodes' neighbors of ntype
 def similarity_proportions(n1, n2, graph, ntype=None):
-    type_list = get_nodes(graph, ntype)
-    n1_edges = get_edges(n1, graph, ntype) #returns a list of each pairing in a tuple
-    n2_edges = get_edges(n2, graph, ntype)
-    match = 0
-    total1 = len(n1_edges)
-    total2 = len(n2_edges)
-
-    matches = []
-    for edges1 in n1_edges: 
-        node1 = edges1[1] #get neighbor
-        if node1 in type_list: #check type
-            for edges2 in n2_edges:
-                if edges1[1] == edges2[1]:
-                    match += 1
-                    matches.append(node1)
+    n1_neighbors = get_neighbors(n1, graph, ntype)
+    n2_neighbors = get_neighbors(n2, graph, ntype)
+    total1 = len(n1_neighbors)
+    total2 = len(n2_neighbors)
+    matches = n1_neighbors.intersection(n2_neighbors)
 
     n1_similarity, n2_similarity = 0, 0
     if total1 > 0:
-        n1_similarity = match/total1
+        n1_similarity = len(matches)/total1
     if total2 > 0:
-        n2_similarity = match/total2
+        n2_similarity = len(matches)/total2
 
     return n1_similarity, n2_similarity, matches
 
@@ -173,7 +206,7 @@ def get_similarity(n1, n2, graph, ntype_list):
 def rank_suggestions_for_node(suggested_links, graph, node_type):
     ranked_suggestions = {}
     for suggestion in suggested_links:
-        count = len(get_edges(suggestion, graph, node_type)) #returns a list of each pairing in a tuple 
+        count = len(get_neighbors(suggestion, graph, node_type)) #returns a list of each pairing in a tuple 
         if count not in ranked_suggestions:
             ranked_suggestions[count] = [suggestion]
         else:
@@ -370,6 +403,9 @@ def main():
         graph = generate_test_graph()
     else:
         graph = load_graph(arguments.graph_path)
+
+    global types_cache
+    types_cache = nx.get_node_attributes(graph, "type")
     '''
     config path: "/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-1-core.json"
     keyword path: "/shared/configs/uwmadison/2014-10-core/keywords/r-432nm-b3a-1-core.json"
