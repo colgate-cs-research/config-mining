@@ -1,6 +1,7 @@
 import csv
 import pandas as pd
 from matplotlib import pyplot as plt
+import argparse
 
 # Grabs specific columns to analyze
 def get_columns_csv(txt, title, variation=None):
@@ -41,11 +42,14 @@ def graph_data(csv_file):
         devices = filtered["Device"].unique()
         for device in devices:
             device_filtered = filtered.loc[filtered["Device"] == device,:]
-            plt.plot(device_filtered["Hyperparam value"], device_filtered["Precision"], label=device + " precision", linestyle='solid')
-            plt.plot(device_filtered["Hyperparam value"], device_filtered["Recall"], label=device + " recall", linestyle='dashed')
+            param_values = list(device_filtered["Hyperparam value"])
+            bar_locs = list(range(len(param_values)))
+            plt.bar([x - .15 for x in bar_locs], device_filtered["Precision"], width=0.3, color='r', label=device + " precision")
+            plt.bar([x + .15 for x in bar_locs], device_filtered["Recall"], width=0.3, color='b', label=device + " recall")
 
         # Add labels to graph
-        plt.xlabel(row["Hyperparam name"])
+        plt.xticks(bar_locs, param_values)
+        plt.xlabel(hyperparam)
         plt.ylabel("Precision/Recall")
         plt.legend()
 
@@ -54,12 +58,12 @@ def graph_data(csv_file):
         plt.savefig(filename)
 
 def main():
-    csv_file = "data_link_prediction.csv"
-    graph_data(csv_file)
-    
-    #print(devices)
-    #plt.plot(filtered["Hyperparam value"], filtered["Precision"], label="Precision")
+    parser = argparse.ArgumentParser(description='Graph link prediction analysis')
+    parser.add_argument('csv_file', help="Data to graph (output by analyze_link_prediction.py)")
+    arguments = parser.parse_args()
 
+    graph_data(arguments.csv_file)
+    
 if __name__ == "__main__":
     main()
 
