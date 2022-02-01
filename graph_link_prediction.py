@@ -18,7 +18,7 @@ def get_columns_csv(txt, title, variation=None):
     return title_list
 
 # Graphs the x and y coordinates as given
-def graph_data(csv_file):
+def graph_data(csv_file, network):
     df = pd.read_csv(csv_file)
 
     #grab unique pairs of Hyperparam name and Similarity
@@ -54,13 +54,19 @@ def graph_data(csv_file):
         plt.legend()
 
         # Save graph
-        filename = "output/graphs/graph_" + hyperparam + "_" + similarity + ".png"
+        # filename = "output/graphs/graph_" + hyperparam + "_" + similarity + ".png"
+        filename = "output/" + network + "/analysis/graph_" + hyperparam + "_" + similarity + ".png"
         plt.savefig(filename)
 
 def main():
-    parser = argparse.ArgumentParser(description='Graph link prediction analysis')
-    parser.add_argument('csv_file', help="Data to graph (output by analyze_link_prediction.py)")
+    parser = argparse.ArgumentParser(description='graph link prediction analysis')
+    parser.add_argument('network', help="Network like Northwestern or UW Madison")
     arguments = parser.parse_args()
+    csv_file = "data_link_prediction_" + arguments.network + ".csv"
+    graph_data(csv_file, arguments.network)
+    
+    #print(devices)
+    #plt.plot(filtered["Hyperparam value"], filtered["Precision"], label="Precision")
 
     graph_data(arguments.csv_file)
     

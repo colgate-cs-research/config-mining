@@ -396,7 +396,7 @@ def main():
     parser.add_argument('-t', '--threshold',type=float,help='threshold for common neighbor similarity', default = 0.9)
     parser.add_argument('-r', '--remove', type=int, help='number of links to randomly remove', default=20)
     parser.add_argument('-s', '--suggest', type=int, help='number of links to suggest', default=0)
-    parser.add_argument('-y', '--nodetype', choices=['interface', 'vlan', 'acl', 'keyword'], default='interface')
+    parser.add_argument('-y', '--nodetype', choices=['interface', 'vlan', 'acl', 'keyword', 'subnet'], default='interface')
   
     #choose one
     group = parser.add_mutually_exclusive_group(required=True)
@@ -434,7 +434,7 @@ def main():
     #print(similarity_function) similarity_common_neighbors
     
     #---------------------------------------------------
-    precision_recall(graph, arguments.remove, arguments.threshold, similarity_options, similarity_function, arguments.suggest, arguments.nodetype) #add arguments.nodetype
+    precision_recall(graph, arguments.remove, arguments.threshold, similarity_options, similarity_function, arguments.suggest, arguments.nodetype)
     #---------------------------------------------------
     #nodes, neighbor_dict = common_neighbors(graph, "interface", 0.75)
     #suggested = suggest_links(neighbor_dict, modified_graph)

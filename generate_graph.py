@@ -48,21 +48,23 @@ def load_config(file):
         config = json.load(infile)
     return config
 
-#constructs graph based on argument config file
+# constructs graph based on argument config file
+# Nodetypes: acl, vlan, interface, subnet (call add_keywords to add keyword nodetype)
 def make_graph(config, graph):
     device_name = config["name"]
     for acl in config["acls"]:
         device_acl = device_name +  "_" + acl
         graph.add_node(device_acl, type= "acl")
-        for line in config["acls"][acl]["lines"]:
-            action = line["action"]
-            if "dstIps" in line:
-                dst_address = ipaddress.IPv4Interface(line["dstIps"])
-                graph.add_node(str(dst_address.network), type ="subnet")
-                graph.add_edge(device_acl, str(dst_address.network), type=[action, "dst"])
-            src_address = ipaddress.IPv4Interface(line["srcIps"])
-            graph.add_node(str(src_address.network), type ="subnet")
-            graph.add_edge(device_acl, str(src_address.network), type=[action, "src"])
+        if config["acls"][acl]["lines"] is not None:
+            for line in config["acls"][acl]["lines"]:
+                action = line["action"]
+                if "dstIps" in line:
+                    dst_address = ipaddress.IPv4Interface(line["dstIps"])
+                    graph.add_node(str(dst_address.network), type ="subnet")
+                    graph.add_edge(device_acl, str(dst_address.network), type=[action, "dst"])
+                src_address = ipaddress.IPv4Interface(line["srcIps"])
+                graph.add_node(str(src_address.network), type ="subnet")
+                graph.add_edge(device_acl, str(src_address.network), type=[action, "src"])
     
     for interface in config["interfaces"]:
         device_interface = device_name + "_" + interface
