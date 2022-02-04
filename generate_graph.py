@@ -26,6 +26,7 @@ def analyze_configuration(in_paths, out_path=None, generate_image=False):
         config = load_config(config_path)
         make_graph(config, graph)
         add_keywords(keyword_path, graph)
+        prune_keywords(graph)
 
     # Save graph
     if out_path is not None:
@@ -110,8 +111,25 @@ def add_keywords(keyword_path, graph):
         else: 
             graph.add_node(device_interface, type="interface")
         for word in keywords:
-            graph.add_node(word, type="keyword")
+            graph.add_node(word, keyword=True) #instead of type='keyword'
             graph.add_edge(device_interface, str(word))
+
+#remove & print keywords that only appear once across the network
+def prune_keywords(graph):
+    keywords = list(nx.get_node_attributes(graph, 'keyword').keys())
+    # print("KEYWORDS:")
+    # print(keywords)
+    # print()
+    print("*********** PRUNED: Words that only appear once ***********")
+    for word in keywords:
+        if graph.degree(word) == 1:
+            print(word)
+            graph.remove_node(word)
+
+    # print()
+    # print("KEYWORDS AFTER PRUNING:")
+    # print(list(nx.get_node_attributes(graph, 'keyword').keys()))
+    return
 
 if __name__ == "__main__":
     main()
