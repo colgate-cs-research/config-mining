@@ -67,8 +67,6 @@ def main():
     
     #print(devices)
     #plt.plot(filtered["Hyperparam value"], filtered["Precision"], label="Precision")
-
-    graph_data(arguments.csv_file)
     
 if __name__ == "__main__":
     main()

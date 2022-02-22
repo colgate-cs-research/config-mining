@@ -27,6 +27,8 @@ def analyze_configuration(in_paths, out_path=None, generate_image=False):
         make_graph(config, graph)
         add_keywords(keyword_path, graph)
         prune_keywords(graph)
+        #prune_all_degree_one(graph)
+        #find_structural_rel(graph)
 
     # Save graph
     if out_path is not None:
@@ -103,7 +105,7 @@ def add_keywords(keyword_path, graph):
         keyword_json = json.load(keyword_file)
     device = keyword_json["name"]
 
-    # Add keyword nodes and edges
+    # Add interface keyword nodes and edges
     for interface, keywords in keyword_json["interfaces"].items():
         device_interface = device + "_" + interface
         if interface.startswith("Vlan"):
@@ -111,8 +113,16 @@ def add_keywords(keyword_path, graph):
         else: 
             graph.add_node(device_interface, type="interface")
         for word in keywords:
-            graph.add_node(word, keyword=True) #instead of type='keyword'
+            graph.add_node(word, type="keyword", keyword=True) #instead of type='keyword'
             graph.add_edge(device_interface, str(word))
+
+    # Add acl keyword nodes and edges
+    for acl, keywords in keyword_json["acls"].items():
+        device_acl = device + "_" + acl
+        graph.add_node(device_acl, type="acl")
+        for word in keywords:
+            graph.add_node(word, type="keyword", keyword=True)
+            graph.add_edge(device_acl, str(word))
 
 #remove & print keywords that only appear once across the network
 def prune_keywords(graph):
@@ -120,15 +130,52 @@ def prune_keywords(graph):
     # print("KEYWORDS:")
     # print(keywords)
     # print()
-    print("*********** PRUNED: Words that only appear once ***********")
+    #print("*********** PRUNED: Words that only appear once ***********")
     for word in keywords:
         if graph.degree(word) == 1:
-            print(word)
+            #print(word)
             graph.remove_node(word)
 
     # print()
     # print("KEYWORDS AFTER PRUNING:")
     # print(list(nx.get_node_attributes(graph, 'keyword').keys()))
+    return
+
+#remove & print nodes that only appear once across the network
+def prune_all_degree_one(graph):
+    nodes = list(graph.nodes)
+    #print("*********** PRUNED NODES that only have one link ***********")
+    for node in nodes:
+        if graph.degree(node) == 1:
+            #print(node)
+            graph.remove_node(node)
+    #print()
+    return
+
+#if interface connects directly to X, does it have a direct connection
+#to neighbor Y, which has a direct connection to X?
+def find_structural_rel(graph):
+    #print("*********** Instances of structural pattern ***********")
+    ifaces = list(n for n in graph if graph.nodes[n]["type"]=="interface")
+    neighbors_cache = {}
+    for iface in ifaces:
+        first_neighbor_set = list(graph.neighbors(iface))
+        neighbors_cache[iface] = first_neighbor_set
+        for neighbor in first_neighbor_set:
+            neighbor_neighbor_set = []
+            if neighbor in neighbors_cache:
+                neighbor_neighbor_set = neighbors_cache[neighbor]
+            else:
+                neighbor_neighbor_set = list(graph.neighbors(neighbor))
+                neighbors_cache[neighbor] = neighbor_neighbor_set
+
+            for node in neighbor_neighbor_set:
+                if graph.has_edge(iface, node):
+                    #print(str(iface) + ": " + str(neighbor) + " + " + str(node))
+                    if node in first_neighbor_set:
+                        first_neighbor_set.remove(node)  
+    #print()
+    #print()           
     return
 
 if __name__ == "__main__":

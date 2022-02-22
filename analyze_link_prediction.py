@@ -8,7 +8,8 @@ def separate_names(directories, network):
     #RUNLINE = python3 analyze_link_prediction.py /shared/config-mining/output/ northwestern
     directory = os.path.join(directories, network)
     # link_prediction = os.path.join(directory, os.listdir(directory)[1]) #make this always go to link_prediction folder
-    link_prediction = os.path.join(directory, os.listdir(directory)[3])
+    link_prediction = os.path.join(directory, os.listdir(directory)[2])
+    # print(os.listdir(directory)[2]) #check retrieved folder
 
     f = open("data_link_prediction_" + network + ".csv", 'w')
     writer = csv.writer(f)
