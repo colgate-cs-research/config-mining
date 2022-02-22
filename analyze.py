@@ -11,11 +11,11 @@ def determine_path_types(in_path, out_path):
         all_files = os.path.isfile(in_path)
 
     # Check if all arguments are paths
-    all_dirs = os.path.isdir(out_path)
+    all_dirs = os.path.isdir(out_path) or (not os.path.exists(out_path))
     if isinstance(in_path, list):
-        all_dirs = all_dirs and all([os.path.isdir(i) for i in in_path])
+        all_dirs = all_dirs and all([os.path.isdir(i) or (not os.path.exists(out_path)) for i in in_path])
     else:
-        all_dirs = all_dirs and os.path.isdir(in_path)
+        all_dirs = all_dirs and (os.path.isdir(in_path) or (not os.path.exists(out_path)))
 
     return all_files, all_dirs
 
@@ -45,24 +45,25 @@ def determine_filepaths(in_path, out_path):
 
     return in_filepaths, out_filepaths
 
-def process_configs(function, in_path, out_path, extra=None, wrap=False):
+def process_configs(function, in_path, out_path, extra=None, generate_global=False):
     print("INPUT: %s OUTPUT: %s" % (in_path, out_path))
-
     in_filepaths, out_filepaths = determine_filepaths(in_path, out_path)
 
     with ThreadPoolExecutor(max_workers=1) as executor:
         futures = []
+        #individual configs
         for i in range(len(in_filepaths)):
             in_filepath = in_filepaths[i]
             out_filepath = out_filepaths[i]
 
             # Call function
-            if wrap:
+            if generate_global:
                 in_filepath = [in_filepath]
             future = executor.submit(function, in_filepath, out_filepath, extra)
             futures.append(future)
-
-        if len(in_filepaths) > 1 and wrap:
+        
+        #aggregate
+        if len(in_filepaths) > 1 and generate_global:
             out_filepath = os.path.join(out_path, "network.json") 
             future = executor.submit(function, in_filepaths, out_filepath, extra)
 
@@ -90,6 +91,9 @@ def create_rule(message, numerator, denominator, exceptions=None):
 
 '''Writes confidence/support for association rules to JSON file'''
 def write_to_outfile(filename, rules):
+    dirpath = os.path.dirname(filename)
+    if not os.path.exists(dirpath):
+        os.makedirs(dirpath)
     with open(filename, 'w') as outfile:         
         json.dump(rules, outfile, indent=4, sort_keys=True)
     return

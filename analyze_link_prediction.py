@@ -7,9 +7,11 @@ import csv
 def separate_names(directories, network):
     #RUNLINE = python3 analyze_link_prediction.py /shared/config-mining/output/ northwestern
     directory = os.path.join(directories, network)
-    link_prediction = os.path.join(directory, os.listdir(directory)[1])
+    # link_prediction = os.path.join(directory, os.listdir(directory)[1]) #make this always go to link_prediction folder
+    link_prediction = os.path.join(directory, os.listdir(directory)[2])
+    # print(os.listdir(directory)[2]) #check retrieved folder
 
-    f = open("data_link_prediction.csv", 'w')
+    f = open("data_link_prediction_" + network + ".csv", 'w')
     writer = csv.writer(f)
     # Make title for columns in csv file
     writer.writerow(["Network", "Device", "Similarity", "Hyperparam name", "Hyperparam value", "Precision", "Recall"])
@@ -43,11 +45,11 @@ def separate_names(directories, network):
     
 def main():
     parser = argparse.ArgumentParser(description='Perform link prediction analysis')
-    parser.add_argument('directory', help="Directory to iterate over")
+    parser.add_argument('directory', help="Directory with link_prediction results to iterate over")
     parser.add_argument('network', help="Network like Northwestern or UW Madison")
 
     arguments = parser.parse_args()
-
+ 
     separate_names(arguments.directory, arguments.network)
 
 if __name__ == "__main__":

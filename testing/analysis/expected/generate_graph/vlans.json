@@ -1,122 +1,122 @@
 {
     "directed": false,
-    "multigraph": false,
     "graph": {},
-    "nodes": [
-        {
-            "type": "interface",
-            "id": "vlans_GigabitEthernet0/1"
-        },
-        {
-            "type": "vlan",
-            "id": "vlans_Vlan100"
-        },
-        {
-            "type": "vlan",
-            "id": "vlans_Vlan200"
-        },
-        {
-            "type": "vlan",
-            "id": "vlans_Vlan300"
-        },
-        {
-            "type": "interface",
-            "id": "vlans_GigabitEthernet0/2"
-        },
-        {
-            "type": "interface",
-            "id": "vlans_GigabitEthernet0/3"
-        },
-        {
-            "type": "interface",
-            "id": "vlans_GigabitEthernet0/4"
-        },
-        {
-            "type": "interface",
-            "id": "vlans_GigabitEthernet0/5"
-        },
-        {
-            "type": "vlan",
-            "id": "vlans_Vlan400"
-        },
-        {
-            "type": "keyword",
-            "id": "red"
-        },
-        {
-            "type": "keyword",
-            "id": "orange"
-        },
-        {
-            "type": "keyword",
-            "id": "yellow"
-        },
-        {
-            "type": "keyword",
-            "id": "green"
-        }
-    ],
     "links": [
         {
-            "type": "allowed",
             "source": "vlans_GigabitEthernet0/1",
-            "target": "vlans_Vlan100"
+            "target": "vlans_Vlan100",
+            "type": "allowed"
         },
         {
-            "type": "allowed",
             "source": "vlans_GigabitEthernet0/1",
-            "target": "vlans_Vlan200"
+            "target": "vlans_Vlan200",
+            "type": "allowed"
         },
         {
-            "type": "allowed",
             "source": "vlans_GigabitEthernet0/1",
-            "target": "vlans_Vlan300"
+            "target": "vlans_Vlan300",
+            "type": "allowed"
         },
         {
-            "type": "allowed",
             "source": "vlans_Vlan100",
-            "target": "vlans_GigabitEthernet0/3"
+            "target": "vlans_GigabitEthernet0/3",
+            "type": "allowed"
         },
         {
-            "type": "allowed",
             "source": "vlans_Vlan100",
-            "target": "vlans_GigabitEthernet0/4"
+            "target": "vlans_GigabitEthernet0/4",
+            "type": "allowed"
         },
         {
             "source": "vlans_Vlan100",
             "target": "red"
         },
         {
-            "type": "allowed",
             "source": "vlans_Vlan200",
-            "target": "vlans_GigabitEthernet0/3"
+            "target": "vlans_GigabitEthernet0/3",
+            "type": "allowed"
         },
         {
-            "type": "allowed",
             "source": "vlans_Vlan200",
-            "target": "vlans_GigabitEthernet0/4"
+            "target": "vlans_GigabitEthernet0/4",
+            "type": "allowed"
         },
         {
             "source": "vlans_Vlan200",
             "target": "orange"
         },
         {
-            "type": "allowed",
             "source": "vlans_Vlan300",
-            "target": "vlans_GigabitEthernet0/2"
+            "target": "vlans_GigabitEthernet0/2",
+            "type": "allowed"
         },
         {
             "source": "vlans_Vlan300",
             "target": "yellow"
         },
         {
-            "type": "allowed",
             "source": "vlans_GigabitEthernet0/5",
-            "target": "vlans_Vlan400"
+            "target": "vlans_Vlan400",
+            "type": "allowed"
         },
         {
             "source": "vlans_Vlan400",
             "target": "green"
+        }
+    ],
+    "multigraph": false,
+    "nodes": [
+        {
+            "id": "vlans_GigabitEthernet0/1",
+            "type": "interface"
+        },
+        {
+            "id": "vlans_Vlan100",
+            "type": "vlan"
+        },
+        {
+            "id": "vlans_Vlan200",
+            "type": "vlan"
+        },
+        {
+            "id": "vlans_Vlan300",
+            "type": "vlan"
+        },
+        {
+            "id": "vlans_GigabitEthernet0/2",
+            "type": "interface"
+        },
+        {
+            "id": "vlans_GigabitEthernet0/3",
+            "type": "interface"
+        },
+        {
+            "id": "vlans_GigabitEthernet0/4",
+            "type": "interface"
+        },
+        {
+            "id": "vlans_GigabitEthernet0/5",
+            "type": "interface"
+        },
+        {
+            "id": "vlans_Vlan400",
+            "type": "vlan"
+        },
+        {
+            "id": "red",
+            "type": "keyword"
+        },
+        {
+            "id": "orange",
+            "type": "keyword"
+        },
+        {
+            "id": "yellow",
+            "type": "keyword"
+        },
+        {
+            "id": "green",
+            "type": "keyword"
         }
     ]
 }
