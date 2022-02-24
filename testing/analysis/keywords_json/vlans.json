@@ -1,0 +1,18 @@
+{
+    "interfaces": {
+        "Vlan100": [
+            "red"
+        ],
+        "Vlan200": [
+            "orange"
+        ],
+        "Vlan300": [
+            "yellow"
+        ],
+        "Vlan400": [
+            "green"
+        ]
+    },
+    "acls": {},
+    "name": "vlans"
+}

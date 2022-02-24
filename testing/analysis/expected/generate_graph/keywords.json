@@ -1,144 +1,73 @@
 {
     "directed": false,
-    "multigraph": false,
     "graph": {},
-    "nodes": [
-        {
-            "type": "acl",
-            "id": "keywords_G"
-        },
-        {
-            "type": "acl",
-            "id": "keywords_O"
-        },
-        {
-            "type": "acl",
-            "id": "keywords_R"
-        },
-        {
-            "type": "acl",
-            "id": "keywords_Y"
-        },
-        {
-            "type": "interface",
-            "id": "keywords_GigabitEthernet0/1"
-        },
-        {
-            "type": "subnet",
-            "id": "10.0.1.0/24"
-        },
-        {
-            "type": "interface",
-            "id": "keywords_GigabitEthernet0/2"
-        },
-        {
-            "type": "subnet",
-            "id": "10.0.2.0/24"
-        },
-        {
-            "type": "interface",
-            "id": "keywords_GigabitEthernet0/3"
-        },
-        {
-            "type": "subnet",
-            "id": "10.0.3.0/24"
-        },
-        {
-            "type": "interface",
-            "id": "keywords_GigabitEthernet0/4"
-        },
-        {
-            "type": "subnet",
-            "id": "10.0.4.0/24"
-        },
-        {
-            "type": "interface",
-            "id": "keywords_GigabitEthernet0/5"
-        },
-        {
-            "type": "subnet",
-            "id": "10.0.5.0/24"
-        },
-        {
-            "type": "interface",
-            "id": "keywords_GigabitEthernet0/6"
-        },
-        {
-            "type": "subnet",
-            "id": "10.0.6.0/24"
-        },
-        {
-            "type": "keyword",
-            "id": "blue"
-        },
-        {
-            "type": "keyword",
-            "id": "red"
-        },
-        {
-            "type": "keyword",
-            "id": "yellow"
-        },
-        {
-            "type": "subnet",
-            "id": "0.0.0.0/0"
-        }
-    ],
     "links": [
         {
-            "type": "out",
             "source": "keywords_G",
-            "target": "keywords_GigabitEthernet0/4"
+            "target": "0.0.0.0/0",
+            "type": [
+                "PERMIT",
+                "src"
+            ]
         },
         {
-            "type": "permit",
             "source": "keywords_G",
-            "target": "0.0.0.0/0"
+            "target": "keywords_GigabitEthernet0/4",
+            "type": "out"
         },
         {
-            "type": "out",
+            "source": "0.0.0.0/0",
+            "target": "keywords_O",
+            "type": [
+                "PERMIT",
+                "src"
+            ]
+        },
+        {
+            "source": "0.0.0.0/0",
+            "target": "keywords_R",
+            "type": [
+                "PERMIT",
+                "src"
+            ]
+        },
+        {
+            "source": "0.0.0.0/0",
+            "target": "keywords_Y",
+            "type": [
+                "PERMIT",
+                "src"
+            ]
+        },
+        {
             "source": "keywords_O",
-            "target": "keywords_GigabitEthernet0/3"
+            "target": "keywords_GigabitEthernet0/3",
+            "type": "out"
         },
         {
-            "type": "in",
             "source": "keywords_O",
-            "target": "keywords_GigabitEthernet0/5"
+            "target": "keywords_GigabitEthernet0/5",
+            "type": "in"
         },
         {
-            "type": "permit",
-            "source": "keywords_O",
-            "target": "0.0.0.0/0"
-        },
-        {
-            "type": "in",
             "source": "keywords_R",
-            "target": "keywords_GigabitEthernet0/2"
+            "target": "keywords_GigabitEthernet0/2",
+            "type": "in"
         },
         {
-            "type": "permit",
-            "source": "keywords_R",
-            "target": "0.0.0.0/0"
-        },
-        {
-            "type": "in",
             "source": "keywords_Y",
-            "target": "keywords_GigabitEthernet0/4"
+            "target": "keywords_GigabitEthernet0/4",
+            "type": "in"
         },
         {
-            "type": "out",
             "source": "keywords_Y",
-            "target": "keywords_GigabitEthernet0/5"
+            "target": "keywords_GigabitEthernet0/5",
+            "type": "out"
         },
         {
-            "type": "out",
             "source": "keywords_Y",
-            "target": "keywords_GigabitEthernet0/6"
-        },
-        {
-            "type": "permit",
-            "source": "keywords_Y",
-            "target": "0.0.0.0/0"
+            "target": "keywords_GigabitEthernet0/6",
+            "type": "out"
         },
         {
             "source": "keywords_GigabitEthernet0/1",
@@ -199,6 +128,89 @@
         {
             "source": "keywords_GigabitEthernet0/6",
             "target": "yellow"
+        }
+    ],
+    "multigraph": false,
+    "nodes": [
+        {
+            "id": "keywords_G",
+            "type": "acl"
+        },
+        {
+            "id": "0.0.0.0/0",
+            "type": "subnet"
+        },
+        {
+            "id": "keywords_O",
+            "type": "acl"
+        },
+        {
+            "id": "keywords_R",
+            "type": "acl"
+        },
+        {
+            "id": "keywords_Y",
+            "type": "acl"
+        },
+        {
+            "id": "keywords_GigabitEthernet0/1",
+            "type": "interface"
+        },
+        {
+            "id": "10.0.1.0/24",
+            "type": "subnet"
+        },
+        {
+            "id": "keywords_GigabitEthernet0/2",
+            "type": "interface"
+        },
+        {
+            "id": "10.0.2.0/24",
+            "type": "subnet"
+        },
+        {
+            "id": "keywords_GigabitEthernet0/3",
+            "type": "interface"
+        },
+        {
+            "id": "10.0.3.0/24",
+            "type": "subnet"
+        },
+        {
+            "id": "keywords_GigabitEthernet0/4",
+            "type": "interface"
+        },
+        {
+            "id": "10.0.4.0/24",
+            "type": "subnet"
+        },
+        {
+            "id": "keywords_GigabitEthernet0/5",
+            "type": "interface"
+        },
+        {
+            "id": "10.0.5.0/24",
+            "type": "subnet"
+        },
+        {
+            "id": "keywords_GigabitEthernet0/6",
+            "type": "interface"
+        },
+        {
+            "id": "10.0.6.0/24",
+            "type": "subnet"
+        },
+        {
+            "id": "blue",
+            "type": "keyword"
+        },
+        {
+            "id": "red",
+            "type": "keyword"
+        },
+        {
+            "id": "yellow",
+            "type": "keyword"
         }
     ]
 }

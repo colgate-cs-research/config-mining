@@ -1,6 +1,7 @@
 import csv
 import pandas as pd
 from matplotlib import pyplot as plt
+import argparse
 
 # Grabs specific columns to analyze
 def get_columns_csv(txt, title, variation=None):
@@ -17,7 +18,7 @@ def get_columns_csv(txt, title, variation=None):
     return title_list
 
 # Graphs the x and y coordinates as given
-def graph_data(csv_file):
+def graph_data(csv_file, network):
     df = pd.read_csv(csv_file)
 
     #grab unique pairs of Hyperparam name and Similarity
@@ -41,30 +42,31 @@ def graph_data(csv_file):
         devices = filtered["Device"].unique()
         for device in devices:
             device_filtered = filtered.loc[filtered["Device"] == device,:]
-            plt.plot(device_filtered["Hyperparam value"], device_filtered["Precision"], label=device + " precision", linestyle='solid')
-            plt.plot(device_filtered["Hyperparam value"], device_filtered["Recall"], label=device + " recall", linestyle='dashed')
+            param_values = list(device_filtered["Hyperparam value"])
+            bar_locs = list(range(len(param_values)))
+            plt.bar([x - .15 for x in bar_locs], device_filtered["Precision"], width=0.3, color='r', label=device + " precision")
+            plt.bar([x + .15 for x in bar_locs], device_filtered["Recall"], width=0.3, color='b', label=device + " recall")
 
         # Add labels to graph
-        plt.xlabel(row["Hyperparam name"])
+        plt.xticks(bar_locs, param_values)
+        plt.xlabel(hyperparam)
         plt.ylabel("Precision/Recall")
         plt.legend()
 
         # Save graph
-        filename = "output/graphs/graph_" + hyperparam + "_" + similarity + ".png"
+        # filename = "output/graphs/graph_" + hyperparam + "_" + similarity + ".png"
+        filename = "output/" + network + "/analysis/graph_" + hyperparam + "_" + similarity + ".png"
         plt.savefig(filename)
 
 def main():
-    csv_file = "data_link_prediction.csv"
-    graph_data(csv_file)
+    parser = argparse.ArgumentParser(description='graph link prediction analysis')
+    parser.add_argument('network', help="Network like Northwestern or UW Madison")
+    arguments = parser.parse_args()
+    csv_file = "data_link_prediction_" + arguments.network + ".csv"
+    graph_data(csv_file, arguments.network)
     
     #print(devices)
     #plt.plot(filtered["Hyperparam value"], filtered["Precision"], label="Precision")
-
+    
 if __name__ == "__main__":
     main()
-
-        #precision_list = get_columns_csv("data_link_prediction.csv", "Precision")
-        #recall_list = get_columns_csv("data_link_prediction.csv", "Recall")
-        #hyperparam_name = get_columns_csv("data_link_prediction.csv", "Hyperparam name")
-
-  

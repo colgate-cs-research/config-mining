@@ -13,17 +13,19 @@ else
 fi
 echo $NETWORK $DEVICE
 
-GRAPH="/shared/config-mining/output/$NETWORK/graphs/$DEVICE.json"
-OUTPUT_DIR="/shared/config-mining/output/$NETWORK/link_prediction/$DEVICE"
+# GRAPH="/shared/config-mining/output/$NETWORK/graphs/$DEVICE.json"
+# OUTPUT_DIR="/shared/config-mining/output/$NETWORK/link_prediction/$DEVICE"
+GRAPH="output/$NETWORK/graphs/$DEVICE.json"
+OUTPUT_DIR="output/$NETWORK/link_prediction/$DEVICE"
 mkdir -p $OUTPUT_DIR
 
 # Consider various types of nodes when computing fraction of common neighbors
-for factor in "none" "vlan" "acl" "keyword"; do
+for factor in "none" "subnet" "vlan" "acl" "keyword"; do
     echo "***** COMMON $factor *****"
     date
     python3 -u link_prediction.py $GRAPH -c "{\"$factor\" : 1}" | tee $OUTPUT_DIR/common_factor_$factor.log
 done
-
+exit
 # Consider various thresholds for declaring two nodes as similar
 for thresh in 0.5 0.6 0.7 0.8 0.9; do
     echo "***** THRESH $thresh (COMMON) *****"
