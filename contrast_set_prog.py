@@ -1,10 +1,13 @@
+from cgi import print_directory
+#from join_all_files_json import join_all_files
+from pickle import TRUE
 import sys
-
+import glob
 from pandas.io.formats.format import return_docstring
 sys.path.append("./libraries/contrast")
 import json
 import ipaddress
-from os import initgroups, writev
+from os import initgroups, writev, system
 import pandas as pd
 from stucco import ContrastSetLearner as csl
 from analyze_refs import intraconfig_refs
@@ -229,34 +232,113 @@ def col_octet(ip):
 def col_prefixes(ip, startlen=20, endlen=31):
     """
     Generates prefixes of varying length from an IP address.
-
-    >>> col_prefixes("85.36.219.170", 20, 31)
+    #>>> col_prefixes("85.36.219.170", 20, 31)
     ['85.36.208.0/20', '85.36.216.0/21', '85.36.216.0/22', '85.36.218.0/23', '85.36.219.0/24', '85.36.219.128/25', '85.36.219.128/26', '85.36.219.160/27', '85.36.219.160/28', '85.36.219.168/29', '85.36.219.168/30', '85.36.219.170/31']
     """
-    prefixes = []
-    for prefixlen in range(startlen, endlen+1):
-        prefix = ipaddress.IPv4Network(ip + "/" + str(prefixlen), strict=False)
-        prefixes.append(str(prefix))
-    return prefixes
+    if(ip!=None and "/" in ip):
+        
+        ip_original,subnet =ip.split("/")[0] ,ip.split("/")[1]
+        
+               
 
-def get_common_keywords(file):
+        #####################
+        # starting the tendril search
+        ###################
+             
+        
+        powers_of_two =[128,64,32,16,8,4,2,1]
+
+        # Figuring ou the starting point
+        # Step1: find the maximun below-min value.
+        remainder=int(ip_original.split(".")[3 -1]) # "3"rd is the octet we want to examine.
+        for two in powers_of_two:
+            if two ==8: # since we only examine the secnd part of the octet.
+                break
+            if two>remainder:
+                pass
+            else:
+                remainder-=two
+        
+        start = int(ip_original.split(".")[3 -1]) - remainder
+
+        #print("Start:"+str(start)+" Remainder:"+str(remainder)+"  original_IP: "+str(ip_original.split(".")[3 -1]))
+
+        # We got the starting point, now we need to generate the list of subnets.
+        # Step2: WE start the largets subnet;  from the middle of the third octet.
+
+        prefixes = []       # the list of prefixes to be added to the one of the greater lists in the parent function
+        #for two in powers_of_two[4:]:
+
+
+        ########################
+        #' IPv4Network nodeul Code (start)
+        # #######################'    
+
+
+        for prefixlen in range(startlen, endlen):
+            prefix = ipaddress.IPv4Network(ip_original + "/" + str(prefixlen), strict=False) # generates subnet list
+            prefixes.append(str(prefix))  # collection of generated subnet lists.
+
+        # Now prefixes have all the subnets relavant for the current IP's situation.
+        # print(prefixes)
+
+        ##################"
+        # Code (end)
+        # ################"
+
+
+        
+
+
+        return prefixes
+    else:
+        # print("Goes here")
+        return list("n"*12)
+
+def get_common_keywords(file="",multifile=0):
     '''
     input: filename
     Output: IfaceName2Keywords,keyword_count_orginal,common_keywords
     '''
-    file_name = file.split("/")[-1].split(".")[0]
-    IfaceName2Keywords=read_dict_from_json("./csl_output/keywords/uw_"+file_name+"_keywords.json",True)
-    #print("---curr IfaceName 2 Keyword ----")
-    #print(IfaceName2Keywords)
-    keyword_count = {}
-    
-    for IfaceName in IfaceName2Keywords.keys():
-        keywords= IfaceName2Keywords[IfaceName]
-        for keyword in keywords:
-            if keyword not in keyword_count.keys():
-                keyword_count[keyword]=1
-            else:
-                keyword_count[keyword]+=1
+
+    if (multifile==1): # we are dealing witha directory
+        # Running the join_all_files_json to produce input
+        # join_all_files_json.join_all_files(file)  # ecnourting circular import
+
+        # loading aggreagted json data
+
+        files = json.load(open("./csl_output/keywords/aggregate/aggregate_data.json",'r'))["filenames"]
+        keyword_count={}
+
+        # Keyword frequency calculator
+        for single_file in files.keys():
+            single_file_dict = files[single_file]
+            for interface in single_file_dict.keys():
+                keywords = single_file_dict[interface]
+                for keyword in keywords:
+                    if keyword in keyword_count.keys():
+                        keyword_count[keyword]+=1
+                    else:
+                        keyword_count[keyword]=1
+        
+        json.dump(keyword_count,open("./tempfile.json","w"),indent=4)
+
+
+
+    else:
+        file_name = file.split("/")[-1].split(".")[0]
+        IfaceName2Keywords=read_dict_from_json("./csl_output/keywords/"+file_name+".json",True)
+        #print("---curr IfaceName 2 Keyword ----")
+        #print(IfaceName2Keywords)
+        keyword_count = {}
+        
+        for IfaceName in IfaceName2Keywords.keys():
+            keywords= IfaceName2Keywords[IfaceName]
+            for keyword in keywords:
+                if keyword not in keyword_count.keys():
+                    keyword_count[keyword]=1
+                else:
+                    keyword_count[keyword]+=1
 
     keyword_count_orginal=keyword_count.copy()
     common_keywords=[]
@@ -267,7 +349,12 @@ def get_common_keywords(file):
         common_keywords.append(keyword)
         keyword_count.pop(keyword)
 
-    print(common_keywords)
+    #print("################ Common keywords ###############")
+    #print(common_keywords)
+
+    # different return statements for multifile vs local file.
+    if(multifile==1):
+        return common_keywords
     return IfaceName2Keywords,keyword_count_orginal,common_keywords
         
 
@@ -282,6 +369,8 @@ def col_keywords(interface_keywords,common_keywords):
     '''
     col_ouput=[]
     for word in common_keywords:
+
+        #print("Current Word:"+word)
         if word in interface_keywords:
             col_ouput.append('1')
         else:
@@ -294,14 +383,13 @@ def col_keywords(interface_keywords,common_keywords):
 
 
 
-def extended_df(IfaceName2AppliedAclNames,IfaceName2IfaceIp,IfaceName2Keywords=None,common_keywords=None):
+def extended_df(IfaceName2AppliedAclNames,IfaceName2IfaceIp,IfaceName2Keywords=None,common_keywords=None,subnet_list=None):
     '''
     Creates extended dataframe using colums
         column_list=['in_acl','out_acl','first_octet','second_octet','16','15','14','13','12','11','10','9','8','7','6','5','4','3','2','1']
     '''
     
     input_dict={}
-    
     for IfaceName in IfaceName2AppliedAclNames.keys():
 
         # adding in_acl and out_acl
@@ -329,13 +417,31 @@ def extended_df(IfaceName2AppliedAclNames,IfaceName2IfaceIp,IfaceName2Keywords=N
         has_both_acl = (has_in_acl & has_out_acl)
 
         
-        #input_dict[IfaceName]=[in_acl,partial_prefix]+col_octet(ip)
 
-        #cuurently using,
+        #curently using,
         # octet numbers     using   col_octet
         # in_acl names
         # Want to add keywords
-        input_dict[IfaceName]=[in_acl]+col_octet(ip)+keyword_dataline#
+        # print(IfaceName2IfaceIp)
+        # print("######## IP: ##########")
+        # print(ip)
+        # print("####### END #########")
+        
+
+        # print("######################")
+        # col_prefixes(ip)
+        # print("####### END #########")
+        # Generating dataline about subnets(YES/NO |  1/0) using subnet_list
+        # subnet_values = []
+        # for supernet in subnet_list:
+        #     if ip_network(supernet).supernet_of(ip):
+        #         subnet_values.append(1)
+        #         continue
+        #     subnet_values.append(0)
+
+
+
+        input_dict[IfaceName]=[in_acl,ip,IfaceName]+col_prefixes(ip)+keyword_dataline #+subnet_values#
 
         
         
@@ -364,45 +470,140 @@ def run_csl(input_df,feature,len,lift):
     return learner.score(min_lift=lift)
 
 
-def compile_dict(file_list):
 
-    for cfile in file_list:
-        IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules = intraconfig_refs(cfile)
+def directory_listing(directory_address):
+    """
+    Listing all the items in a given directory
+    @returns: ['file1_Addr','file2_address'] 
+    """
+    list = glob.glob("/shared/configs/uwmadison/2014-10-core/configs_json/*.json")
+    return list
+
+
+def compile_dict(cfile,custom_keywords=[]):
+
+    
+    
+
+    IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules = intraconfig_refs(cfile)
         #write_to_outfile("AclName2IpsInRules.json",AclName2IpsInRules)
         #write_to_outfile("IfaceIp2AppliedAclNames.json",IfaceIp2AppliedAclNames)
         #write_to_outfile("IfaceName2AppliedAclNames.json",IfaceName2AppliedAclNames)
 
-        #ge
-        IfaceName2IfaceIp=read_dict_from_json(cfile)  #
-        #IfaceName2Keywords=read_dict_from_json(cfile,True)
-        IfaceName2Keywords,keyword_count,common_keywords=get_common_keywords(cfile)
+    IfaceName2IfaceIp=read_dict_from_json(cfile)  # 
+    #IfaceName2Keywords=read_dict_from_json(cfile,True)
+    IfaceName2Keywords,keyword_count,common_keywords=get_common_keywords(cfile)
 
-    input_dict=extended_df(IfaceName2AppliedAclNames,IfaceName2IfaceIp,IfaceName2Keywords,common_keywords)
+    # Collecting common Keywords for columns
+
+    # generating the input dictionary and the data.
+    
+    if custom_keywords == []:
+        input_dict=extended_df(IfaceName2AppliedAclNames,IfaceName2IfaceIp,IfaceName2Keywords,common_keywords)
+    else:
+        input_dict=extended_df(IfaceName2AppliedAclNames,IfaceName2IfaceIp,IfaceName2Keywords,custom_keywords)
+
+    # For multi-file processing, adding file name to every line in input dict
+    for key in input_dict.keys():
+        input_dict[key] = [cfile]+input_dict[key]
+        # print(input_dict[key])
+
     return input_dict,common_keywords
     
 
 
 def main():
+    # 1 - directories, 0 - file name
+    multiple_files = 1
 
     cfile_org = "/shared/configs/northwestern/configs_json/core3.json"
-    cfile = "/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-10-core.json"
+    cfile = "/shared/configs/uwmadison/2014-10-core/configs_json/r-432nm-b3a-2-core.json"
+    cdir = "/shared/configs/uwmadison/2014-10-core/configs_json/"
     #execute_file(cfile,3)
 
     column_list_old=['in_acl','has_in_acl','out_acl','prefixlen', 'first_octet','second_octet','16','15','14','13','12','11','10','9','8','7','6','5','4','3','2','1']
     column_list=['','has_in_acl','has_out_acl','has_both_acl','prefixlen', 'partial_prefix','21','22','23','24','25','26','27','28','29','30']
-    column_list=['in_acl','has_in_acl','partial_prefix','21','22','23','24','25','26','27','28','29','30']
-    column_list=['in_acl','20','21','22','23','24','25','26','27','28','29','30','31','32']
-    #compte precision and recall.
+    column_list=['in_acl','has_in_acl','partial_prefix','/21','/22','/23','/24','/25','/26','/27','/28','/29','/30']
+    column_list=['in_acl','/20','/21','/22','/23','/24','/25','/26','/27','/28','/29','/30','/31']
+    column_list=['filename','in_acl','IfaceName','ip','/20','/21','/22','/23','/24','/25','/26','/27','/28','/29','/30','/31']
 
+    #compte precision and recall.   s
 
-    # compiling the entries in dictionary form
-    input_dict,common_keywords=compile_dict([cfile])
-    # creating a dataframe from the input dictionary
-    print(common_keywords)
-    dataframe=create_DataFrame(column_list+common_keywords,input_dict)
-
+    agg_common_keywords,aggregated_input_dict = [],{}
     
-    print(dataframe.to_string())
+    if multiple_files == 1:     # multiple files
+
+        # getting the file list
+        directory_list = directory_listing(cdir)
+
+        #aggregated_input_dict = {}
+
+        #generating keyword list for the directories listed
+        python_bash_cmd = "/usr/bin/python3"
+        script_path_cmd = "/users/jchauhan/config-mining/extract_keywords.py"
+        output_path_cmd = "/users/jchauhan/config-mining/csl_output/keywords/"
+        print("Reached till here")
+        for json_file in directory_list:
+            # Generates Iface2Keywords files
+            final_cmd = python_bash_cmd +" "+script_path_cmd+" "+ json_file +" "+ output_path_cmd+json_file.split("/")[-1]
+            system(final_cmd)
+
+
+        # Compile aggregated keyword list using join_all_files_json.py
+        # system(python_bas_cmd +" "+"/users/jchauhan/config-mining/jsoin_all_files_json.py")
+
+        # Finding most common keywords when aggreagted
+        agg_common_keywords = get_common_keywords("",1)
+
+        print("######## COMMON KEYWORDS ###########")
+        print(agg_common_keywords)
+        print("####################################")
+
+
+        # generating aggregated input dict
+        for json_file in directory_list:
+            current_input_dict,current_common_keywords=compile_dict(json_file,agg_common_keywords)
+
+            # changing primary key in aggregate_input_dict
+            for interface in current_input_dict.keys():
+                dataline =current_input_dict[interface]
+                aggregate_key = dataline[0] + " "+ interface
+                aggregated_input_dict[aggregate_key] = dataline
+
+        # json.dump(aggregated_input_dict,open("aggregted_input_dict.json",'w'),indent = 4)
+        # creating a dataframe from the input dictionary
+        print("Almost done")
+        #dataframe=create_DataFrame(column_list+agg_common_keywords,aggregated_input_dict)
+        #print(dataframe.head)
+
+        
+    else:                       # single file
+        # compiling the entries in dictionary form
+        input_dict,common_keywords=compile_dict(cfile)
+        
+        ## PRINT statements
+        # print(common_keywords)
+        # print(input_dict)
+
+        # creating a dataframe from the input dictionary
+        dataframe=create_DataFrame(column_list+common_keywords,input_dict)
+
+    # IF DOESN"T RUN, the uncomment
+    # compiling the entries in dictionary form
+    #       input_dict,common_keywords=compile_dict(cfile)
+        
+        ## PRINT statements
+        # print(common_keywords)
+        # print(input_dict)
+
+        # creating a dataframe from the input dictionary
+    #       dataframe=create_DataFrame(column_list+common_keywords,input_dict)
+
+    dataframe=create_DataFrame(column_list+agg_common_keywords,aggregated_input_dict)
+
+    print("Till here.......")
+    print(dataframe.head)
+    print("And here")
     depth =2    
     #generates ACL, first octet DataFrame
     #input_dataframe= first_octet_df(AclName2IpsInRules)
@@ -412,10 +613,10 @@ def main():
 
     
     # Saving the Database:
-    dataframe.to_csv("/users/jchauhan/config-mining/csl_output/workingDB/"+cfile_org[-10:-5]+"_workDB.csv",index=False)
+    dataframe.to_csv("/users/jchauhan/config-mining/csl_output/workingDB/"+"aggregate_df"+"_workDB.csv",index=False)
 
     #STARTING Contrast Set Learner
-    run_csl(dataframe,'32',depth,0).to_csv("/users/jchauhan/config-mining/csl_output/rules/"+cfile_org[-10:-5]+"_depth_"+str(depth)+"_pr.csv",index=False)
+    run_csl(dataframe,'management',depth,0).to_csv("/users/jchauhan/config-mining/csl_output/rules/"+"aggregate_df"+"_depth_"+str(depth)+"keyword: mgmt"+"_pr.csv",index=False)
 
     return 0
 

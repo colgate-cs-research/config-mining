@@ -2,9 +2,9 @@
 
 import argparse
 import json
-import nltk
-nltk.download('stopwords')
-from nltk.corpus import stopwords
+#import nltk
+#nltk.download('stopwords')
+#from nltk.corpus import stopwords
 import re
 import analyze
 
@@ -29,7 +29,7 @@ def get_keywords(phrase, delims=[" "]):
     words = [word.lower() for word in words]
 
     # Skip stop words
-    words = [word for word in words if not word in stopwords.words()]
+    # words = [word for word in words if not word in stopwords.words()]
 
     # Skip single-character words
     words = [word for word in words if len(word) > 1]
