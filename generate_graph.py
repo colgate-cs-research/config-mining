@@ -4,6 +4,9 @@ import ipaddress
 import json
 import networkx as nx
 
+all_paths = []
+set_paths = []
+
 def main():
     #Parse command-line arguments
     parser = argparse.ArgumentParser(description='Generate a graph')
@@ -27,8 +30,8 @@ def analyze_configuration(in_paths, out_path=None, generate_image=False):
         make_graph(config, graph)
         add_keywords(keyword_path, graph)
         prune_keywords(graph)
-        #prune_all_degree_one(graph)
-        #find_structural_rel(graph)
+        prune_all_degree_one(graph)
+        #find_structural_rel(graph, degree, "interface")
 
     # Save graph
     if out_path is not None:
@@ -154,31 +157,45 @@ def prune_all_degree_one(graph):
     #print()
     return
 
-#if interface connects directly to X, does it have a direct connection
-#to neighbor Y, which has a direct connection to X?
-def find_structural_rel(graph):
-    #print("*********** Instances of structural pattern ***********")
-    ifaces = list(n for n in graph if graph.nodes[n]["type"]=="interface")
-    neighbors_cache = {}
+# Do neighbors <degrees> degrees away from node X have
+# a direct connection with node X?
+def find_structural_rel(graph, degrees, node_type):
+    types_cache = nx.get_node_attributes(graph, "type")
+    ifaces = list(n for n in graph if graph.nodes[n]["type"] == node_type)
     for iface in ifaces:
-        first_neighbor_set = list(graph.neighbors(iface))
-        neighbors_cache[iface] = first_neighbor_set
-        for neighbor in first_neighbor_set:
-            neighbor_neighbor_set = []
-            if neighbor in neighbors_cache:
-                neighbor_neighbor_set = neighbors_cache[neighbor]
-            else:
-                neighbor_neighbor_set = list(graph.neighbors(neighbor))
-                neighbors_cache[neighbor] = neighbor_neighbor_set
-
-            for node in neighbor_neighbor_set:
-                if graph.has_edge(iface, node):
-                    #print(str(iface) + ": " + str(neighbor) + " + " + str(node))
-                    if node in first_neighbor_set:
-                        first_neighbor_set.remove(node)  
-    #print()
-    #print()           
+        structural_rel_helper([iface], graph, degrees)
+        
+    for path in all_paths:
+        start_node = path[0]
+        last_node = path[-1]
+        types = []
+        for node in path:
+            types.append(types_cache[node])
+        print(path)
+        print(types, graph.has_edge(start_node, last_node))
+        print()
+        #SARAS_FUNCT(types, graph.has_edge(start_node, end_node):
+              
     return
+
+# helper function for find_structural_rel()
+# generates lists of paths with <max_degree> number of nodes and
+# aggregates all paths into global var (all_paths)
+def structural_rel_helper(path, graph, max_degree):
+    #base case
+    if len(path)-1 == max_degree:
+        if set(path) not in set_paths:
+            all_paths.append(path)
+            set_paths.append(set(path))
+        return 
+    
+    #recursive case
+    neighbors = list(graph.neighbors(path[-1])) #get neighbors of last node in path
+    for neighbor in neighbors:
+        if neighbor not in path:
+            structural_rel_helper(path + [neighbor], graph, max_degree)
+    return
+
 
 if __name__ == "__main__":
     main()
