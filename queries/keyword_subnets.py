@@ -33,7 +33,6 @@ def process_dir(dirpath, keyword, verbose=False):
     return all_addresses
 
 def process_file(filepath, keyword, verbose=False):
-    print(filepath)
     with open(filepath) as json_file:
         config = json.load(json_file)
 
