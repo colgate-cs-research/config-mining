@@ -48,8 +48,8 @@ def analyze_configuration(in_paths, out_path=None, extras=(False,False)):
     
     return graph
 
-def generate_graph(config_path, keyword_path):
-    return analyze_configuration([config_path, keyword_path])
+def generate_graph(config_path, keyword_path, extras=(False, False)):
+    return analyze_configuration([config_path, keyword_path], extras=extras)
 
 def load_config(file):
     # Load config
@@ -140,7 +140,7 @@ def prune_keywords(graph):
     # print()
     #print("*********** PRUNED: Words that only appear once ***********")
     for word in keywords:
-        if graph.degree(word) == 1:
+        if graph.degree(word) <= 1:
             #print(word)
             graph.remove_node(word)
 
@@ -154,7 +154,7 @@ def prune_all_degree_one(graph):
     nodes = list(graph.nodes)
     #print("*********** PRUNED NODES that only have one link ***********")
     for node in nodes:
-        if graph.degree(node) == 1:
+        if graph.degree(node) <= 1:
             #print(node)
             graph.remove_node(node)
     #print()

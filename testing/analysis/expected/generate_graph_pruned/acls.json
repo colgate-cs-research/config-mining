@@ -1,0 +1,144 @@
+{
+    "directed": false,
+    "graph": {},
+    "links": [
+        {
+            "source": "acls_aclA",
+            "target": "acls_GigabitEthernet0/2",
+            "type": "in"
+        },
+        {
+            "source": "acls_aclB",
+            "target": "0.0.0.0/0",
+            "type": [
+                "PERMIT",
+                "src"
+            ]
+        },
+        {
+            "source": "acls_aclB",
+            "target": "acls_GigabitEthernet0/3",
+            "type": "out"
+        },
+        {
+            "source": "acls_aclB",
+            "target": "acls_GigabitEthernet0/5",
+            "type": "out"
+        },
+        {
+            "source": "acls_aclB",
+            "target": "acls_GigabitEthernet0/6",
+            "type": "out"
+        },
+        {
+            "source": "0.0.0.0/0",
+            "target": "acls_aclC",
+            "type": [
+                "DENY",
+                "src"
+            ]
+        },
+        {
+            "source": "0.0.0.0/0",
+            "target": "acls_aclD",
+            "type": [
+                "PERMIT",
+                "dst"
+            ]
+        },
+        {
+            "source": "acls_aclC",
+            "target": "20.0.3.0/24",
+            "type": [
+                "PERMIT",
+                "src"
+            ]
+        },
+        {
+            "source": "acls_aclC",
+            "target": "acls_GigabitEthernet0/4",
+            "type": "in"
+        },
+        {
+            "source": "acls_aclC",
+            "target": "acls_GigabitEthernet0/5",
+            "type": "in"
+        },
+        {
+            "source": "acls_aclC",
+            "target": "test"
+        },
+        {
+            "source": "acls_aclC",
+            "target": "filtering"
+        },
+        {
+            "source": "acls_aclD",
+            "target": "acls_GigabitEthernet0/4",
+            "type": "out"
+        },
+        {
+            "source": "acls_aclD",
+            "target": "test"
+        },
+        {
+            "source": "acls_aclD",
+            "target": "filtering"
+        }
+    ],
+    "multigraph": false,
+    "nodes": [
+        {
+            "id": "acls_aclA",
+            "type": "acl"
+        },
+        {
+            "id": "acls_aclB",
+            "type": "acl"
+        },
+        {
+            "id": "0.0.0.0/0",
+            "type": "subnet"
+        },
+        {
+            "id": "acls_aclC",
+            "type": "acl"
+        },
+        {
+            "id": "20.0.3.0/24",
+            "type": "subnet"
+        },
+        {
+            "id": "acls_aclD",
+            "type": "acl"
+        },
+        {
+            "id": "acls_GigabitEthernet0/2",
+            "type": "interface"
+        },
+        {
+            "id": "acls_GigabitEthernet0/3",
+            "type": "interface"
+        },
+        {
+            "id": "acls_GigabitEthernet0/4",
+            "type": "interface"
+        },
+        {
+            "id": "acls_GigabitEthernet0/5",
+            "type": "interface"
+        },
+        {
+            "id": "acls_GigabitEthernet0/6",
+            "type": "interface"
+        },
+        {
+            "id": "test",
+            "type": "keyword"
+        },
+        {
+            "id": "filtering",
+            "type": "keyword"
+        }
+    ]
+}
