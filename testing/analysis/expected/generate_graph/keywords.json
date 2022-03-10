@@ -128,6 +128,22 @@
         {
             "source": "keywords_GigabitEthernet0/6",
             "target": "yellow"
+        },
+        {
+            "source": "keywords_G",
+            "target": "green"
+        },
+        {
+            "source": "keywords_O",
+            "target": "orange"
+        },
+        {
+            "source": "keywords_R",
+            "target": "red"
+        },
+        {
+            "source": "keywords_Y",
+            "target": "yellow"
         }
     ],
     "multigraph": false,
@@ -210,6 +226,14 @@
         },
         {
             "id": "yellow",
+            "type": "keyword"
+        },
+        {
+            "id": "green",
+            "type": "keyword"
+        },
+        {
+            "id": "orange",
             "type": "keyword"
         }
     ]

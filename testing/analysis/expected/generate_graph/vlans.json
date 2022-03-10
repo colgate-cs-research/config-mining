@@ -4,63 +4,63 @@
     "links": [
         {
             "source": "vlans_GigabitEthernet0/1",
-            "target": "vlans_Vlan100",
+            "target": "Vlan100",
             "type": "allowed"
         },
         {
             "source": "vlans_GigabitEthernet0/1",
-            "target": "vlans_Vlan200",
+            "target": "Vlan200",
             "type": "allowed"
         },
         {
             "source": "vlans_GigabitEthernet0/1",
-            "target": "vlans_Vlan300",
+            "target": "Vlan300",
             "type": "allowed"
         },
         {
-            "source": "vlans_Vlan100",
+            "source": "Vlan100",
             "target": "vlans_GigabitEthernet0/3",
             "type": "allowed"
         },
         {
-            "source": "vlans_Vlan100",
+            "source": "Vlan100",
             "target": "vlans_GigabitEthernet0/4",
             "type": "allowed"
         },
         {
-            "source": "vlans_Vlan100",
+            "source": "Vlan100",
             "target": "red"
         },
         {
-            "source": "vlans_Vlan200",
+            "source": "Vlan200",
             "target": "vlans_GigabitEthernet0/3",
             "type": "allowed"
         },
         {
-            "source": "vlans_Vlan200",
+            "source": "Vlan200",
             "target": "vlans_GigabitEthernet0/4",
             "type": "allowed"
         },
         {
-            "source": "vlans_Vlan200",
+            "source": "Vlan200",
             "target": "orange"
         },
         {
-            "source": "vlans_Vlan300",
+            "source": "Vlan300",
             "target": "vlans_GigabitEthernet0/2",
             "type": "allowed"
         },
         {
-            "source": "vlans_Vlan300",
+            "source": "Vlan300",
             "target": "yellow"
         },
         {
             "source": "vlans_GigabitEthernet0/5",
-            "target": "vlans_Vlan400",
+            "target": "Vlan400",
             "type": "allowed"
         },
         {
-            "source": "vlans_Vlan400",
+            "source": "Vlan400",
             "target": "green"
         }
     ],
@@ -71,15 +71,15 @@
             "type": "interface"
         },
         {
-            "id": "vlans_Vlan100",
+            "id": "Vlan100",
             "type": "vlan"
         },
         {
-            "id": "vlans_Vlan200",
+            "id": "Vlan200",
             "type": "vlan"
         },
         {
-            "id": "vlans_Vlan300",
+            "id": "Vlan300",
             "type": "vlan"
         },
         {
@@ -99,7 +99,7 @@
             "type": "interface"
         },
         {
-            "id": "vlans_Vlan400",
+            "id": "Vlan400",
             "type": "vlan"
         },
         {

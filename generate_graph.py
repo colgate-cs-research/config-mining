@@ -15,11 +15,13 @@ def main():
     parser.add_argument('out_path',type=str,help='Path for a file (or directory) in which to store a JSON representation (and image) of the graph(s)')
     parser.add_argument('-i', '--images', action='store_true')
     parser.add_argument('-a', '--aggregate', action='store_true')
+    parser.add_argument('-p', '--prune', action='store_true')
     arguments = parser.parse_args()
 
-    analyze.process_configs(analyze_configuration, [arguments.config_path, arguments.keyword_path], arguments.out_path, arguments.images, arguments.aggregate)
+    analyze.process_configs(analyze_configuration, [arguments.config_path, arguments.keyword_path], arguments.out_path, (arguments.images, arguments.prune), arguments.aggregate)
 
-def analyze_configuration(in_paths, out_path=None, generate_image=False):
+def analyze_configuration(in_paths, out_path=None, extras=(False,False)):
+    generate_image, prune = extras
     print("Current working files: %s" % (in_paths))
     graph = nx.Graph()
     if not isinstance(in_paths[0], list):
@@ -29,8 +31,9 @@ def analyze_configuration(in_paths, out_path=None, generate_image=False):
         config = load_config(config_path)
         make_graph(config, graph)
         add_keywords(keyword_path, graph)
-        prune_keywords(graph)
-        prune_all_degree_one(graph)
+        if (prune):
+            prune_keywords(graph)
+            prune_all_degree_one(graph)
         #find_structural_rel(graph, degree, "interface")
 
     # Save graph
@@ -73,11 +76,11 @@ def make_graph(config, graph):
                 graph.add_edge(device_acl, str(src_address.network), type=[action, "src"])
     
     for interface in config["interfaces"]:
-        node_name = device_name + "_" + interface
         if interface.startswith("Vlan"):
             node_name = interface
             graph.add_node(node_name, type="vlan")
         else:    
+            node_name = device_name + "_" + interface
             graph.add_node(node_name, type="interface")
         
         if config["interfaces"][interface]["address"] is not None:
@@ -111,11 +114,11 @@ def add_keywords(keyword_path, graph):
 
     # Add interface keyword nodes and edges
     for interface, keywords in keyword_json["interfaces"].items():
-        node_name = device + "_" + interface
         if interface.startswith("Vlan"):
             node_name = interface
             graph.add_node(node_name, type="vlan")
         else: 
+            node_name = device + "_" + interface
             graph.add_node(node_name, type="interface")
         for word in keywords:
             graph.add_node(word, type="keyword", keyword=True) #instead of type='keyword'

@@ -24,6 +24,10 @@
             "type": "in"
         },
         {
+            "source": "acls_aclA",
+            "target": "acla"
+        },
+        {
             "source": "acls_aclB",
             "target": "0.0.0.0/0",
             "type": [
@@ -53,6 +57,10 @@
             "source": "acls_aclB",
             "target": "acls_GigabitEthernet0/6",
             "type": "out"
+        },
+        {
+            "source": "acls_aclB",
+            "target": "aclb"
         },
         {
             "source": "0.0.0.0/0",
@@ -177,6 +185,38 @@
             "type": "in"
         },
         {
+            "source": "acls_aclC",
+            "target": "aclc"
+        },
+        {
+            "source": "acls_aclC",
+            "target": "test"
+        },
+        {
+            "source": "acls_aclC",
+            "target": "filtering"
+        },
+        {
+            "source": "acls_aclC",
+            "target": "by"
+        },
+        {
+            "source": "acls_aclC",
+            "target": "source"
+        },
+        {
+            "source": "acls_aclC",
+            "target": "or"
+        },
+        {
+            "source": "acls_aclC",
+            "target": "destination"
+        },
+        {
+            "source": "acls_aclC",
+            "target": "and"
+        },
+        {
             "source": "20.0.3.0/24",
             "target": "acls_GigabitEthernet0/7"
         },
@@ -208,6 +248,34 @@
             "source": "acls_aclD",
             "target": "acls_GigabitEthernet0/4",
             "type": "out"
+        },
+        {
+            "source": "acls_aclD",
+            "target": "acld"
+        },
+        {
+            "source": "acls_aclD",
+            "target": "test"
+        },
+        {
+            "source": "acls_aclD",
+            "target": "filtering"
+        },
+        {
+            "source": "acls_aclD",
+            "target": "based"
+        },
+        {
+            "source": "acls_aclD",
+            "target": "on"
+        },
+        {
+            "source": "acls_aclD",
+            "target": "different"
+        },
+        {
+            "source": "acls_aclD",
+            "target": "protocols"
         },
         {
             "source": "acls_GigabitEthernet0/1",
@@ -391,6 +459,66 @@
         {
             "id": "20.0.4.0/24",
             "type": "subnet"
+        },
+        {
+            "id": "acla",
+            "type": "keyword"
+        },
+        {
+            "id": "aclb",
+            "type": "keyword"
+        },
+        {
+            "id": "aclc",
+            "type": "keyword"
+        },
+        {
+            "id": "test",
+            "type": "keyword"
+        },
+        {
+            "id": "filtering",
+            "type": "keyword"
+        },
+        {
+            "id": "by",
+            "type": "keyword"
+        },
+        {
+            "id": "source",
+            "type": "keyword"
+        },
+        {
+            "id": "or",
+            "type": "keyword"
+        },
+        {
+            "id": "destination",
+            "type": "keyword"
+        },
+        {
+            "id": "and",
+            "type": "keyword"
+        },
+        {
+            "id": "acld",
+            "type": "keyword"
+        },
+        {
+            "id": "based",
+            "type": "keyword"
+        },
+        {
+            "id": "on",
+            "type": "keyword"
+        },
+        {
+            "id": "different",
+            "type": "keyword"
+        },
+        {
+            "id": "protocols",
+            "type": "keyword"
         }
     ]
 }
