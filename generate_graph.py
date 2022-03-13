@@ -3,9 +3,11 @@ import argparse
 import ipaddress
 import json
 import networkx as nx
+import pdb
 
 all_paths = []
 set_paths = []
+pattern_table = {}
 
 def main():
     #Parse command-line arguments
@@ -31,10 +33,13 @@ def analyze_configuration(in_paths, out_path=None, extras=(False,False)):
         config = load_config(config_path)
         make_graph(config, graph)
         add_keywords(keyword_path, graph)
-        if (prune):
-            prune_keywords(graph)
-            prune_all_degree_one(graph)
-        #find_structural_rel(graph, degree, "interface")
+        prune_keywords(graph)
+        prune_all_degree_one(graph)
+        find_structural_rel(graph, 2, "interface")
+        for key, val in pattern_table.items():
+            if (val[1] > 1) and (val[0]*100/val[1]) > 20:
+                print(str(key) + ":" + str(val) + " (" + str(round(val[0]*100/val[1],2)) + "%)")
+        #add_supernets(graph, prefix_length)
 
     # Save graph
     if out_path is not None:
@@ -69,10 +74,10 @@ def make_graph(config, graph):
                 action = line["action"]
                 if "dstIps" in line:
                     dst_address = ipaddress.IPv4Interface(line["dstIps"])
-                    graph.add_node(str(dst_address.network), type ="subnet")
+                    graph.add_node(str(dst_address.network), type ="subnet", subnet=True)
                     graph.add_edge(device_acl, str(dst_address.network), type=[action, "dst"])
                 src_address = ipaddress.IPv4Interface(line["srcIps"])
-                graph.add_node(str(src_address.network), type ="subnet")
+                graph.add_node(str(src_address.network), type ="subnet", subnet=True)
                 graph.add_edge(device_acl, str(src_address.network), type=[action, "src"])
     
     for interface in config["interfaces"]:
@@ -86,7 +91,7 @@ def make_graph(config, graph):
         if config["interfaces"][interface]["address"] is not None:
             address = config["interfaces"][interface]["address"]
             network_obj = ipaddress.IPv4Interface(address)
-            graph.add_node(str(network_obj.network), type="subnet")
+            graph.add_node(str(network_obj.network), type="subnet", subnet=True)
             graph.add_edge(node_name, str(network_obj.network))
 
         #added create node line (undefined allowed vlans???????)
@@ -115,13 +120,13 @@ def add_keywords(keyword_path, graph):
     # Add interface keyword nodes and edges
     for interface, keywords in keyword_json["interfaces"].items():
         if interface.startswith("Vlan"):
-            node_name = interface
+            node_name = interface #remove device name from vlans
             graph.add_node(node_name, type="vlan")
         else: 
             node_name = device + "_" + interface
             graph.add_node(node_name, type="interface")
         for word in keywords:
-            graph.add_node(word, type="keyword", keyword=True) #instead of type='keyword'
+            graph.add_node(word, type="keyword", keyword=True)
             graph.add_edge(node_name, str(word))
 
     # Add acl keyword nodes and edges
@@ -160,6 +165,25 @@ def prune_all_degree_one(graph):
     #print()
     return
 
+def count_patterns(tuple_of_node_types, last_link_found):
+    '''
+    1. Stores each sequence of node types found as a pattern
+    2. Counts the number of paths found that follow each pattern
+    3. Assumes patterns and path counts are stored in a global dictionary
+    pattern_table, where the tuple of node types are the keys and the values are
+    lists of two numbers. The first number in the lists are the number of *cycles*
+    found and the second number is the number of *seqences* of these node types found.
+    
+    '''
+    if pattern_table.get(tuple_of_node_types) != None:
+        pattern_table.get(tuple_of_node_types)[1] += 1
+        
+    else:
+        pattern_table[tuple_of_node_types] = [0,1]
+    if last_link_found:
+        pattern_table.get(tuple_of_node_types)[0] += 1
+    return
+
 # Do neighbors <degrees> degrees away from node X have
 # a direct connection with node X?
 def find_structural_rel(graph, degrees, node_type):
@@ -173,11 +197,11 @@ def find_structural_rel(graph, degrees, node_type):
         last_node = path[-1]
         types = []
         for node in path:
-            types.append(types_cache[node])
-        print(path)
-        print(types, graph.has_edge(start_node, last_node))
-        print()
-        #SARAS_FUNCT(types, graph.has_edge(start_node, end_node):
+            if types_cache[node] == "keyword":
+                types.append(node)
+            else:
+                types.append(types_cache[node])
+        count_patterns(tuple(types), graph.has_edge(start_node, last_node))
               
     return
 
@@ -199,6 +223,17 @@ def structural_rel_helper(path, graph, max_degree):
             structural_rel_helper(path + [neighbor], graph, max_degree)
     return
 
+#add supernet subnet nodes to argument graph with specified prefix length
+def add_supernets(graph, prefix_length):
+    subnets = list(nx.get_node_attributes(graph, 'subnet').keys())
+    supernets = set()
+    for subnet in subnets:
+        supernet = ipaddress.IPv4Interface(subnet).network.supernet(new_prefix=prefix_length)
+        if supernet not in supernets:
+            supernets.add(supernet)
+            graph.add_node(str(supernet), type="subnet", subnet=True)
+            graph.add_edge(subnet, str(supernet))
+    return
 
 if __name__ == "__main__":
     main()

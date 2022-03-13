@@ -72,6 +72,7 @@ def process_configs(function, in_path, out_path, extra=None, generate_global=Fal
             result = future.result()
             if (result is not None):
                 print(result)
+                print()
 
 def compute_confidence(numerator, denominator):
     if (denominator > 0):
