@@ -33,8 +33,9 @@ def analyze_configuration(in_paths, out_path=None, extras=(False,False)):
         config = load_config(config_path)
         make_graph(config, graph)
         add_keywords(keyword_path, graph)
-        prune_keywords(graph)
-        prune_all_degree_one(graph)
+        if (prune):
+            prune_keywords(graph)
+            prune_all_degree_one(graph)
         find_structural_rel(graph, 2, "interface")
         for key, val in pattern_table.items():
             if (val[1] > 1) and (val[0]*100/val[1]) > 20:
