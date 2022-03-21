@@ -33,7 +33,6 @@ def process_dir(dirpath, keyword, verbose=False):
     return all_addresses
 
 def process_file(filepath, keyword, verbose=False):
-    print(filepath)
     with open(filepath) as json_file:
         config = json.load(json_file)
 
@@ -55,7 +54,9 @@ def process_file(filepath, keyword, verbose=False):
 def aggregate_addresses(all_addresses):
     all_prefixes = []
     for address in sorted(all_addresses):
-        all_prefixes.append(address.network)
+        if address.network not in all_prefixes:
+            all_prefixes.append(address.network)
+    #return all_prefixes
 
     aggregated_prefixes = aggregate_prefixes(all_prefixes) 
     while len(all_prefixes) > len(aggregated_prefixes):
@@ -69,7 +70,10 @@ def aggregate_prefixes(all_prefixes):
     while (i < len(all_prefixes)-1):
         curr_prefix = all_prefixes[i]
         next_prefix = all_prefixes[i+1]
-        if (curr_prefix.supernet() == next_prefix.supernet()):
+        if (next_prefix.subnet_of(curr_prefix)):
+            aggregated_prefixes.append(curr_prefix)
+            i += 2
+        elif (curr_prefix.supernet() == next_prefix.supernet()):
             aggregated_prefixes.append(curr_prefix.supernet())
             i += 2
         else:

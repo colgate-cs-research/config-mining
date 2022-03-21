@@ -3,6 +3,11 @@ import argparse
 import ipaddress
 import json
 import networkx as nx
+import pdb
+
+all_paths = []
+set_paths = []
+pattern_table = {}
 
 def main():
     #Parse command-line arguments
@@ -12,11 +17,13 @@ def main():
     parser.add_argument('out_path',type=str,help='Path for a file (or directory) in which to store a JSON representation (and image) of the graph(s)')
     parser.add_argument('-i', '--images', action='store_true')
     parser.add_argument('-a', '--aggregate', action='store_true')
+    parser.add_argument('-p', '--prune', action='store_true')
     arguments = parser.parse_args()
 
-    analyze.process_configs(analyze_configuration, [arguments.config_path, arguments.keyword_path], arguments.out_path, arguments.images, arguments.aggregate)
+    analyze.process_configs(analyze_configuration, [arguments.config_path, arguments.keyword_path], arguments.out_path, (arguments.images, arguments.prune), arguments.aggregate)
 
-def analyze_configuration(in_paths, out_path=None, generate_image=False):
+def analyze_configuration(in_paths, out_path=None, extras=(False,False)):
+    generate_image, prune = extras
     print("Current working files: %s" % (in_paths))
     graph = nx.Graph()
     if not isinstance(in_paths[0], list):
@@ -26,9 +33,14 @@ def analyze_configuration(in_paths, out_path=None, generate_image=False):
         config = load_config(config_path)
         make_graph(config, graph)
         add_keywords(keyword_path, graph)
-        prune_keywords(graph)
-        #prune_all_degree_one(graph)
-        #find_structural_rel(graph)
+        if (prune):
+            prune_keywords(graph)
+            prune_all_degree_one(graph)
+        find_structural_rel(graph, 2, "interface")
+        for key, val in pattern_table.items():
+            if (val[1] > 1) and (val[0]*100/val[1]) > 20:
+                print(str(key) + ":" + str(val) + " (" + str(round(val[0]*100/val[1],2)) + "%)")
+        #add_supernets(graph, prefix_length)
 
     # Save graph
     if out_path is not None:
@@ -42,8 +54,8 @@ def analyze_configuration(in_paths, out_path=None, generate_image=False):
     
     return graph
 
-def generate_graph(config_path, keyword_path):
-    return analyze_configuration([config_path, keyword_path])
+def generate_graph(config_path, keyword_path, extras=(False, False)):
+    return analyze_configuration([config_path, keyword_path], extras=extras)
 
 def load_config(file):
     # Load config
@@ -63,38 +75,39 @@ def make_graph(config, graph):
                 action = line["action"]
                 if "dstIps" in line:
                     dst_address = ipaddress.IPv4Interface(line["dstIps"])
-                    graph.add_node(str(dst_address.network), type ="subnet")
+                    graph.add_node(str(dst_address.network), type ="subnet", subnet=True)
                     graph.add_edge(device_acl, str(dst_address.network), type=[action, "dst"])
                 src_address = ipaddress.IPv4Interface(line["srcIps"])
-                graph.add_node(str(src_address.network), type ="subnet")
+                graph.add_node(str(src_address.network), type ="subnet", subnet=True)
                 graph.add_edge(device_acl, str(src_address.network), type=[action, "src"])
     
     for interface in config["interfaces"]:
-        device_interface = device_name + "_" + interface
         if interface.startswith("Vlan"):
-            graph.add_node(device_interface, type="vlan")
+            node_name = interface
+            graph.add_node(node_name, type="vlan")
         else:    
-            graph.add_node(device_interface, type="interface")
+            node_name = device_name + "_" + interface
+            graph.add_node(node_name, type="interface")
         
         if config["interfaces"][interface]["address"] is not None:
             address = config["interfaces"][interface]["address"]
             network_obj = ipaddress.IPv4Interface(address)
-            graph.add_node(str(network_obj.network), type="subnet")
-            graph.add_edge(device_interface, str(network_obj.network))
+            graph.add_node(str(network_obj.network), type="subnet", subnet=True)
+            graph.add_edge(node_name, str(network_obj.network))
 
         #added create node line (undefined allowed vlans???????)
         if config["interfaces"][interface]["allowed_vlans"] is not None:
             for vlan in config["interfaces"][interface]["allowed_vlans"]:
-                vlan_name = device_name + "_" + "Vlan" + str(vlan)
-                graph.add_node(vlan_name, type="vlan")  #want allowed vlans to include device name??
-                graph.add_edge(device_interface, vlan_name, type="allowed")
+                vlan_name = "Vlan" + str(vlan)
+                graph.add_node(vlan_name, type="vlan")
+                graph.add_edge(node_name, vlan_name, type="allowed")
 
         if config["interfaces"][interface]["in_acl"] is not None:
             acl_name = device_name + "_" + config["interfaces"][interface]["in_acl"]
-            graph.add_edge(device_interface, acl_name, type = "in")
+            graph.add_edge(node_name, acl_name, type = "in")
         if config["interfaces"][interface]["out_acl"] is not None:
             acl_name = device_name + "_" + config["interfaces"][interface]["out_acl"]
-            graph.add_edge(device_interface, acl_name, type = "out")
+            graph.add_edge(node_name, acl_name, type = "out")
 
     return graph
 
@@ -107,14 +120,15 @@ def add_keywords(keyword_path, graph):
 
     # Add interface keyword nodes and edges
     for interface, keywords in keyword_json["interfaces"].items():
-        device_interface = device + "_" + interface
         if interface.startswith("Vlan"):
-            graph.add_node(device_interface, type="vlan")
+            node_name = interface #remove device name from vlans
+            graph.add_node(node_name, type="vlan")
         else: 
-            graph.add_node(device_interface, type="interface")
+            node_name = device + "_" + interface
+            graph.add_node(node_name, type="interface")
         for word in keywords:
-            graph.add_node(word, type="keyword", keyword=True) #instead of type='keyword'
-            graph.add_edge(device_interface, str(word))
+            graph.add_node(word, type="keyword", keyword=True)
+            graph.add_edge(node_name, str(word))
 
     # Add acl keyword nodes and edges
     for acl, keywords in keyword_json["acls"].items():
@@ -132,7 +146,7 @@ def prune_keywords(graph):
     # print()
     #print("*********** PRUNED: Words that only appear once ***********")
     for word in keywords:
-        if graph.degree(word) == 1:
+        if graph.degree(word) <= 1:
             #print(word)
             graph.remove_node(word)
 
@@ -146,36 +160,80 @@ def prune_all_degree_one(graph):
     nodes = list(graph.nodes)
     #print("*********** PRUNED NODES that only have one link ***********")
     for node in nodes:
-        if graph.degree(node) == 1:
+        if graph.degree(node) <= 1:
             #print(node)
             graph.remove_node(node)
     #print()
     return
 
-#if interface connects directly to X, does it have a direct connection
-#to neighbor Y, which has a direct connection to X?
-def find_structural_rel(graph):
-    #print("*********** Instances of structural pattern ***********")
-    ifaces = list(n for n in graph if graph.nodes[n]["type"]=="interface")
-    neighbors_cache = {}
-    for iface in ifaces:
-        first_neighbor_set = list(graph.neighbors(iface))
-        neighbors_cache[iface] = first_neighbor_set
-        for neighbor in first_neighbor_set:
-            neighbor_neighbor_set = []
-            if neighbor in neighbors_cache:
-                neighbor_neighbor_set = neighbors_cache[neighbor]
-            else:
-                neighbor_neighbor_set = list(graph.neighbors(neighbor))
-                neighbors_cache[neighbor] = neighbor_neighbor_set
+def count_patterns(tuple_of_node_types, last_link_found):
+    '''
+    1. Stores each sequence of node types found as a pattern
+    2. Counts the number of paths found that follow each pattern
+    3. Assumes patterns and path counts are stored in a global dictionary
+    pattern_table, where the tuple of node types are the keys and the values are
+    lists of two numbers. The first number in the lists are the number of *cycles*
+    found and the second number is the number of *seqences* of these node types found.
+    
+    '''
+    if pattern_table.get(tuple_of_node_types) != None:
+        pattern_table.get(tuple_of_node_types)[1] += 1
+        
+    else:
+        pattern_table[tuple_of_node_types] = [0,1]
+    if last_link_found:
+        pattern_table.get(tuple_of_node_types)[0] += 1
+    return
 
-            for node in neighbor_neighbor_set:
-                if graph.has_edge(iface, node):
-                    #print(str(iface) + ": " + str(neighbor) + " + " + str(node))
-                    if node in first_neighbor_set:
-                        first_neighbor_set.remove(node)  
-    #print()
-    #print()           
+# Do neighbors <degrees> degrees away from node X have
+# a direct connection with node X?
+def find_structural_rel(graph, degrees, node_type):
+    types_cache = nx.get_node_attributes(graph, "type")
+    ifaces = list(n for n in graph if graph.nodes[n]["type"] == node_type)
+    for iface in ifaces:
+        structural_rel_helper([iface], graph, degrees)
+        
+    for path in all_paths:
+        start_node = path[0]
+        last_node = path[-1]
+        types = []
+        for node in path:
+            if types_cache[node] == "keyword":
+                types.append(node)
+            else:
+                types.append(types_cache[node])
+        count_patterns(tuple(types), graph.has_edge(start_node, last_node))
+              
+    return
+
+# helper function for find_structural_rel()
+# generates lists of paths with <max_degree> number of nodes and
+# aggregates all paths into global var (all_paths)
+def structural_rel_helper(path, graph, max_degree):
+    #base case
+    if len(path)-1 == max_degree:
+        if set(path) not in set_paths:
+            all_paths.append(path)
+            set_paths.append(set(path))
+        return 
+    
+    #recursive case
+    neighbors = list(graph.neighbors(path[-1])) #get neighbors of last node in path
+    for neighbor in neighbors:
+        if neighbor not in path:
+            structural_rel_helper(path + [neighbor], graph, max_degree)
+    return
+
+#add supernet subnet nodes to argument graph with specified prefix length
+def add_supernets(graph, prefix_length):
+    subnets = list(nx.get_node_attributes(graph, 'subnet').keys())
+    supernets = set()
+    for subnet in subnets:
+        supernet = ipaddress.IPv4Interface(subnet).network.supernet(new_prefix=prefix_length)
+        if supernet not in supernets:
+            supernets.add(supernet)
+            graph.add_node(str(supernet), type="subnet", subnet=True)
+            graph.add_edge(subnet, str(supernet))
     return
 
 if __name__ == "__main__":

@@ -15,13 +15,16 @@ import extract_keywords
 configs_dir = os.path.join(testing_dir, "analysis", "configs_json")
 graphs_dir = os.path.join(testing_dir, "analysis", "expected", "generate_graph")
 
-def helper_test_graph(filename):
+def helper_test_graph(filename, prune=False):
     config_path = os.path.join(configs_dir, filename) 
     tmp_dir = tempfile.mkdtemp()
     keyword_path = os.path.join(tmp_dir, filename)
     extract_keywords.analyze_configuration(config_path, keyword_path, None)
-    actual = generate_graph.generate_graph(config_path, keyword_path)
-    graph_path = os.path.join(graphs_dir, filename)
+    actual = generate_graph.generate_graph(config_path, keyword_path, (False, prune))
+    if prune:
+        graph_path = os.path.join(graphs_dir + "_pruned", filename)
+    else:
+        graph_path = os.path.join(graphs_dir, filename)
     with open(graph_path, 'r') as graph_file:
         graph_json = json.load(graph_file)
     expected = nx.readwrite.json_graph.node_link_graph(graph_json)
@@ -47,8 +50,17 @@ def helper_test_graph(filename):
 def test_graph_acls():
     helper_test_graph("acls.json")
 
+def test_graph_acls_pruned():
+    helper_test_graph("acls.json", True)
+
 def test_graph_keywords():
     helper_test_graph("keywords.json")
 
+def test_graph_keywords_pruned():
+    helper_test_graph("keywords.json", True)
+
 def test_graph_vlans():
     helper_test_graph("vlans.json")
+
+def test_graph_vlans_pruned():
+    helper_test_graph("vlans.json", True)

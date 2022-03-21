@@ -71,23 +71,11 @@
         },
         {
             "source": "keywords_GigabitEthernet0/1",
-            "target": "10.0.1.0/24"
-        },
-        {
-            "source": "keywords_GigabitEthernet0/1",
             "target": "blue"
         },
         {
             "source": "keywords_GigabitEthernet0/2",
-            "target": "10.0.2.0/24"
-        },
-        {
-            "source": "keywords_GigabitEthernet0/2",
             "target": "red"
-        },
-        {
-            "source": "keywords_GigabitEthernet0/3",
-            "target": "10.0.3.0/24"
         },
         {
             "source": "keywords_GigabitEthernet0/3",
@@ -96,10 +84,6 @@
         {
             "source": "keywords_GigabitEthernet0/3",
             "target": "yellow"
-        },
-        {
-            "source": "keywords_GigabitEthernet0/4",
-            "target": "10.0.4.0/24"
         },
         {
             "source": "keywords_GigabitEthernet0/4",
@@ -111,10 +95,6 @@
         },
         {
             "source": "keywords_GigabitEthernet0/5",
-            "target": "10.0.5.0/24"
-        },
-        {
-            "source": "keywords_GigabitEthernet0/5",
             "target": "red"
         },
         {
@@ -123,19 +103,7 @@
         },
         {
             "source": "keywords_GigabitEthernet0/6",
-            "target": "10.0.6.0/24"
-        },
-        {
-            "source": "keywords_GigabitEthernet0/6",
             "target": "yellow"
-        },
-        {
-            "source": "keywords_G",
-            "target": "green"
-        },
-        {
-            "source": "keywords_O",
-            "target": "orange"
         },
         {
             "source": "keywords_R",
@@ -173,48 +141,24 @@
             "type": "interface"
         },
         {
-            "id": "10.0.1.0/24",
-            "type": "subnet"
-        },
-        {
             "id": "keywords_GigabitEthernet0/2",
             "type": "interface"
-        },
-        {
-            "id": "10.0.2.0/24",
-            "type": "subnet"
         },
         {
             "id": "keywords_GigabitEthernet0/3",
             "type": "interface"
         },
         {
-            "id": "10.0.3.0/24",
-            "type": "subnet"
-        },
-        {
             "id": "keywords_GigabitEthernet0/4",
             "type": "interface"
-        },
-        {
-            "id": "10.0.4.0/24",
-            "type": "subnet"
         },
         {
             "id": "keywords_GigabitEthernet0/5",
             "type": "interface"
         },
         {
-            "id": "10.0.5.0/24",
-            "type": "subnet"
-        },
-        {
             "id": "keywords_GigabitEthernet0/6",
             "type": "interface"
-        },
-        {
-            "id": "10.0.6.0/24",
-            "type": "subnet"
         },
         {
             "id": "blue",
@@ -226,14 +170,6 @@
         },
         {
             "id": "yellow",
-            "type": "keyword"
-        },
-        {
-            "id": "green",
-            "type": "keyword"
-        },
-        {
-            "id": "orange",
             "type": "keyword"
         }
     ]

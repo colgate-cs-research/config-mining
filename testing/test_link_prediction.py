@@ -32,7 +32,9 @@ def test_get_nodes_all():
         "20.0.4.1/32", "20.0.5.0/24", "20.0.6.1/32", "20.0.7.0/24", 
         "20.0.8.0/24", "20.0.9.1/32", "20.0.10.1/32", "20.0.11.0/24", 
         "20.0.12.1/32", "20.0.13.1/32", "20.0.14.0/24", "20.0.15.0/24", 
-        "20.0.16.0/24", "20.0.17.0/24"]
+        "20.0.16.0/24", "20.0.17.0/24",
+        "acla", "aclb", "aclc", "test", "filtering", "by", "source", "or",
+        "destination", "and", "acld", "based", "on", "different", "protocols"]
     actual = link_prediction.get_nodes(graph)
     assert sorted(actual) == sorted(expected)
 
@@ -44,7 +46,7 @@ def test_get_nodes_acls():
 
 def test_get_nodes_vlans():
     graph = load_graph("vlans.json")
-    expected = ["vlans_Vlan100", "vlans_Vlan200", "vlans_Vlan300", "vlans_Vlan400"]
+    expected = ["Vlan100", "Vlan200", "Vlan300", "Vlan400"]
     actual = link_prediction.get_nodes(graph, "vlan")
     assert sorted(actual) == sorted(expected)
 
@@ -62,13 +64,13 @@ def test_get_edges_ge02_acl():
 
 def test_get_edges_ge01():
     graph = load_graph("vlans.json")
-    expected = [("vlans_GigabitEthernet0/1", "vlans_Vlan100"), ("vlans_GigabitEthernet0/1", "vlans_Vlan200"), ("vlans_GigabitEthernet0/1", "vlans_Vlan300")]
+    expected = [("vlans_GigabitEthernet0/1", "Vlan100"), ("vlans_GigabitEthernet0/1", "Vlan200"), ("vlans_GigabitEthernet0/1", "Vlan300")]
     actual = link_prediction.get_edges("vlans_GigabitEthernet0/1", graph)
     assert sorted(actual) == sorted(expected)
 
 def test_get_edges_ge03():
     graph = load_graph("vlans.json")
-    expected = [("vlans_GigabitEthernet0/3", "vlans_Vlan100"), ("vlans_GigabitEthernet0/3", "vlans_Vlan200")]
+    expected = [("vlans_GigabitEthernet0/3", "Vlan100"), ("vlans_GigabitEthernet0/3", "Vlan200")]
     actual = link_prediction.get_edges("vlans_GigabitEthernet0/3", graph)
     assert sorted(actual) == sorted(expected)
 
