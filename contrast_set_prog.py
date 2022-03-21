@@ -229,7 +229,7 @@ def col_octet(ip):
     
     return(current_selection)
 
-def col_prefixes(ip, startlen=20, endlen=31):
+def col_prefixes(ip, startlen=20, endlen=32):
     """
     Generates prefixes of varying length from an IP address.
     #>>> col_prefixes("85.36.219.170", 20, 31)
@@ -342,7 +342,7 @@ def get_common_keywords(file="",multifile=0):
 
     keyword_count_orginal=keyword_count.copy()
     common_keywords=[]
-    for i in range(0,9):
+    for i in range(0,14):
         count=max(keyword_count.values())
         keyword=list(keyword_count.keys())[list(keyword_count.values()).index(count)]
         #print(keyword+" Count: "+str(count))
@@ -604,7 +604,7 @@ def main():
     print("Till here.......")
     print(dataframe.head)
     print("And here")
-    depth =2    
+     
     #generates ACL, first octet DataFrame
     #input_dataframe= first_octet_df(AclName2IpsInRules)
     #print(input_dataframe)
@@ -616,7 +616,9 @@ def main():
     dataframe.to_csv("/users/jchauhan/config-mining/csl_output/workingDB/"+"aggregate_df"+"_workDB.csv",index=False)
 
     #STARTING Contrast Set Learner
-    run_csl(dataframe,'management',depth,0).to_csv("/users/jchauhan/config-mining/csl_output/rules/"+"aggregate_df"+"_depth_"+str(depth)+"keyword: mgmt"+"_pr.csv",index=False)
+    depth = 2    
+    keyword = 'management'
+    run_csl(dataframe,keyword,depth,0).to_csv("/users/jchauhan/config-mining/csl_output/rules/"+"aggregate_df"+"_depth_"+str(depth)+"keyword: "+keyword+"_pr.csv",index=False)
 
     return 0
 
