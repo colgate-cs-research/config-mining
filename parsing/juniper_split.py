@@ -12,7 +12,7 @@ def get_dict(lst, d):
             key = s.strip().split()[0]
             start = i + 1
             end = start
-            occ = 1
+            occ = 1 #open curly brace count
             while (occ != 0):
                 if "{" in s:
                     occ += 1
