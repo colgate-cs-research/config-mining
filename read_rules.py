@@ -54,12 +54,12 @@ def weigthed_rank(df):
 
     return 
 
-def order_dataframe(df):
+def order_dataframe(df,group):
     # selecting rules where GROUP = 1
-    df = df.loc[ df['group']== 1]
+    if(group>=0): df = df.loc[ df['group']== group]
 
     # ordering metric
-    df =df.sort_values(by=['weighted_value','f1_score','frequency','precision'], ascending=False)
+    df =df.sort_values(by=['weighted_value','precision','f1_score','frequency'], ascending=False)
 
     #df=df[df['group'] == 1]
     return df
@@ -76,13 +76,13 @@ def additional_mertics(df):
     f1 = df['f1_score']
 
     # adding weigthed rank
-    precision_weight = 1
+    precision_weight = 10
     recall_weight = 1
     frequency_weight = 1
     f1_score_weight = 2
 
     # frequency is normalied. divided by the biggest value
-    df = df.assign(weighted_value= frequency_weight*f/max(f) + f1_score_weight*f1)
+    df = df.assign(weighted_value= precision_weight*p+frequency_weight*f/max(f) + f1_score_weight*f1)
 
 
     return df
@@ -99,8 +99,9 @@ def top_attributes(df):
 
 
 def main():
-    depth = 2
+    depth = 1
     keyword = 'l3'
+    group = -1  # 0 for not present | 1 for present | -1 for both
 
     # creating dataframe
     rule_df = pd.read_csv("./csl_output/rules/aggregate_df_depth_"+str(depth)+"keyword: "+keyword+"_pr.csv",header=0)
@@ -116,13 +117,13 @@ def main():
     
     
     # ranking rules
-    new_df=order_dataframe(new_df)
+    new_df=order_dataframe(new_df,group)
     
     # geetng the best predictors for the GROUP
     top_network_attributes = top_attributes(new_df)
 
     new_df.to_csv('new_df.csv', index=False)
-    #print(new_df.head)
+    print(new_df.head)
 
     return 0
 

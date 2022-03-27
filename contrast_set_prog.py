@@ -1,4 +1,6 @@
 from cgi import print_directory
+import time
+from datetime import date
 #from join_all_files_json import join_all_files
 from pickle import TRUE
 import sys
@@ -510,9 +512,26 @@ def compile_dict(cfile,custom_keywords=[]):
 
     return input_dict,common_keywords
     
+def update_time_measurement(file_name,depth,keyword,time_taken):
+    '''
+    Save time measurement to file
+    '''
+    now = date.today()
+    d4 = now.strftime("%d/%m/%Y %H:%M:%S")
+
+    file = open("csl_runtime_dataset.txt", "a")
+
+    date_entry = "date:"+str(d4)+" | "
+    L = date_entry+"input:"+file_name.split("/")[-2] + "/" +file_name.split("/")[-1] +" | " +"depth:"+str(depth)+" | "+"keyword:"+ keyword + " | "+"time_taken:"+ str(time_taken)+"\n"
+    file.writelines(L)
+    file.close()
+
 
 
 def main():
+
+    
+
     # 1 - directories, 0 - file name
     multiple_files = 1
 
@@ -616,9 +635,18 @@ def main():
     dataframe.to_csv("/users/jchauhan/config-mining/csl_output/workingDB/"+"aggregate_df"+"_workDB.csv",index=False)
 
     #STARTING Contrast Set Learner
-    depth = 2    
-    keyword = 'management'
+    depth = 1    
+    keyword = 'l3'
+
+
+    # time measuring
+    start_time = time.process_time()
+
     run_csl(dataframe,keyword,depth,0).to_csv("/users/jchauhan/config-mining/csl_output/rules/"+"aggregate_df"+"_depth_"+str(depth)+"keyword: "+keyword+"_pr.csv",index=False)
+
+    # time Measuring 
+    execution_time = time.process_time()-start_time
+    update_time_measurement(cdir,depth,keyword,execution_time)
 
     return 0
 
