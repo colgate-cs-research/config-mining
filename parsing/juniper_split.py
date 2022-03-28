@@ -56,7 +56,7 @@ def main():
         # Sample code for writing to file
         '''section_name = "interfaces"
         section_contents = "interfaces {\n    testing\n}"'''
-        section_name = "alba_dict"
+        section_name = arguments.config_filepath.split("/")[-1][0:-4] + "_dict"
         lst = cfg_file.read().split("\n")
         d = {}
         get_dict(lst, d)
