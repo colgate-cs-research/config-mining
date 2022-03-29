@@ -1,14 +1,9 @@
 import argparse
 import json
 import networkx as nx
-from networkx.classes.function import non_edges
-import node2vec
-import pprint
-import random
 import tqdm
 
 get_nodes_cache = {}
-get_edges_cache = {}
 get_neighbors_cache = {}
 types_cache = None
 
@@ -16,14 +11,13 @@ all_paths = []
 set_paths = []
 
 def clear_caches():
-    global get_nodes_cache, get_edges_cache, get_neighbors_cache, types_cache
+    global get_nodes_cache, get_neighbors_cache, types_cache
     get_nodes_cache = {}
-    get_edges_cache = {}
     get_neighbors_cache = {}
     types_cache = None
 
-#returns list of all nodes of target_type in argument graph
 def get_nodes(graph, target_type=None):
+    """Returns list of all nodes of target_type in argument graph"""
     # Check if previously computed
     if target_type in get_nodes_cache:
         return get_nodes_cache[target_type]
@@ -41,31 +35,8 @@ def get_nodes(graph, target_type=None):
     get_nodes_cache[target_type] = node_list
     return node_list
 
-#return a list of all edges for node of target_type
-def get_edges(node, graph, target_type=None):
-    # Check if previously computed
-    if target_type in get_edges_cache and node in get_edges_cache[target_type]:
-        return get_edges_cache[target_type][node]
-
-    # Compute
-    global types_cache
-    if types_cache is None:
-        types_cache = nx.get_node_attributes(graph, "type")
-    edge_list = []
-    for edge in graph.edges(node):
-        if target_type is None or types_cache[edge[1]] == target_type:
-            edge_list.append(edge)
-
-    # Cache and return result
-    if target_type not in get_edges_cache:
-        get_edges_cache[target_type] = {}
-    get_edges_cache[target_type][node] = edge_list
-    return edge_list
-
-"""
-Get a set of node's neighbors of target_type
-"""
 def get_neighbors(node, graph, target_type=None):
+    """Get a set of node's neighbors of target_type"""
     # Check if previously computed
     if target_type in get_neighbors_cache and node in get_neighbors_cache[target_type]:
         return get_neighbors_cache[target_type][node]
@@ -109,11 +80,9 @@ def count_patterns(tuple_of_node_types, last_link_found, pattern_table):
         pattern_table.get(tuple_of_node_types)[0] += 1
     return
 
-# Do neighbors <degrees> degrees away from node X have
-# a direct connection with node X?
 def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False):
-    types_cache = nx.get_node_attributes(graph, "type")
-    ifaces = list(n for n in graph if types_cache[n] == node_type)
+    """Do neighbors <degrees> degrees away from node X have a direct connection with node X?"""
+    ifaces = get_nodes(graph, node_type)
     
     pbar = tqdm.tqdm(ifaces)
     pbar.set_description("Computing paths from interfaces")
@@ -137,10 +106,10 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False)
               
     return
 
-# helper function for find_structural_rel()
-# generates lists of paths with <max_degree> number of nodes and
-# aggregates all paths into global var (all_paths)
 def structural_rel_helper(path, graph, max_degree):
+    """helper function for find_structural_rel()
+    generates lists of paths with <max_degree> number of nodes and
+    aggregates all paths into global var (all_paths)"""
     #base case
     if len(path)-1 == max_degree:
         if set(path) not in set_paths:
@@ -149,14 +118,14 @@ def structural_rel_helper(path, graph, max_degree):
         return 
     
     #recursive case
-    neighbors = list(graph.neighbors(path[-1])) #get neighbors of last node in path
+    neighbors = get_neighbors(path[-1], graph) #get neighbors of last node in path
     for neighbor in neighbors:
         if neighbor not in path:
             structural_rel_helper(path + [neighbor], graph, max_degree)
     return
 
-"""Load a graph from a JSON representation"""
 def load_graph(graph_path):
+    """Load a graph from a JSON representation"""
     with open(graph_path, 'r') as graph_file:
         graph_json = json.load(graph_file)
     return nx.readwrite.json_graph.node_link_graph(graph_json)
@@ -174,9 +143,6 @@ def main():
     arguments=parser.parse_args()
 
     graph = load_graph(arguments.graph_path)
-
-    global types_cache
-    types_cache = nx.get_node_attributes(graph, "type")
 
     pattern_table = {}
     find_structural_rel(graph, arguments.degree, "interface", pattern_table, arguments.verbose)
