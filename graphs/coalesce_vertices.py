@@ -156,17 +156,20 @@ def ranges(p):
             i = j
     yield (q[i], q[-1])
 
-def process_graph(in_path, out_path, extras=(False,)):
+def process_graph(in_path, out_path, verbose=False):
     print("Current working file: %s" % (in_path))
-    clear_caches()
     graph = load_graph(in_path)
-    verbose = extras
 
-    to_coalesce = find_vertices_to_coalesce(graph, "vlan", verbose)
-    out = pprint.PrettyPrinter(compact=True)
-    out.pprint(to_coalesce)
+    for vertex_type in ["vlan", "keyword", "interface", "subnet", "acl"]:
+        clear_caches()
+        to_coalesce = find_vertices_to_coalesce(graph, vertex_type, verbose)
+        if (verbose):
+            out = pprint.PrettyPrinter(compact=True)
+            out.pprint(to_coalesce)
 
-    update_graph(graph, to_coalesce)
+        if len(to_coalesce) > 0:
+            update_graph(graph, to_coalesce)
+            print("Replaced {} {} vertices with {} vertices".format(sum([len(v) for v in to_coalesce]), vertex_type, len(to_coalesce)))
 
     # Save graph
     analyze.write_to_outfile(out_path, nx.readwrite.json_graph.node_link_data(graph))
@@ -179,7 +182,7 @@ def main():
     parser.add_argument('-v', '--verbose', action='store_true', help="Display verbose output")
     arguments = parser.parse_args()
 
-    analyze.process_configs(process_graph, arguments.graph_path, arguments.out_path, (arguments.verbose,))
+    analyze.process_configs(process_graph, arguments.graph_path, arguments.out_path, arguments.verbose)
 
 
 
