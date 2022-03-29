@@ -5,10 +5,6 @@ import json
 import networkx as nx
 import pdb
 
-all_paths = []
-set_paths = []
-pattern_table = {}
-
 def main():
     #Parse command-line arguments
     parser = argparse.ArgumentParser(description='Generate a graph')
@@ -36,10 +32,6 @@ def analyze_configuration(in_paths, out_path=None, extras=(False,False)):
         if (prune):
             prune_keywords(graph)
             prune_all_degree_one(graph)
-        find_structural_rel(graph, 2, "interface")
-        for key, val in pattern_table.items():
-            if (val[1] > 1) and (val[0]*100/val[1]) > 20:
-                print(str(key) + ":" + str(val) + " (" + str(round(val[0]*100/val[1],2)) + "%)")
         #add_supernets(graph, prefix_length)
 
     # Save graph
@@ -166,66 +158,8 @@ def prune_all_degree_one(graph):
     #print()
     return
 
-def count_patterns(tuple_of_node_types, last_link_found):
-    '''
-    1. Stores each sequence of node types found as a pattern
-    2. Counts the number of paths found that follow each pattern
-    3. Assumes patterns and path counts are stored in a global dictionary
-    pattern_table, where the tuple of node types are the keys and the values are
-    lists of two numbers. The first number in the lists are the number of *cycles*
-    found and the second number is the number of *seqences* of these node types found.
-    
-    '''
-    if pattern_table.get(tuple_of_node_types) != None:
-        pattern_table.get(tuple_of_node_types)[1] += 1
-        
-    else:
-        pattern_table[tuple_of_node_types] = [0,1]
-    if last_link_found:
-        pattern_table.get(tuple_of_node_types)[0] += 1
-    return
-
-# Do neighbors <degrees> degrees away from node X have
-# a direct connection with node X?
-def find_structural_rel(graph, degrees, node_type):
-    types_cache = nx.get_node_attributes(graph, "type")
-    ifaces = list(n for n in graph if graph.nodes[n]["type"] == node_type)
-    for iface in ifaces:
-        structural_rel_helper([iface], graph, degrees)
-        
-    for path in all_paths:
-        start_node = path[0]
-        last_node = path[-1]
-        types = []
-        for node in path:
-            if types_cache[node] == "keyword":
-                types.append(node)
-            else:
-                types.append(types_cache[node])
-        count_patterns(tuple(types), graph.has_edge(start_node, last_node))
-              
-    return
-
-# helper function for find_structural_rel()
-# generates lists of paths with <max_degree> number of nodes and
-# aggregates all paths into global var (all_paths)
-def structural_rel_helper(path, graph, max_degree):
-    #base case
-    if len(path)-1 == max_degree:
-        if set(path) not in set_paths:
-            all_paths.append(path)
-            set_paths.append(set(path))
-        return 
-    
-    #recursive case
-    neighbors = list(graph.neighbors(path[-1])) #get neighbors of last node in path
-    for neighbor in neighbors:
-        if neighbor not in path:
-            structural_rel_helper(path + [neighbor], graph, max_degree)
-    return
-
-#add supernet subnet nodes to argument graph with specified prefix length
 def add_supernets(graph, prefix_length):
+    """add supernet subnet nodes to argument graph with specified prefix length"""
     subnets = list(nx.get_node_attributes(graph, 'subnet').keys())
     supernets = set()
     for subnet in subnets:
