@@ -3,7 +3,6 @@ import argparse
 import ipaddress
 import json
 import networkx as nx
-import pdb
 
 def main():
     #Parse command-line arguments
