@@ -3,6 +3,7 @@ import argparse
 import ipaddress
 import json
 import networkx as nx
+from queue import Queue
 
 def main():
     #Parse command-line arguments
@@ -129,32 +130,31 @@ def add_keywords(keyword_path, graph):
             graph.add_node(word, type="keyword", keyword=True)
             graph.add_edge(device_acl, str(word))
 
-#remove & print keywords that only appear once across the network
-def prune_keywords(graph):
-    keywords = list(nx.get_node_attributes(graph, 'keyword').keys())
-    # print("KEYWORDS:")
-    # print(keywords)
-    # print()
-    #print("*********** PRUNED: Words that only appear once ***********")
-    for word in keywords:
-        if graph.degree(word) <= 1:
-            #print(word)
-            graph.remove_node(word)
 
-    # print()
-    # print("KEYWORDS AFTER PRUNING:")
-    # print(list(nx.get_node_attributes(graph, 'keyword').keys()))
-    return
-
-#remove & print nodes that only appear once across the network
-def prune_all_degree_one(graph):
-    nodes = list(graph.nodes)
-    #print("*********** PRUNED NODES that only have one link ***********")
+#remove & print nodes of type node_type that only appear once across the network
+#if node_type is None, then prune all nodes of degree one
+def prune_degree_one(graph, node_type = None):
+    q = Queue(maxsize = 0)
+    s = set()
+    if node_type is not None:
+        nodes = [node for node,attributes in graph.nodes(data=True) if attributes["type"] == node_type]
+    else:
+        nodes = list(graph.nodes)
+        
     for node in nodes:
-        if graph.degree(node) <= 1:
-            #print(node)
-            graph.remove_node(node)
-    #print()
+        q.put(node)
+        s.add(node)
+
+    while not q.empty():
+        current_node = q.get() 
+        if graph.degree(current_node) <= 1:
+            neighbors = list(graph.neighbors(current_node))
+            if len(neighbors) == 1 and neighbors[0] not in s:
+                if (node_type is None) or (graph.nodes[neighbors[0]]["type"] == node_type):
+                    q.put(neighbors[0])
+                    s.add(neighbors[0])
+            graph.remove_node(current_node)
+        s.discard(current_node)
     return
 
 def add_supernets(graph, prefix_length):
