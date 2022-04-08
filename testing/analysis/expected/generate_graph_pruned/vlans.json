@@ -13,11 +13,6 @@
             "type": "allowed"
         },
         {
-            "source": "vlans_GigabitEthernet0/1",
-            "target": "Vlan300",
-            "type": "allowed"
-        },
-        {
             "source": "Vlan100",
             "target": "vlans_GigabitEthernet0/3",
             "type": "allowed"
@@ -53,20 +48,12 @@
             "type": "vlan"
         },
         {
-            "id": "Vlan300",
-            "type": "vlan"
-        },
-        {
             "id": "vlans_GigabitEthernet0/3",
             "type": "interface"
         },
         {
             "id": "vlans_GigabitEthernet0/4",
             "type": "interface"
-        },
-        {
-            "id": "Vlan400",
-            "type": "vlan"
         }
     ]
 }

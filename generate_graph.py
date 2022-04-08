@@ -30,8 +30,7 @@ def analyze_configuration(in_paths, out_path=None, extras=(False,False)):
         make_graph(config, graph)
         add_keywords(keyword_path, graph)
         if (prune):
-            prune_keywords(graph)
-            prune_all_degree_one(graph)
+            prune_degree_one(graph)
         #add_supernets(graph, prefix_length)
 
     # Save graph

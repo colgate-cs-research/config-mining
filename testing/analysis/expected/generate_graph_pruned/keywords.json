@@ -70,10 +70,6 @@
             "type": "out"
         },
         {
-            "source": "keywords_GigabitEthernet0/1",
-            "target": "blue"
-        },
-        {
             "source": "keywords_GigabitEthernet0/2",
             "target": "red"
         },
@@ -88,10 +84,6 @@
         {
             "source": "keywords_GigabitEthernet0/4",
             "target": "yellow"
-        },
-        {
-            "source": "keywords_GigabitEthernet0/4",
-            "target": "blue"
         },
         {
             "source": "keywords_GigabitEthernet0/5",
@@ -137,10 +129,6 @@
             "type": "acl"
         },
         {
-            "id": "keywords_GigabitEthernet0/1",
-            "type": "interface"
-        },
-        {
             "id": "keywords_GigabitEthernet0/2",
             "type": "interface"
         },
@@ -159,10 +147,6 @@
         {
             "id": "keywords_GigabitEthernet0/6",
             "type": "interface"
-        },
-        {
-            "id": "blue",
-            "type": "keyword"
         },
         {
             "id": "red",
