@@ -1,0 +1,91 @@
+{
+    "directed": false,
+    "graph": {},
+    "links": [
+        {
+            "source": "A",
+            "target": "196.18.246.17/32",
+            "type": "dst"
+        },
+        {
+            "source": "A",
+            "target": "1"
+        },
+        {
+            "source": "A",
+            "target": "5"
+        },
+        {
+            "source": "B",
+            "target": "1"
+        },
+		{
+            "source": "B",
+            "target": "5"
+        },
+        {
+            "source": "B",
+            "target": "10"
+        },
+        {
+            "source": "B",
+            "target": "15"
+        },
+        {
+            "source": "10",
+            "target": "COW"
+        },
+        {
+            "source": "15",
+            "target": "COW"
+        },
+        {
+            "source": "WOW",
+            "target": "196.18.246.17/32",
+            "type": "dst"
+        },
+        {
+            "source": "WOW",
+            "target": "1"
+        }
+    ],
+    "multigraph": false,
+    "nodes": [
+        {
+            "id": "A",
+            "type": "interface"
+        },
+        {
+            "id": "B",
+            "type": "interface"
+        },
+        {
+            "id": "1",
+            "type": "vlan"
+        },
+        {
+            "id": "5",
+            "type": "vlan"
+        },
+        {
+            "id": "10",
+            "type": "vlan"
+        },
+        {
+            "id": "15",
+            "type": "vlan"
+        },
+        {
+            "id": "196.18.246.17/32",
+            "type": "subnet"
+        },
+        {
+            "id": "WOW",
+            "type": "keyword"
+        },
+        {
+            "id": "COW",
+            "type": "keyword"
+        }
+    ]
+}
