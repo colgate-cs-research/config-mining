@@ -122,12 +122,17 @@ def find_vertices_to_coalesce(graph, target_type, verbose=False):
 
     return list(coalesce.values())
 
-def update_graph(graph, to_coalesce):
+def update_graph(graph, to_coalesce, verbose=False):
     for vertices in to_coalesce:
         # Add new vertex
-        new_name = get_coalesced_name(vertices)
         new_type = get_node_type(vertices[0], graph)
+        new_name = get_coalesced_name(vertices, new_type)
         graph.add_node(new_name, type=new_type)
+        
+        if (verbose):
+            out = pprint.PrettyPrinter(compact=True)
+            out.pprint(vertices)
+            print("=> "+new_name)
 
         # Add same edges as existing vertices
         for edge in graph.edges(vertices[0]):
@@ -137,14 +142,38 @@ def update_graph(graph, to_coalesce):
         for vertex in vertices:
             graph.remove_node(vertex)
 
-def get_coalesced_name(vertices):
-    if vertices[0].startswith("Vlan"):
+def get_coalesced_name(vertices, type):
+    if type == "vlan":
         return get_coalesced_vlan_name(vertices)
+    elif type == "keyword":
+        return ",".join(vertices)
+    elif type == "acl":
+        return ",".join(vertices)
+    elif type == "subnet":
+        return ",".join(vertices)
+    elif type == "interface":
+        return get_coalesced_interface_name(vertices)
+    else:
+        raise Exception("Unsupported type: "+type)
 
 def get_coalesced_vlan_name(vlan_vertices):
     nums = [int(v[4:]) for v in vlan_vertices]
     num_ranges = ranges(nums)
     return "Vlan{" + ",".join([str(start) if start == end else "{}-{}".format(start,end) for start,end in num_ranges]) + "}"
+
+def get_coalesced_interface_name(interface_vertices):
+    devices = {}
+    for vertex in interface_vertices:
+        device, iface = vertex.split("_")
+        if device not in devices:
+            devices[device] = [iface]
+        else:
+            devices[device].append(iface)
+
+    parts = []
+    for device, interfaces in devices.items(): 
+        parts.append(device + "_{" + ",".join(interfaces) + "}")
+    return ",".join(parts)
 
 def ranges(p):
     # https://stackoverflow.com/questions/4628333/converting-a-list-of-integers-into-range-in-python#answer-4628813
@@ -163,12 +192,9 @@ def process_graph(in_path, out_path, verbose=False):
     for vertex_type in ["vlan", "keyword", "interface", "subnet", "acl"]:
         clear_caches()
         to_coalesce = find_vertices_to_coalesce(graph, vertex_type, verbose)
-        if (verbose):
-            out = pprint.PrettyPrinter(compact=True)
-            out.pprint(to_coalesce)
 
         if len(to_coalesce) > 0:
-            update_graph(graph, to_coalesce)
+            update_graph(graph, to_coalesce, verbose)
             print("Replaced {} {} vertices with {} vertices".format(sum([len(v) for v in to_coalesce]), vertex_type, len(to_coalesce)))
 
     # Save graph
