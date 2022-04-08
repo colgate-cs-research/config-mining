@@ -61,7 +61,7 @@ def get_neighbors(node, graph, target_type=None):
     return neighbor_list
 
 
-def count_patterns(tuple_of_node_types, last_link_found, pattern_table):
+def count_patterns(tuple_of_node_types, last_link_found, pattern_table, path):
     '''
     1. Stores each sequence of node types found as a pattern
     2. Counts the number of paths found that follow each pattern
@@ -72,12 +72,15 @@ def count_patterns(tuple_of_node_types, last_link_found, pattern_table):
     
     '''
     if pattern_table.get(tuple_of_node_types) != None:
-        pattern_table.get(tuple_of_node_types)[1] += 1
-        
+        #pattern_table.get(tuple_of_node_types)[1] += 1
+        pattern_table.get(tuple_of_node_types)[1].append(path)
     else:
-        pattern_table[tuple_of_node_types] = [0,1]
+        #pattern_table[tuple_of_node_types] = [0,1]
+        pattern_table[tuple_of_node_types] = [[],[path]]
+
     if last_link_found:
-        pattern_table.get(tuple_of_node_types)[0] += 1
+        #pattern_table.get(tuple_of_node_types)[0] += 1
+        pattern_table.get(tuple_of_node_types)[0].append(path)
     return
 
 def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False):
@@ -102,7 +105,7 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False)
                 types.append(node)
             else:
                 types.append(types_cache[node])
-        count_patterns(tuple(types), graph.has_edge(start_node, last_node), pattern_table)
+        count_patterns(tuple(types), graph.has_edge(start_node, last_node), pattern_table, path)
               
     return
 
@@ -112,8 +115,8 @@ def structural_rel_helper(path, graph, max_degree):
     aggregates all paths into global var (all_paths)"""
     #base case
     if len(path)-1 == max_degree:
+        all_paths.append(path)
         if set(path) not in set_paths:
-            all_paths.append(path)
             set_paths.append(set(path))
         return 
     
@@ -143,12 +146,21 @@ def main():
     arguments=parser.parse_args()
 
     graph = load_graph(arguments.graph_path)
+    print(list(graph.neighbors("Vlan2587")))
 
     pattern_table = {}
     find_structural_rel(graph, arguments.degree, "interface", pattern_table, arguments.verbose)
     for key, val in pattern_table.items():
-        if (val[1] > 1) and (val[0]*100/val[1]) > 20:
-            print(str(key) + ":" + str(val) + " (" + str(round(val[0]*100/val[1],2)) + "%)")
+#        if (val[1] > 1) and (val[0]*100/val[1]) > 20:
+#            print(str(key) + ":" + str(val) + " (" + str(round(val[0]*100/val[1],2)) + "%)")
+        if len(val[0]) > 1:
+            print(key)
+            for cycle in val[0]:
+                print("\tCycle\t{}".format(cycle))
+            for path in val[1]:
+                if path not in val[0]:
+                    print("\tNo\t{}".format(path))
+
 
 if __name__ == "__main__":
     main()
