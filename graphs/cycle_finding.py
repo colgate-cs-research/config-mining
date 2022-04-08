@@ -146,20 +146,23 @@ def main():
     arguments=parser.parse_args()
 
     graph = load_graph(arguments.graph_path)
-    print(list(graph.neighbors("Vlan2587")))
 
     pattern_table = {}
     find_structural_rel(graph, arguments.degree, "interface", pattern_table, arguments.verbose)
     for key, val in pattern_table.items():
 #        if (val[1] > 1) and (val[0]*100/val[1]) > 20:
-#            print(str(key) + ":" + str(val) + " (" + str(round(val[0]*100/val[1],2)) + "%)")
         if len(val[0]) > 1:
-            print(key)
-            for cycle in val[0]:
-                print("\tCycle\t{}".format(cycle))
-            for path in val[1]:
-                if path not in val[0]:
-                    print("\tNo\t{}".format(path))
+            if (arguments.verbose):
+                print(key)
+                for cycle in val[0]:
+                    print("\tCycle\t{}".format(cycle))
+                for path in val[1]:
+                    if path not in val[0]:
+                        print("\tNo\t{}".format(path))
+            else:
+                cycles = len(val[0])
+                total = len(val[1])
+                print("{} : {}/{} ({}%)".format(key, cycles, total, round(cycles*100/total,2)))
 
 
 if __name__ == "__main__":
