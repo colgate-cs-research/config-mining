@@ -13,7 +13,17 @@
             "type": "allowed"
         },
         {
+            "source": "vlans_GigabitEthernet0/1",
+            "target": "Vlan300",
+            "type": "allowed"
+        },
+        {
             "source": "Vlan100",
+            "target": "vlans_GigabitEthernet0/3",
+            "type": "allowed"
+        },
+		{
+            "source": "Vlan300",
             "target": "vlans_GigabitEthernet0/3",
             "type": "allowed"
         },
@@ -30,6 +40,26 @@
         {
             "source": "Vlan200",
             "target": "vlans_GigabitEthernet0/4",
+            "type": "allowed"
+        },
+        {
+            "source": "Vlan300",
+            "target": "vlans_GigabitEthernet0/2",
+            "type": "allowed"
+        },
+        {
+            "source": "vlans_GigabitEthernet0/5",
+            "target": "Vlan400",
+            "type": "allowed"
+        },
+        {
+            "source": "vlans_GigabitEthernet0/5",
+            "target": "Vlan401",
+            "type": "allowed"
+        },
+        {
+            "source": "vlans_GigabitEthernet0/5",
+            "target": "Vlan405",
             "type": "allowed"
         }
     ],
@@ -48,12 +78,36 @@
             "type": "vlan"
         },
         {
+            "id": "Vlan300",
+            "type": "vlan"
+        },
+        {
+            "id": "vlans_GigabitEthernet0/2",
+            "type": "interface"
+        },
+        {
             "id": "vlans_GigabitEthernet0/3",
             "type": "interface"
         },
         {
             "id": "vlans_GigabitEthernet0/4",
             "type": "interface"
+        },
+        {
+            "id": "vlans_GigabitEthernet0/5",
+            "type": "interface"
+        },
+        {
+            "id": "Vlan400",
+            "type": "vlan"
+        },
+        {
+            "id": "Vlan401",
+            "type": "vlan"
+        },
+        {
+            "id": "Vlan405",
+            "type": "vlan"
         }
     ]
 }

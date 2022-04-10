@@ -12,7 +12,7 @@ def get_dict(lst, d):
             key = s.strip().split()[0]
             start = i + 1
             end = start
-            occ = 1
+            occ = 1 #open curly brace count
             while (occ != 0):
                 if "{" in s:
                     occ += 1
@@ -56,7 +56,7 @@ def main():
         # Sample code for writing to file
         '''section_name = "interfaces"
         section_contents = "interfaces {\n    testing\n}"'''
-        section_name = "alba_dict"
+        section_name = arguments.config_filepath.split("/")[-1][0:-4] + "_dict.txt"
         lst = cfg_file.read().split("\n")
         d = {}
         get_dict(lst, d)
