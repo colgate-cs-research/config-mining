@@ -5,6 +5,8 @@ import re
 from sklearn.metrics import f1_score
 
 def extract_dataframe(dataframe):
+
+    
     
     # converting rules to dict { 'attribute'<type: str> : 'value'<type: str> } 
     dataframe = dataframe.assign(rule= dataframe['rule'].map(lambda x: clean_rule(x)))
@@ -18,15 +20,37 @@ def extract_dataframe(dataframe):
 
     # cleaning recall
     dataframe = dataframe.assign(frequency= dataframe['frequency'].map(lambda x: int(x)))
-
-    # 
-
-
-
-
+    
+    # removing all rules with "filename" string 
+    dataframe = filter_rule_column(dataframe)
 
     #print(dataframe.head)
     return dataframe
+
+
+def filter_rule_column(df):
+    record_list = df.to_dict('records')
+    new_record_list = []
+    #print("Entering filter_rule_column")
+    
+    for record in record_list:
+        rule_dict = record['rule']
+
+        # FILTER 1 -----
+        # filtering all records which contain   "filename" : 'some_value' 
+        if "filename" not in list(rule_dict.keys()):
+            #print(" entering record:" +str(rule_dict))
+            new_record_list.append(record)
+            
+
+    
+
+    df = pd.DataFrame.from_records(new_record_list)
+    
+
+    #print("\n\n Leaving filter_rule_column")
+    return df
+
 
 def clean_group(string):
     return int(string.strip()[-1])
@@ -50,16 +74,14 @@ def clean_rule(string):
     #print('|'+string[0]+'|'+string[1]+'|')
     return rules
 
-def weigthed_rank(df):
 
-    return 
 
 def order_dataframe(df,group):
     # selecting rules where GROUP = 1
-    if(group>=0): df = df.loc[ df['group']== group]
+    if(int(group)>=0): df = df.loc[ df['group']== group]
 
     # ordering metric
-    df =df.sort_values(by=['weighted_value','precision','f1_score','frequency'], ascending=False)
+    df =df.sort_values(by=['precision','frequency'], ascending=False)
 
     #df=df[df['group'] == 1]
     return df
@@ -99,7 +121,7 @@ def top_attributes(df):
 
 
 def main():
-    depth = 1
+    depth = 2
     keyword = 'l3'
     group = -1  # 0 for not present | 1 for present | -1 for both
 
@@ -123,9 +145,10 @@ def main():
     top_network_attributes = top_attributes(new_df)
 
     new_df.to_csv('new_df.csv', index=False)
+    #new_df.to_pickle('new_df.pkl')
     print(new_df.head)
 
-    return 0
+    return new_df
 
 
 
