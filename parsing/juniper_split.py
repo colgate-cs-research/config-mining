@@ -2,42 +2,53 @@
 
 import argparse
 import os
+import json
 
-def get_dict(lst, d):
-    i = 0
-    while i < len(lst):
-        #print(i)
-        s = lst[i]
-        if "{" in s:
-            key = s.strip().split()[0]
-            start = i + 1
-            end = start
-            occ = 1 #open curly brace count
-            while (occ != 0):
-                if "{" in s:
-                    occ += 1
-                if "}" in s:
-                    occ -= 1
-                end += 1
-                i += 1
-                if i< len(lst):
-                    s = lst[i]
+def find_match(symbols, lst, start, end):
+    """Find index of matching curly brace, square bracket, etc."""
+    occ = 1
+    i = start + 1
+    while (occ != 0 and i <= end):
+        line = lst[i]
+        if symbols[0] in line:
+            occ += 1
+        if symbols[1] in line:
+            occ -= 1
+        i += 1
+    return i-1
+
+def get_dict(lst, start, end, dict):
+    """Create dictionary based on subset of lines"""
+    i = start
+    while i <= end:
+        line = lst[i]
+        if "{" in line:
+            key = line.split('{')[0].strip()
+            brace_start = i
+            brace_end = find_match("{}", lst, i, end)
+            subdict = {}
+            get_dict(lst, brace_start + 1, brace_end - 1, subdict)
+            dict[key] = subdict
+            i = brace_end
+        elif line[-1] == ';':
+            line = line.strip(' ;')
+            key = line.split(' ')[0];
+            if "[" in line and line[-1] == "]":
+                values = line.split('[')[1].strip()
+                values = values.split(']')[0].strip()
+                value = values.split(' ')
+            else:
+                if (len(line.split(' ')) > 1):
+                    value = ' '.join(line.split(' ')[1:])
                 else:
-                    break
-            #print("recursive call")
-            d2 = {}
-            lst2 = lst[start:end]
-            get_dict(lst2,d2)
-            d[key] = d2
-        #base case
+                    value = None
+            dict[key] = value
+        elif line[-2:] == "*/":
+            key = line.strip()
+            dict[key] = None
         else:
-            key = s.strip()
-            d[key] = None
-        i+= 1
-    return
-
-
-
+            print("!Unhandled line: " + line)
+        i += 1
 
 def main():
     # Parse command-line arguments
@@ -51,18 +62,11 @@ def main():
 
     # Open configuration file
     with open(arguments.config_filepath, 'r') as cfg_file:
-        # TODO: iterate over configuration file and find sections
-
-        # Sample code for writing to file
-        '''section_name = "interfaces"
-        section_contents = "interfaces {\n    testing\n}"'''
-        section_name = arguments.config_filepath.split("/")[-1][0:-4] + "_dict.txt"
         lst = cfg_file.read().split("\n")
         d = {}
-        get_dict(lst, d)
-        section_contents = str(d)
-        with open(os.path.join(arguments.output_path, section_name+".cfg"), 'w') as out_file:
-            out_file.write(section_contents)
+        get_dict(lst, 0, len(lst)-1, d)
+        with open(os.path.join(arguments.output_path, os.path.basename(arguments.config_filepath)), 'w') as out_file:
+            json.dump(d, out_file, indent=4, sort_keys=True)
 
 if __name__ == "__main__":
     main()
