@@ -47,26 +47,38 @@ def get_dict(lst, start, end, dict):
             key = line.strip()
             dict[key] = None
         else:
-            print("!Unhandled line: " + line)
+            print("!Unhandled line {}: {}".format(i+1, line))
         i += 1
+
+def jsonify_config(config_filepath, output_dir):
+    """Create a JSON-ified version of a single Juniper configuration"""
+    print("JSONifying {}...".format(os.path.basename(config_filepath)))
+    with open(config_filepath, 'r') as cfg_file:
+        lst = cfg_file.read().split("\n")
+        d = {}
+        get_dict(lst, 0, len(lst)-1, d)
+        with open(os.path.join(output_dir, os.path.basename(config_filepath)), 'w') as out_file:
+            json.dump(d, out_file, indent=4, sort_keys=True)
 
 def main():
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Commandline arguments')
-    parser.add_argument('config_filepath',type=str, help='Path for a Juniper configuration file')
-    parser.add_argument('output_path',type=str, help='Path in which to store the parts of the configuration')
+    parser.add_argument('config_path',type=str, help='Path to a (directory of) Juniper configuration file(s)')
+    parser.add_argument('output_dir',type=str, help='Directory in which to store the JSONified configuration(s)')
     arguments = parser.parse_args()
 
     # Create output directory
-    os.makedirs(arguments.output_path, exist_ok=True)
+    os.makedirs(arguments.output_dir, exist_ok=True)
 
-    # Open configuration file
-    with open(arguments.config_filepath, 'r') as cfg_file:
-        lst = cfg_file.read().split("\n")
-        d = {}
-        get_dict(lst, 0, len(lst)-1, d)
-        with open(os.path.join(arguments.output_path, os.path.basename(arguments.config_filepath)), 'w') as out_file:
-            json.dump(d, out_file, indent=4, sort_keys=True)
+    # Determine whether to process a single configuration or a directory of configurations
+    if os.path.isfile(arguments.config_path):
+        jsonify_config(arguments.config_path, arguments.output_dir)
+    else:
+        for filename in os.listdir(arguments.config_path):
+            jsonify_config(os.path.join(arguments.config_path, filename), arguments.output_dir)
+
+
+
 
 if __name__ == "__main__":
     main()
