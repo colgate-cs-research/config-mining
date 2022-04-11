@@ -27,7 +27,7 @@ def main():
     arguments = parser.parse_args()
 
     # Determine paths
-    configs_path = os.path.join(arguments.snapshot_path, "configs")
+    configs_path = os.path.join(arguments.snapshot_path, "configs_jsonified")
     
     # Parse each configuration
     symbol_table = {}
