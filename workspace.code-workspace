@@ -17,6 +17,9 @@
 		},
 		{
 			"path": "/shared/configs/colgate/daily/2022-03-06"
+		},
+		{
+			"path": "/shared/config-mining/csl"
 		}
 	],
 	"settings": {}
