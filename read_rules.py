@@ -22,7 +22,7 @@ def extract_dataframe(dataframe):
     dataframe = dataframe.assign(frequency= dataframe['frequency'].map(lambda x: int(x)))
     
     # removing all rules with "filename" string 
-    dataframe = filter_rule_column(dataframe)
+    #dataframe = filter_rule_column(dataframe)
 
     #print(dataframe.head)
     return dataframe

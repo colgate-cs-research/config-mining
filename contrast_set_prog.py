@@ -1,6 +1,6 @@
 from cgi import print_directory
 import time
-from datetime import date
+import datetime
 #from join_all_files_json import join_all_files
 from pickle import TRUE
 import sys
@@ -484,9 +484,6 @@ def directory_listing(directory_address):
 
 def compile_dict(cfile,custom_keywords=[]):
 
-    
-    
-
     IfaceName2AppliedAclNames, IfaceIp2AppliedAclNames, AclName2IpsInRules = intraconfig_refs(cfile)
         #write_to_outfile("AclName2IpsInRules.json",AclName2IpsInRules)
         #write_to_outfile("IfaceIp2AppliedAclNames.json",IfaceIp2AppliedAclNames)
@@ -516,7 +513,7 @@ def update_time_measurement(file_name,depth,keyword,time_taken):
     '''
     Save time measurement to file
     '''
-    now = date.today()
+    now = datetime.datetime.now()
     d4 = now.strftime("%d/%m/%Y %H:%M:%S")
 
     file = open("csl_runtime_dataset.txt", "a")
@@ -635,8 +632,8 @@ def main():
     dataframe.to_csv("/users/jchauhan/config-mining/csl_output/workingDB/"+"aggregate_df"+"_workDB.csv",index=False)
 
     #STARTING Contrast Set Learner
-    depth = 1    
-    keyword = 'l3'
+    depth = 2    
+    keyword = 'management'
 
 
     # time measuring
