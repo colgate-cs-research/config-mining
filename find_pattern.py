@@ -1,10 +1,5 @@
 import argparse
-import json
 import networkx as nx
-from networkx.classes.function import non_edges
-import pprint
-import random
-import tqdm
 from link_prediction import load_graph
 
 #find vlans that are connected to both argument keyword and acl 110
