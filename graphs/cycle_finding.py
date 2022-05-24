@@ -2,13 +2,13 @@ import argparse
 import json
 import networkx as nx
 import tqdm
+import concurrent.futures
 
 get_nodes_cache = {}
 get_neighbors_cache = {}
 types_cache = None
 
-all_paths = []
-set_paths = []
+#set_paths = []
 
 def clear_caches():
     global get_nodes_cache, get_neighbors_cache, types_cache
@@ -85,18 +85,27 @@ def count_patterns(tuple_of_node_types, last_link_found, pattern_table, path):
 
 def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False):
     """Do neighbors <degrees> degrees away from node X have a direct connection with node X?"""
-    ifaces = get_nodes(graph, node_type)
+    nodes = get_nodes(graph, node_type)
     
-    pbar = tqdm.tqdm(ifaces)
-    pbar.set_description("Computing paths from interfaces")
-    for iface in pbar:
-        if (verbose):
-            print(iface)
-        structural_rel_helper([iface], graph, degrees)
+    all_paths = []
+    pbar = tqdm.tqdm(total=len(nodes))
+    pbar.set_description("Computing paths from {}s".format(node_type))
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        future_to_node = {executor.submit(compute_paths_start, node, graph, degrees) : node for node in nodes}
+        for future in concurrent.futures.as_completed(future_to_node):
+            try:
+                paths = future.result()
+                all_paths.extend(paths)
+                #if (verbose):
+                #    print("\tComputed paths starting from {}".format(future_to_node[future]))
+                pbar.update()
+            except Exception as ex:
+                print("\tFailed to compute paths starting from {}".format(future_to_node[future]))
+    pbar.close()
 
-    print("Computed paths")
-        
-    for path in all_paths:
+    pbar = tqdm.tqdm(all_paths)
+    pbar.set_description("Processing paths") 
+    for path in pbar:
         start_node = path[0]
         last_node = path[-1]
         types = []
@@ -109,22 +118,27 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False)
               
     return
 
-def structural_rel_helper(path, graph, max_degree):
+def compute_paths_start(node, graph, max_degree):
+    all_paths = []
+    structural_rel_helper([node], graph, max_degree, all_paths)
+    return all_paths
+
+def structural_rel_helper(path, graph, max_degree, all_paths):
     """helper function for find_structural_rel()
     generates lists of paths with <max_degree> number of nodes and
     aggregates all paths into global var (all_paths)"""
     #base case
     if len(path)-1 == max_degree:
         all_paths.append(path)
-        if set(path) not in set_paths:
-            set_paths.append(set(path))
+#        if set(path) not in set_paths:
+#            set_paths.append(set(path))
         return 
     
     #recursive case
     neighbors = get_neighbors(path[-1], graph) #get neighbors of last node in path
     for neighbor in neighbors:
         if neighbor not in path:
-            structural_rel_helper(path + [neighbor], graph, max_degree)
+            structural_rel_helper(path + [neighbor], graph, max_degree, all_paths)
     return
 
 def load_graph(graph_path):
@@ -142,13 +156,15 @@ def main():
         help='Degrees of separation between nodes')
     parser.add_argument('graph_path',type=str, 
             help='Path for a file containing a JSON representation of graph')
+    parser.add_argument('-s', '--starting', type=str, default="interface",
+        help='Type of starting node')
     parser.add_argument('-v', '--verbose', action='store_true', help="Display verbose output")
     arguments=parser.parse_args()
 
     graph = load_graph(arguments.graph_path)
 
     pattern_table = {}
-    find_structural_rel(graph, arguments.degree, "interface", pattern_table, arguments.verbose)
+    find_structural_rel(graph, arguments.degree, arguments.starting, pattern_table, arguments.verbose)
     for key, val in pattern_table.items():
 #        if (val[1] > 1) and (val[0]*100/val[1]) > 20:
         if len(val[0]) > 1:
