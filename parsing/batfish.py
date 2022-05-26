@@ -186,7 +186,6 @@ def extract_acls(node):
                 "remarks" : []
             }
         acls[acl["name"]] = acl
-
     return acls
 
 def resolve_acls_aliases(acls):
@@ -247,21 +246,36 @@ def is_regex_match(pattern, line):
     iList = p.findall(line)
     return (len(iList) > 0)
 
-"""Extract all remarks from all ACLs on a node"""
+#Extract all remarks from all ACLs on a node
 def extract_acl_remarks(parts, raw_lines):
     i = 0
     while i < len(raw_lines):
         line = raw_lines[i].strip()
-        i += 1
         if is_regex_match('^ip access-list', line):
             name = line.split()[-1]
-            line = raw_lines[i].strip()
             i += 1
+            line = raw_lines[i].strip()
             while (line != "!"):
+                if line[:2] == "ip":
+                    i -= 1
+                    break
                 if is_regex_match('^remark ', line):
-                    parts["acls"][name]["remarks"].append(line[7:])
-                line = raw_lines[i].strip()
+                    start_idx = 7
+                    if len(line) > 11 and line[7:10] == "---":
+                        start_idx = 11
+                    parts["acls"][name]["remarks"].append(line[start_idx:])
                 i += 1
+                if i >= len(raw_lines):
+                    break
+                line = raw_lines[i].strip()     
+        elif is_regex_match('^access-list \d+ remark', line):
+            name = line.split()[1]
+            start_idx = line.find("remark") + 7
+            parts["acls"][name]["remarks"].append(line[start_idx:])
+            i += 1
+            line = raw_lines[i].strip()
+        i += 1
+
 
 """Extract all VLAN names from all VLANs on a node"""
 def extract_vlans(raw_lines):
