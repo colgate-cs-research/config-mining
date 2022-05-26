@@ -11,18 +11,14 @@
             "aclc",
             "test",
             "filtering",
-            "by",
             "source",
-            "or",
             "destination",
-            "and"
         ],
         "aclD": [
             "acld",
             "test",
             "filtering",
             "based",
-            "on",
             "different",
             "protocols"
         ]

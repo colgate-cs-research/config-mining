@@ -198,23 +198,11 @@
         },
         {
             "source": "acls_aclC",
-            "target": "by"
-        },
-        {
-            "source": "acls_aclC",
             "target": "source"
         },
         {
             "source": "acls_aclC",
-            "target": "or"
-        },
-        {
-            "source": "acls_aclC",
             "target": "destination"
-        },
-        {
-            "source": "acls_aclC",
-            "target": "and"
         },
         {
             "source": "20.0.3.0/24",
@@ -264,10 +252,6 @@
         {
             "source": "acls_aclD",
             "target": "based"
-        },
-        {
-            "source": "acls_aclD",
-            "target": "on"
         },
         {
             "source": "acls_aclD",
@@ -481,23 +465,11 @@
             "type": "keyword"
         },
         {
-            "id": "by",
-            "type": "keyword"
-        },
-        {
             "id": "source",
             "type": "keyword"
         },
         {
-            "id": "or",
-            "type": "keyword"
-        },
-        {
             "id": "destination",
-            "type": "keyword"
-        },
-        {
-            "id": "and",
             "type": "keyword"
         },
         {
@@ -506,10 +478,6 @@
         },
         {
             "id": "based",
-            "type": "keyword"
-        },
-        {
-            "id": "on",
             "type": "keyword"
         },
         {

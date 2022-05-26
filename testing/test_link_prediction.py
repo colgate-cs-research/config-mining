@@ -33,8 +33,8 @@ def test_get_nodes_all():
         "20.0.8.0/24", "20.0.9.1/32", "20.0.10.1/32", "20.0.11.0/24", 
         "20.0.12.1/32", "20.0.13.1/32", "20.0.14.0/24", "20.0.15.0/24", 
         "20.0.16.0/24", "20.0.17.0/24",
-        "acla", "aclb", "aclc", "test", "filtering", "by", "source", "or",
-        "destination", "and", "acld", "based", "on", "different", "protocols"]
+        "acla", "aclb", "aclc", "test", "filtering", "source", 
+        "destination", "acld", "based", "different", "protocols"]
     actual = link_prediction.get_nodes(graph)
     assert sorted(actual) == sorted(expected)
 
