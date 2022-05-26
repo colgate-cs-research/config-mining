@@ -71,16 +71,22 @@ def count_patterns(tuple_of_node_types, last_link_found, pattern_table, path):
     found and the second number is the number of *seqences* of these node types found.
     
     '''
-    if pattern_table.get(tuple_of_node_types) != None:
-        #pattern_table.get(tuple_of_node_types)[1] += 1
-        pattern_table.get(tuple_of_node_types)[1].append(path)
-    else:
-        #pattern_table[tuple_of_node_types] = [0,1]
-        pattern_table[tuple_of_node_types] = [[],[path]]
+    if pattern_table.get(tuple_of_node_types) is None:
+        if path is None:
+            pattern_table[tuple_of_node_types] = [0,0]
+        else:
+            pattern_table[tuple_of_node_types] = [[],[]]
 
     if last_link_found:
-        #pattern_table.get(tuple_of_node_types)[0] += 1
-        pattern_table.get(tuple_of_node_types)[0].append(path)
+        if path is None:
+            pattern_table.get(tuple_of_node_types)[0] += 1
+        else:
+            pattern_table.get(tuple_of_node_types)[0].append(path)
+    else:
+        if path is None:
+            pattern_table.get(tuple_of_node_types)[1] += 1
+        else:
+            pattern_table.get(tuple_of_node_types)[1].append(path)
     return
 
 def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False):
@@ -106,17 +112,20 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False)
     pbar = tqdm.tqdm(all_paths)
     pbar.set_description("Processing paths") 
     for path in pbar:
-        start_node = path[0]
-        last_node = path[-1]
-        types = []
-        for node in path:
-            if types_cache[node] == "keyword": #or types_cache[node] == "acl":
-                types.append(node)
-            else:
-                types.append(types_cache[node])
-        count_patterns(tuple(types), graph.has_edge(start_node, last_node), pattern_table, path)
+        count_path(path, graph, pattern_table, verbose)
               
     return
+
+def count_path(path, graph, pattern_table, verbose=False):
+    start_node = path[0]
+    last_node = path[-1]
+    types = []
+    for node in path:
+        if types_cache[node] == "keyword": #or types_cache[node] == "acl":
+            types.append(node)
+        else:
+            types.append(types_cache[node])
+    count_patterns(tuple(types), graph.has_edge(start_node, last_node), pattern_table, (path if verbose else None))
 
 def compute_paths_start(node, graph, max_degree):
     all_paths = []
@@ -170,18 +179,21 @@ def main():
     with open(arguments.output_path, 'w') as outfile:
         for key, val in pattern_table.items():
     #        if (val[1] > 1) and (val[0]*100/val[1]) > 20:
-            if len(val[0]) > 1:
+            if (isinstance(val[0], list) and len(val[0]) > 1) or val[0] > 1:
                 if (arguments.verbose):
                     print(key)
                     for cycle in val[0]:
                         print("\tCycle\t{}".format(cycle))
                     for path in val[1]:
-                        if path not in val[0]:
-                            print("\tNo\t{}".format(path))
-                else:
+                        print("\tNo\t{}".format(path))
+                if isinstance(val[0], list):
                     cycles = len(val[0])
-                    total = len(val[1])
-                    outfile.write("{} : {}/{} ({}%)\n".format(key, cycles, total, round(cycles*100/total,2)))
+                    notcycles = len(val[1])
+                else:
+                    cycles = val[0]
+                    notcycles = val[1]
+                total = cycles + notcycles
+                outfile.write("{} : {}/{} ({}%)\n".format(key, cycles, total, round(cycles*100/total,2)))
 
 
 if __name__ == "__main__":
