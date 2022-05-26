@@ -251,7 +251,14 @@ def extract_acl_remarks(parts, raw_lines):
     i = 0
     while i < len(raw_lines):
         line = raw_lines[i].strip()
-        if is_regex_match('^ip access-list', line):
+        if is_regex_match('^access-list \d+ remark', line):
+            name = line.split()[1]
+            start_idx = line.find("remark") + 7
+            parts["acls"][name]["remarks"].append(line[start_idx:])
+            i += 1
+            line = raw_lines[i].strip()
+        #elif is_regex_match('^(ip|ipv6) access-list', line):
+        elif is_regex_match('^ip access-list', line):
             name = line.split()[-1]
             i += 1
             line = raw_lines[i].strip()
@@ -260,20 +267,15 @@ def extract_acl_remarks(parts, raw_lines):
                     i -= 1
                     break
                 if is_regex_match('^remark ', line):
-                    start_idx = 7
-                    if len(line) > 11 and line[7:10] == "---":
-                        start_idx = 11
-                    parts["acls"][name]["remarks"].append(line[start_idx:])
+                    if (len(line) < 11) or (line[10] != "-"): #check for meaningful remark
+                        start_idx = 7
+                        if line[7:10] == "---":
+                            start_idx = 11
+                        parts["acls"][name]["remarks"].append(line[start_idx:])
                 i += 1
                 if i >= len(raw_lines):
                     break
                 line = raw_lines[i].strip()     
-        elif is_regex_match('^access-list \d+ remark', line):
-            name = line.split()[1]
-            start_idx = line.find("remark") + 7
-            parts["acls"][name]["remarks"].append(line[start_idx:])
-            i += 1
-            line = raw_lines[i].strip()
         i += 1
 
 
