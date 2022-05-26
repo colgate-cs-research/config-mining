@@ -32,20 +32,35 @@ def get_dict(lst, start, end, dict):
             i = brace_end
         elif line[-1] == ';':
             line = line.strip(' ;')
-            key = line.split(' ')[0];
+            key = line
+            # for lists of things as values for keys
             if "[" in line and line[-1] == "]":
+                key = line.split(' ')[0];
                 values = line.split('[')[1].strip()
                 values = values.split(']')[0].strip()
                 value = values.split(' ')
             else:
                 if (len(line.split(' ')) > 1):
-                    value = ' '.join(line.split(' ')[1:])
+                    line = line.split(' ')
+                    # the key is more than one word long
+                    # if "\"" in line[-1]:
+                    #     key = ' '.join(line[0:-1])
+                    #     value = line[-1]
+                    if len(line)==2:
+                        key = line[0]
+                        value = line[1]
+                    else:
+                        key = ' '.join(line)
+                        value = None
                 else:
                     value = None
             dict[key] = value
-        elif line[-2:] == "*/":
-            key = line.strip()
-            dict[key] = None
+
+        # uncomment to include comments from config files in the .json file
+        # elif line[-2:] == "*/":
+        #     key = line.strip()
+        #     dict[key] = None
+
         else:
             print("!Unhandled line {}: {}".format(i+1, line))
         i += 1
@@ -55,10 +70,17 @@ def jsonify_config(config_filepath, output_dir):
     print("JSONifying {}...".format(os.path.basename(config_filepath)))
     with open(config_filepath, 'r') as cfg_file:
         lst = cfg_file.read().split("\n")
+
+        # to debug
+        # print('start')
+        # for l in lst:
+        #     print(l)
+        # print('end')
+
         d = {}
         get_dict(lst, 0, len(lst)-1, d)
         with open(os.path.join(output_dir, os.path.basename(config_filepath)), 'w') as out_file:
-            json.dump(d, out_file, indent=4, sort_keys=True)
+            json.dump(d, out_file, indent=4, sort_keys=False)
 
 def main():
     # Parse command-line arguments
