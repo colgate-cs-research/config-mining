@@ -117,6 +117,7 @@ def extract_node(node, raw_lines):
         "interfaces" : extract_interfaces(node),
         "acls" : extract_acls(node),
         "vlans" : extract_vlans(raw_lines),
+        "lags" : extract_lags(node),
         "ospf" : extract_ospf(node, raw_lines)
     }
     extract_acl_remarks(parts, raw_lines)
@@ -137,8 +138,9 @@ def extract_interfaces(node):
             "description" : row["Description"],
             "address" : row["Primary_Address"],
             "switchport" : (None if row["Switchport_Mode"] == "NONE" else row["Switchport_Mode"].lower()),
-            "access_vlan" : row["Access_VLAN"],
-            "allowed_vlans" : convert_allowed_vlans(row["Allowed_VLANs"])
+            "access_vlan" : (row["Encapsulation_VLAN"] if row["Encapsulation_VLAN"] is not None else row["Access_VLAN"]),
+            "allowed_vlans" : convert_allowed_vlans(row["Allowed_VLANs"]),
+            "lag" : (None if row["Channel_Group"] is None else row["Channel_Group"].replace("Port-channel",""))
         }
         interfaces[interface["name"]] = interface
 
@@ -297,6 +299,21 @@ def extract_vlans(raw_lines):
         i += 1
 
     return vlans
+
+"""Extract details for all LAGs on a node"""
+def extract_lags(node):
+    lags = {}
+    
+    data = bfq.interfaceProperties(nodes=node, interfaces="/^Port-channel/", excludeShutInterfaces=False).answer().frame()
+
+    for i,row in data.iterrows():
+        lag = {
+            "num": row["Interface"].interface.replace("Port-channel",""),
+            "interface" : row["Interface"].interface,
+        }
+        lags[lag["num"]] = lag
+
+    return lags
 
 """Extract OSPF information on a node"""
 def extract_ospf(node, raw_lines):
