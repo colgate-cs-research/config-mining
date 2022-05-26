@@ -110,7 +110,7 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False)
     pbar = tqdm.tqdm(total=len(nodes))
     pbar.set_description("Computing paths from {}s".format(node_type))
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        future_to_node = {executor.submit(compute_paths_start, node, graph, degrees) : node for node in nodes}
+        future_to_node = {executor.submit(compute_paths_start, node, graph, degrees, verbose) : node for node in nodes}
         for future in concurrent.futures.as_completed(future_to_node):
             try:
                 patterns = future.result()
@@ -187,6 +187,8 @@ def main():
             help='Path for a file in which to store the pattern table')
     parser.add_argument('-s', '--starting', type=str, default="interface",
         help='Type of starting node')
+    parser.add_argument('-t', '--threshold', type=int, default=0.01,
+        help="Miniminum precentage of paths that must have a cycle")
     parser.add_argument('-v', '--verbose', action='store_true', help="Display verbose output")
     arguments=parser.parse_args()
 
@@ -196,22 +198,26 @@ def main():
     find_structural_rel(graph, arguments.degree, arguments.starting, pattern_table, arguments.verbose)
     with open(arguments.output_path, 'w') as outfile:
         for key, val in pattern_table.items():
-    #        if (val[1] > 1) and (val[0]*100/val[1]) > 20:
-            if (isinstance(val[0], list) and len(val[0]) > 1) or val[0] > 1:
+            if isinstance(val[0], list):
+                cycles = len(val[0])
+                notcycles = len(val[1])
+            else:
+                cycles = val[0]
+                notcycles = val[1]
+            total = cycles + notcycles
+            percentage = cycles*100/total
+            if (percentage > arguments.threshold):
+                path = " ".join([s.replace(',','_') for s in key])
+                row = "{},{},{},{}".format(path, cycles, total, round(percentage, 2))
+                outfile.write(row+"\n")
+
                 if (arguments.verbose):
-                    print(key)
+                    print(row)
                     for cycle in val[0]:
                         print("\tCycle\t{}".format(cycle))
                     for path in val[1]:
                         print("\tNo\t{}".format(path))
-                if isinstance(val[0], list):
-                    cycles = len(val[0])
-                    notcycles = len(val[1])
-                else:
-                    cycles = val[0]
-                    notcycles = val[1]
-                total = cycles + notcycles
-                outfile.write("{} : {}/{} ({}%)\n".format(key, cycles, total, round(cycles*100/total,2)))
+
 
 
 if __name__ == "__main__":
