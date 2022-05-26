@@ -110,7 +110,7 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False)
         last_node = path[-1]
         types = []
         for node in path:
-            if types_cache[node] == "keyword":
+            if types_cache[node] == "keyword": #or types_cache[node] == "acl":
                 types.append(node)
             else:
                 types.append(types_cache[node])
@@ -156,6 +156,8 @@ def main():
         help='Degrees of separation between nodes')
     parser.add_argument('graph_path',type=str, 
             help='Path for a file containing a JSON representation of graph')
+    parser.add_argument('output_path',type=str, 
+            help='Path for a file in which to store the pattern table')
     parser.add_argument('-s', '--starting', type=str, default="interface",
         help='Type of starting node')
     parser.add_argument('-v', '--verbose', action='store_true', help="Display verbose output")
@@ -165,20 +167,21 @@ def main():
 
     pattern_table = {}
     find_structural_rel(graph, arguments.degree, arguments.starting, pattern_table, arguments.verbose)
-    for key, val in pattern_table.items():
-#        if (val[1] > 1) and (val[0]*100/val[1]) > 20:
-        if len(val[0]) > 1:
-            if (arguments.verbose):
-                print(key)
-                for cycle in val[0]:
-                    print("\tCycle\t{}".format(cycle))
-                for path in val[1]:
-                    if path not in val[0]:
-                        print("\tNo\t{}".format(path))
-            else:
-                cycles = len(val[0])
-                total = len(val[1])
-                print("{} : {}/{} ({}%)".format(key, cycles, total, round(cycles*100/total,2)))
+    with open(arguments.output_path, 'w') as outfile:
+        for key, val in pattern_table.items():
+    #        if (val[1] > 1) and (val[0]*100/val[1]) > 20:
+            if len(val[0]) > 1:
+                if (arguments.verbose):
+                    print(key)
+                    for cycle in val[0]:
+                        print("\tCycle\t{}".format(cycle))
+                    for path in val[1]:
+                        if path not in val[0]:
+                            print("\tNo\t{}".format(path))
+                else:
+                    cycles = len(val[0])
+                    total = len(val[1])
+                    outfile.write("{} : {}/{} ({}%)\n".format(key, cycles, total, round(cycles*100/total,2)))
 
 
 if __name__ == "__main__":
