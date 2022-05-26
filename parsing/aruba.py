@@ -57,6 +57,7 @@ def extract_node(node, conf):
         "interfaces" : extract_interfaces(conf),
         "acls" : extract_acls(conf),
         "vlans" : extract_vlans(conf),
+        "lags" : extract_lags(conf),
     }
     return parts
 
@@ -64,19 +65,48 @@ def extract_interfaces(conf):
     """Extract details for all interfaces on a node"""
     interfaces = {}
     
+    # Iterate over all ports in Aruba config
     for port in conf["Port"].values():
-        html_name = port["name"].replace("/", "%2F")
-        iface = (conf["Interface"][html_name] if html_name in conf["Interface"] else {})   
+        # Attempt to find corresponding interface in Aruba config
+        iface = {}
+        if "interfaces" in port and len(port["interfaces"]) == 1:
+            iface_name = port["interfaces"][0]
+            if iface_name in conf["Interface"]:
+                iface = conf["Interface"][iface_name]
+            else:
+                print("WARNING: interface '{}' associated with port '{}' does not exist".format(iface_name, port["name"]))
 
+        # Extra interface details
         interface = {
             "name" : port["name"],
             "description" : (iface["description"] if "description" in iface else None),
             "address" : (port["ip4_address"] if "ip4_address" in port else None),
             "switchport" : (None if len(port) == 0 else ("trunk" if "vlan_trunks" in port else "access")),
-            "access_vlan" : (port["vlan_tag"] if "vlan_tag" in port else None),
+            "access_vlan" : (int(port["vlan_tag"]) if "vlan_tag" in port else None),
             "allowed_vlans" : (sorted([int(v) for v in port["vlan_trunks"]]) if "vlan_trunks" in port else None),
             "in_acl" : None, # FIXME
-            "out_acl" : None # FIXME
+            "out_acl" : (port["aclv4_routed_out_cfg"].split('/')[0] if "aclv4_routed_out_cfg" in port else None),
+            "lag" : (int(iface["other_config"]["lacp-aggregation-key"]) if ("other_config" in iface and "lacp-aggregation-key" in iface["other_config"]) else None)
+        }
+
+        interfaces[interface["name"]] = interface
+
+    # Iterate over interfaces that do not have a directly corresponding port
+    remain = set(conf["Interface"].keys()) - set(interfaces.keys())
+    for iface_name in remain:
+        iface = conf["Interface"][iface_name]
+
+        # Extract interface details
+        interface = {
+            "name" : iface["name"],
+            "description" : (iface["description"] if "description" in iface else None),
+            "address" : None,
+            "switchport" : None,
+            "access_vlan" : None,
+            "allowed_vlans" : None,
+            "in_acl" : None,
+            "out_acl" : None,
+            "lag" : (int(iface["other_config"]["lacp-aggregation-key"]) if ("other_config" in iface and "lacp-aggregation-key" in iface["other_config"]) else None)
         }
 
         interfaces[interface["name"]] = interface
@@ -87,7 +117,7 @@ def extract_acls(conf):
     """Extract details for all ACLs on a node"""
     acls = {}
     for acl_conf in conf["ACL"].values():
-        lines, remarks = extract_acl_parts(acl_conf["cfg_aces"])
+        lines, remarks = extract_acl_parts(acl_conf["cfg_aces"], acl_conf["name"])
         acl  = {
             "name" : acl_conf["name"],
             "lines" : lines,
@@ -98,7 +128,7 @@ def extract_acls(conf):
     
     return acls
 
-def extract_acl_parts(acl_conf):
+def extract_acl_parts(acl_conf, acl_name):
     """Extract match criteria for all lines in an ACL"""
     lines = []
     remarks = []
@@ -112,14 +142,14 @@ def extract_acl_parts(acl_conf):
                 try:
                     srcIps = str(ipaddress.ip_network(line_conf["src_ip"]))
                 except ValueError as err:
-                    print(err)
+                    print("WARNING: rule {} in ACL '{}': {}".format(priority, acl_name, err))
 
             dstIps = None
             if "dst_ip" in line_conf:
                 try:
                     dstIps = str(ipaddress.ip_network(line_conf["dst_ip"]))
                 except ValueError as err:
-                    print(err)
+                    print("WARNING: rule {} in ACL '{}': {}".format(priority, acl_name, err))
 
             line = {
                 "action" : (line_conf["action"] if "action" in line_conf else None),
@@ -138,14 +168,32 @@ def extract_vlans(conf):
     """Extract all VLAN names from all VLANs on a node"""
     vlans = {}
     for vlan_conf in conf["VLAN"].values():
+        vlan_num = vlan_conf["id"]
+        iface_name = "vlan{}".format(vlan_num)
         vlan = {
-            "num" : vlan_conf["id"],
-            "name" : (vlan_conf["name"] if "name" in vlan_conf else None)
+            "num" : vlan_num,
+            "name" : (vlan_conf["name"] if "name" in vlan_conf else None),
+            "interface" : (iface_name if iface_name in conf["Port"] else None)
         }
         
         vlans[vlan["num"]] = vlan
 
     return vlans
+
+def extract_lags(conf):
+    """Extract all LAGs on a node"""
+    lags = {}
+
+    # Look for LAG ports
+    for port_name in conf["Port"].keys():
+        if port_name.startswith("lag"):
+            lag = {
+                "num" : int(port_name[3:]),
+                "interface" : port_name,
+            }
+            lags[lag["num"]] = lag
+
+    return lags
 
 if __name__ == "__main__":
     main()
