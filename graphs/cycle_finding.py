@@ -89,19 +89,34 @@ def count_patterns(tuple_of_node_types, last_link_found, pattern_table, path):
             pattern_table.get(tuple_of_node_types)[1].append(path)
     return
 
+def merge_table(pattern_table, patterns):
+    for key, val in patterns.items():
+        if key not in pattern_table:
+            pattern_table[key] = val
+        else:
+            curr = pattern_table[key]
+            if isinstance(curr[0], list):
+                curr[0].extend(val[0])
+                curr[1].extend(val[1])
+            else:
+                curr[0] += val[0]
+                curr[1] += val[1]
+
 def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False):
     """Do neighbors <degrees> degrees away from node X have a direct connection with node X?"""
     nodes = get_nodes(graph, node_type)
     
-    all_paths = []
+#    all_paths = []
     pbar = tqdm.tqdm(total=len(nodes))
     pbar.set_description("Computing paths from {}s".format(node_type))
     with concurrent.futures.ProcessPoolExecutor() as executor:
         future_to_node = {executor.submit(compute_paths_start, node, graph, degrees) : node for node in nodes}
         for future in concurrent.futures.as_completed(future_to_node):
             try:
-                paths = future.result()
-                all_paths.extend(paths)
+                patterns = future.result()
+                merge_table(pattern_table, patterns)
+                #paths = future.result()
+                #all_paths.extend(paths)
                 #if (verbose):
                 #    print("\tComputed paths starting from {}".format(future_to_node[future]))
                 pbar.update()
@@ -109,10 +124,10 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False)
                 print("\tFailed to compute paths starting from {}".format(future_to_node[future]))
     pbar.close()
 
-    pbar = tqdm.tqdm(all_paths)
-    pbar.set_description("Processing paths") 
-    for path in pbar:
-        count_path(path, graph, pattern_table, verbose)
+#    pbar = tqdm.tqdm(all_paths)
+#    pbar.set_description("Processing paths") 
+#    for path in pbar:
+#        count_path(path, graph, pattern_table, verbose)
               
     return
 
@@ -127,18 +142,21 @@ def count_path(path, graph, pattern_table, verbose=False):
             types.append(types_cache[node])
     count_patterns(tuple(types), graph.has_edge(start_node, last_node), pattern_table, (path if verbose else None))
 
-def compute_paths_start(node, graph, max_degree):
-    all_paths = []
-    structural_rel_helper([node], graph, max_degree, all_paths)
-    return all_paths
+def compute_paths_start(node, graph, max_degree, verbose=False):
+    #all_paths = []
+    pattern_table = {}
+    structural_rel_helper([node], graph, max_degree, pattern_table, verbose) #all_paths)
+    return pattern_table
+#    return all_paths
 
-def structural_rel_helper(path, graph, max_degree, all_paths):
+def structural_rel_helper(path, graph, max_degree, pattern_table, verbose=False): #all_paths):
     """helper function for find_structural_rel()
     generates lists of paths with <max_degree> number of nodes and
     aggregates all paths into global var (all_paths)"""
     #base case
     if len(path)-1 == max_degree:
-        all_paths.append(path)
+        count_path(path, graph, pattern_table, verbose)
+#        all_paths.append(path)
 #        if set(path) not in set_paths:
 #            set_paths.append(set(path))
         return 
@@ -147,7 +165,7 @@ def structural_rel_helper(path, graph, max_degree, all_paths):
     neighbors = get_neighbors(path[-1], graph) #get neighbors of last node in path
     for neighbor in neighbors:
         if neighbor not in path:
-            structural_rel_helper(path + [neighbor], graph, max_degree, all_paths)
+            structural_rel_helper(path + [neighbor], graph, max_degree, pattern_table, verbose) #all_paths)
     return
 
 def load_graph(graph_path):
