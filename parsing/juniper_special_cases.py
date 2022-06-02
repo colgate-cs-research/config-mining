@@ -4,89 +4,124 @@ import argparse
 import os
 import json
 
-def find_match(symbols, lst, start, end):
-    """Find index of matching curly brace, square bracket, etc."""
-    occ = 1
-    i = start + 1
-    while (occ != 0 and i <= end):
-        line = lst[i]
-        if symbols[0] in line:
-            occ += 1
-        if symbols[1] in line:
-            occ -= 1
-        i += 1
-    return i-1
+def interfaces_cleanup():
+    pass
 
-def get_dict(lst, start, end, dict):
-    """Create dictionary based on subset of lines"""
-    i = start
-    while i <= end:
-        line = lst[i]
-        if "{" in line:
-            key = line.split('{')[0].strip()
-            brace_start = i
-            brace_end = find_match("{}", lst, i, end)
-            subdict = {}
-            get_dict(lst, brace_start + 1, brace_end - 1, subdict)
-            dict[key] = subdict
-            i = brace_end
-        elif line[-1] == ';':
-            line = line.strip(' ;')
-            key = line
-            # for lists of things as values for keys
-            if "[" in line and line[-1] == "]":
-                key = line.split(' ')[0];
-                values = line.split('[')[1].strip()
-                values = values.split(']')[0].strip()
-                value = values.split(' ')
+def policy_options_cleanup(policy_options):
+    # Determine types of policy options
+    new_policy_options = {}
+    for key, value in policy_options.items():
+        # Identify type of policy option (e.g., prefix-list)
+        parts = key.split(' ')
+        typ = parts[0]
+
+        # First time seeing a specific type of policy option
+        if typ not in new_policy_options:
+            new_policy_options[typ] = {}
+
+        # If policy option has details
+        if len(parts) > 1:
+            name = parts[1]
+            # Clean-up value
+            if typ == "as-path":
+                new_value = as_path_cleanup(key)
+            elif typ == "community":
+                new_value = community_cleanup(parts[2:])
+            elif typ == "prefix-list":
+                new_value = prefix_list_cleanup(value)
+            elif typ == "policy-statement":
+                new_value = policy_statement_cleanup(value)
             else:
-                if (len(line.split(' ')) > 1):
-                    line = line.split(' ')
-                    # the key is more than one word long
-                    # if "\"" in line[-1]:
-                    #     key = ' '.join(line[0:-1])
-                    #     value = line[-1]
-                    if len(line)==2:
-                        key = line[0]
-                        value = line[1]
-                    else:
-                        key = ' '.join(line)
-                        value = None
-                else:
-                    value = None
-            dict[key] = value
-
-        # uncomment to include comments from config files in the .json file
-        # elif line[-2:] == "*/":
-        #     key = line.strip()
-        #     dict[key] = None
-
+                print("!Policy-options of type", typ, "not cleaned up")
+                new_value = value
+            new_policy_options[typ][name] = new_value
+            
+        # Policy option is just a name
         else:
-            print("!Unhandled line {}: {}".format(i+1, line))
-        i += 1
+            name = policy_options[key]
+            new_policy_options[typ][name] = [] # changed this to a list
 
-def jsonify_config(config_filepath, output_dir):
-    """Create a JSON-ified version of a single Juniper configuration"""
-    print("JSONifying {}...".format(os.path.basename(config_filepath)))
+    return new_policy_options
+
+def as_path_cleanup(key):
+    parts = key.split(' ')
+    return " ".join(parts[2:]).strip('"')
+    #return key[len("as-path "):]
+
+def community_cleanup(details):
+    key = details[0]
+    value = " ".join(details[1:]).strip('"')
+    return { key : value}
+
+def prefix_list_cleanup(value):
+    lst = []
+    for key in value:
+        lst.append(key)
+    #lst = value.keys()
+    return lst
+
+# hard codes for juniper specific syntax
+def policy_statement_cleanup(dict):
+    new_value = {}
+    for key in dict:
+        #print("Key1: " + key)
+        # 1. "term"
+        if "term " in key:
+            new_key = key[5:]
+            new_value[new_key] = {}
+            for key2 in dict[key]:
+                #print("Key2: " + key2)
+                val2 = dict[key][key2]
+                # 2. "from"
+                # 3. "to"
+                # 4. "then" nested inside a term
+                lst2= []
+                if type(val2) == str or val2 == None:
+                    keyword = ""
+                    for word in ["to","from", "then"]:
+                        if word in key2:
+                            keyword = word
+                    #print("Keyword: " + keyword)
+                    el = key2[len(keyword):]
+                    if val2 != None:
+                        el += " " + val2
+                    lst2.append(el)
+                    #print("El: " + el)
+                    new_value[new_key][keyword] = lst2
+                    
+                elif dict[key][key2] != None:
+                    lst2 = []
+                    for key3 in dict[key][key2]:
+                        #print("Key3: " + key3)
+                        el = key3
+                        val3 = dict[key][key2][key3]
+                        if val3 != None:
+                            el += " " + val3
+                        lst2.append(el)
+                    new_value[new_key][key2] = lst2
+        # 5. term "then"
+        if "then" in key:
+            new_value["then"] = key[5:]
+            if dict[key] != None:
+                new_value["then"] += dict[key]
+
+    return new_value
+
+
+def cleanup_config(config_filepath, output_dir):
     with open(config_filepath, 'r') as cfg_file:
-        lst = cfg_file.read().split("\n")
+        config = json.load(cfg_file)
 
-        # to debug
-        # print('start')
-        # for l in lst:
-        #     print(l)
-        # print('end')
+    config["policy-options"]= policy_options_cleanup(config["policy-options"])
 
-        d = {}
-        get_dict(lst, 0, len(lst)-1, d)
-        with open(os.path.join(output_dir, os.path.basename(config_filepath)), 'w') as out_file:
-            json.dump(d, out_file, indent=4, sort_keys=False)
+    with open(os.path.join(output_dir, os.path.basename(config_filepath)), 'w') as out_file:
+        json.dump(config, out_file, indent=4, sort_keys=False)
 
 def main():
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Commandline arguments')
-    parser.add_argument('config_path',type=str, help='Path to a (directory of) Juniper configuration file(s)')
-    parser.add_argument('output_dir',type=str, help='Directory in which to store the JSONified configuration(s)')
+    parser.add_argument('config_path',type=str, help='Path to a (directory of) JSON-ified Juniper configuration file(s)')
+    parser.add_argument('output_dir',type=str, help='Directory in which to store the cleaned configuration(s)')
     arguments = parser.parse_args()
 
     # Create output directory
@@ -94,10 +129,10 @@ def main():
 
     # Determine whether to process a single configuration or a directory of configurations
     if os.path.isfile(arguments.config_path):
-        jsonify_config(arguments.config_path, arguments.output_dir)
+        cleanup_config(arguments.config_path, arguments.output_dir)
     else:
         for filename in os.listdir(arguments.config_path):
-            jsonify_config(os.path.join(arguments.config_path, filename), arguments.output_dir)
+            cleanup_config(os.path.join(arguments.config_path, filename), arguments.output_dir)
 
 
 
