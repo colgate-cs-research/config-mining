@@ -137,7 +137,7 @@ def extract_acl_parts(acl_conf, acl_name):
         line_conf = acl_conf[str(priority)]
 
         if "action" in line_conf:
-            srcIps = None
+            srcIps = "0.0.0.0/0"
             if "src_ip" in line_conf:
                 try:
                     srcIps = str(ipaddress.ip_network(line_conf["src_ip"]))
@@ -154,8 +154,9 @@ def extract_acl_parts(acl_conf, acl_name):
             line = {
                 "action" : (line_conf["action"] if "action" in line_conf else None),
                 "srcIps" : srcIps,
-                "dstIps" : dstIps,
             }
+            if dstIps is not None:
+                line["dstIps"] = dstIps
 
             lines.append(line)
 
