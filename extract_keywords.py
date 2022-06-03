@@ -65,7 +65,8 @@ def analyze_configuration(file, outf, extra=None):
     # Iterate over VLANs
     for vlan in config["vlans"].values():
         iName = "Vlan%d" % vlan["num"]
-        add_keywords(iface_dict, iName, get_keywords(vlan["name"], delims=[" ", "-", "_"]))
+        if vlan["name"] is not None:
+            add_keywords(iface_dict, iName, get_keywords(vlan["name"], delims=[" ", "-", "_"]))
 
     # Iterate over ACL names
     for name in config["acls"]:
