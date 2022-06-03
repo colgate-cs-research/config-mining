@@ -117,6 +117,7 @@ def extract_node(node, raw_lines):
         "interfaces" : extract_interfaces(node),
         "acls" : extract_acls(node),
         "vlans" : extract_vlans(raw_lines),
+        "lags" : extract_lags(node),
         "ospf" : extract_ospf(node, raw_lines)
     }
     extract_acl_remarks(parts, raw_lines)
@@ -137,8 +138,9 @@ def extract_interfaces(node):
             "description" : row["Description"],
             "address" : row["Primary_Address"],
             "switchport" : (None if row["Switchport_Mode"] == "NONE" else row["Switchport_Mode"].lower()),
-            "access_vlan" : row["Access_VLAN"],
-            "allowed_vlans" : convert_allowed_vlans(row["Allowed_VLANs"])
+            "access_vlan" : (row["Encapsulation_VLAN"] if row["Encapsulation_VLAN"] is not None else row["Access_VLAN"]),
+            "allowed_vlans" : convert_allowed_vlans(row["Allowed_VLANs"]),
+            "lag" : (None if row["Channel_Group"] is None else row["Channel_Group"].replace("Port-channel",""))
         }
         interfaces[interface["name"]] = interface
 
@@ -186,7 +188,6 @@ def extract_acls(node):
                 "remarks" : []
             }
         acls[acl["name"]] = acl
-
     return acls
 
 def resolve_acls_aliases(acls):
@@ -247,21 +248,38 @@ def is_regex_match(pattern, line):
     iList = p.findall(line)
     return (len(iList) > 0)
 
-"""Extract all remarks from all ACLs on a node"""
+#Extract all remarks from all ACLs on a node
 def extract_acl_remarks(parts, raw_lines):
     i = 0
     while i < len(raw_lines):
         line = raw_lines[i].strip()
-        i += 1
-        if is_regex_match('^ip access-list', line):
-            name = line.split()[-1]
-            line = raw_lines[i].strip()
+        if is_regex_match('^access-list \d+ remark', line):
+            name = line.split()[1]
+            start_idx = line.find("remark") + 7
+            parts["acls"][name]["remarks"].append(line[start_idx:])
             i += 1
+            line = raw_lines[i].strip()
+        #elif is_regex_match('^(ip|ipv6) access-list', line):
+        elif is_regex_match('^ip access-list', line):
+            name = line.split()[-1]
+            i += 1
+            line = raw_lines[i].strip()
             while (line != "!"):
+                if line[:2] == "ip":
+                    i -= 1
+                    break
                 if is_regex_match('^remark ', line):
-                    parts["acls"][name]["remarks"].append(line[7:])
-                line = raw_lines[i].strip()
+                    if (len(line) < 11) or (line[10] != "-"): #check for meaningful remark
+                        start_idx = 7
+                        if line[7:10] == "---":
+                            start_idx = 11
+                        parts["acls"][name]["remarks"].append(line[start_idx:])
                 i += 1
+                if i >= len(raw_lines):
+                    break
+                line = raw_lines[i].strip()     
+        i += 1
+
 
 """Extract all VLAN names from all VLANs on a node"""
 def extract_vlans(raw_lines):
@@ -281,6 +299,21 @@ def extract_vlans(raw_lines):
         i += 1
 
     return vlans
+
+"""Extract details for all LAGs on a node"""
+def extract_lags(node):
+    lags = {}
+    
+    data = bfq.interfaceProperties(nodes=node, interfaces="/^Port-channel/", excludeShutInterfaces=False).answer().frame()
+
+    for i,row in data.iterrows():
+        lag = {
+            "num": row["Interface"].interface.replace("Port-channel",""),
+            "interface" : row["Interface"].interface,
+        }
+        lags[lag["num"]] = lag
+
+    return lags
 
 """Extract OSPF information on a node"""
 def extract_ospf(node, raw_lines):

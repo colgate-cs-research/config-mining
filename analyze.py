@@ -50,7 +50,7 @@ def process_configs(function, in_path, out_path, extra=None, generate_global=Fal
     in_filepaths, out_filepaths = determine_filepaths(in_path, out_path)
 
     with ThreadPoolExecutor(max_workers=1) as executor:
-        futures = []
+        futures = {}
         #individual configs
         for i in range(len(in_filepaths)):
             in_filepath = in_filepaths[i]
@@ -60,18 +60,24 @@ def process_configs(function, in_path, out_path, extra=None, generate_global=Fal
             if generate_global:
                 in_filepath = [in_filepath]
             future = executor.submit(function, in_filepath, out_filepath, extra)
-            futures.append(future)
+            futures[(tuple(in_filepath[0]) if generate_global else tuple(in_filepath))] = future
         
         #aggregate
         if len(in_filepaths) > 1 and generate_global:
             out_filepath = os.path.join(out_path, "network.json") 
-            future = executor.submit(function, in_filepaths, out_filepath, extra)
+            futures["GLOBAL"] = executor.submit(function, in_filepaths, out_filepath, extra)
 
         # Get results from functions to catch any exceptions
-        for future in futures:
-            result = future.result()
-            if (result is not None):
-                print(result)
+        for in_filepath, future in futures.items():
+            try:
+                result = future.result()
+                if (result is not None):
+                    print(in_filepath)
+                    print(result)
+                    print()
+            except Exception as ex:
+                print(in_filepath)
+                print("ERROR",ex)
                 print()
 
 def compute_confidence(numerator, denominator):

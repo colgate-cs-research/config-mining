@@ -2,13 +2,13 @@ import argparse
 import json
 import networkx as nx
 import tqdm
+import concurrent.futures
 
 get_nodes_cache = {}
 get_neighbors_cache = {}
 types_cache = None
 
-all_paths = []
-set_paths = []
+#set_paths = []
 
 def clear_caches():
     global get_nodes_cache, get_neighbors_cache, types_cache
@@ -71,60 +71,101 @@ def count_patterns(tuple_of_node_types, last_link_found, pattern_table, path):
     found and the second number is the number of *seqences* of these node types found.
     
     '''
-    if pattern_table.get(tuple_of_node_types) != None:
-        #pattern_table.get(tuple_of_node_types)[1] += 1
-        pattern_table.get(tuple_of_node_types)[1].append(path)
-    else:
-        #pattern_table[tuple_of_node_types] = [0,1]
-        pattern_table[tuple_of_node_types] = [[],[path]]
+    if pattern_table.get(tuple_of_node_types) is None:
+        if path is None:
+            pattern_table[tuple_of_node_types] = [0,0]
+        else:
+            pattern_table[tuple_of_node_types] = [[],[]]
 
     if last_link_found:
-        #pattern_table.get(tuple_of_node_types)[0] += 1
-        pattern_table.get(tuple_of_node_types)[0].append(path)
+        if path is None:
+            pattern_table.get(tuple_of_node_types)[0] += 1
+        else:
+            pattern_table.get(tuple_of_node_types)[0].append(path)
+    else:
+        if path is None:
+            pattern_table.get(tuple_of_node_types)[1] += 1
+        else:
+            pattern_table.get(tuple_of_node_types)[1].append(path)
     return
+
+def merge_table(pattern_table, patterns):
+    for key, val in patterns.items():
+        if key not in pattern_table:
+            pattern_table[key] = val
+        else:
+            curr = pattern_table[key]
+            if isinstance(curr[0], list):
+                curr[0].extend(val[0])
+                curr[1].extend(val[1])
+            else:
+                curr[0] += val[0]
+                curr[1] += val[1]
 
 def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False):
     """Do neighbors <degrees> degrees away from node X have a direct connection with node X?"""
-    ifaces = get_nodes(graph, node_type)
+    nodes = get_nodes(graph, node_type)
     
-    pbar = tqdm.tqdm(ifaces)
-    pbar.set_description("Computing paths from interfaces")
-    for iface in pbar:
-        if (verbose):
-            print(iface)
-        structural_rel_helper([iface], graph, degrees)
+#    all_paths = []
+    pbar = tqdm.tqdm(total=len(nodes))
+    pbar.set_description("Computing paths from {}s".format(node_type))
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        future_to_node = {executor.submit(compute_paths_start, node, graph, degrees, verbose) : node for node in nodes}
+        for future in concurrent.futures.as_completed(future_to_node):
+            try:
+                patterns = future.result()
+                merge_table(pattern_table, patterns)
+                #paths = future.result()
+                #all_paths.extend(paths)
+                #if (verbose):
+                #    print("\tComputed paths starting from {}".format(future_to_node[future]))
+                pbar.update()
+            except Exception as ex:
+                print("\tFailed to compute paths starting from {}".format(future_to_node[future]))
+    pbar.close()
 
-    print("Computed paths")
-        
-    for path in all_paths:
-        start_node = path[0]
-        last_node = path[-1]
-        types = []
-        for node in path:
-            if types_cache[node] == "keyword":
-                types.append(node)
-            else:
-                types.append(types_cache[node])
-        count_patterns(tuple(types), graph.has_edge(start_node, last_node), pattern_table, path)
+#    pbar = tqdm.tqdm(all_paths)
+#    pbar.set_description("Processing paths") 
+#    for path in pbar:
+#        count_path(path, graph, pattern_table, verbose)
               
     return
 
-def structural_rel_helper(path, graph, max_degree):
+def count_path(path, graph, pattern_table, verbose=False):
+    start_node = path[0]
+    last_node = path[-1]
+    types = []
+    for node in path:
+        if types_cache[node] == "keyword": #or types_cache[node] == "acl":
+            types.append(node)
+        else:
+            types.append(types_cache[node])
+    count_patterns(tuple(types), graph.has_edge(start_node, last_node), pattern_table, (path if verbose else None))
+
+def compute_paths_start(node, graph, max_degree, verbose=False):
+    #all_paths = []
+    pattern_table = {}
+    structural_rel_helper([node], graph, max_degree, pattern_table, verbose) #all_paths)
+    return pattern_table
+#    return all_paths
+
+def structural_rel_helper(path, graph, max_degree, pattern_table, verbose=False): #all_paths):
     """helper function for find_structural_rel()
     generates lists of paths with <max_degree> number of nodes and
     aggregates all paths into global var (all_paths)"""
     #base case
     if len(path)-1 == max_degree:
-        all_paths.append(path)
-        if set(path) not in set_paths:
-            set_paths.append(set(path))
+        count_path(path, graph, pattern_table, verbose)
+#        all_paths.append(path)
+#        if set(path) not in set_paths:
+#            set_paths.append(set(path))
         return 
     
     #recursive case
     neighbors = get_neighbors(path[-1], graph) #get neighbors of last node in path
     for neighbor in neighbors:
         if neighbor not in path:
-            structural_rel_helper(path + [neighbor], graph, max_degree)
+            structural_rel_helper(path + [neighbor], graph, max_degree, pattern_table, verbose) #all_paths)
     return
 
 def load_graph(graph_path):
@@ -142,27 +183,41 @@ def main():
         help='Degrees of separation between nodes')
     parser.add_argument('graph_path',type=str, 
             help='Path for a file containing a JSON representation of graph')
+    parser.add_argument('output_path',type=str, 
+            help='Path for a file in which to store the pattern table')
+    parser.add_argument('-s', '--starting', type=str, default="interface",
+        help='Type of starting node')
+    parser.add_argument('-t', '--threshold', type=int, default=0.01,
+        help="Miniminum precentage of paths that must have a cycle")
     parser.add_argument('-v', '--verbose', action='store_true', help="Display verbose output")
     arguments=parser.parse_args()
 
     graph = load_graph(arguments.graph_path)
 
     pattern_table = {}
-    find_structural_rel(graph, arguments.degree, "interface", pattern_table, arguments.verbose)
-    for key, val in pattern_table.items():
-#        if (val[1] > 1) and (val[0]*100/val[1]) > 20:
-        if len(val[0]) > 1:
-            if (arguments.verbose):
-                print(key)
-                for cycle in val[0]:
-                    print("\tCycle\t{}".format(cycle))
-                for path in val[1]:
-                    if path not in val[0]:
-                        print("\tNo\t{}".format(path))
-            else:
+    find_structural_rel(graph, arguments.degree, arguments.starting, pattern_table, arguments.verbose)
+    with open(arguments.output_path, 'w') as outfile:
+        for key, val in pattern_table.items():
+            if isinstance(val[0], list):
                 cycles = len(val[0])
-                total = len(val[1])
-                print("{} : {}/{} ({}%)".format(key, cycles, total, round(cycles*100/total,2)))
+                notcycles = len(val[1])
+            else:
+                cycles = val[0]
+                notcycles = val[1]
+            total = cycles + notcycles
+            percentage = cycles*100/total
+            if (percentage > arguments.threshold):
+                path = " ".join([s.replace(',','_') for s in key])
+                row = "{},{},{},{}".format(path, cycles, total, round(percentage, 2))
+                outfile.write(row+"\n")
+
+                if (arguments.verbose):
+                    print(row)
+                    for cycle in val[0]:
+                        print("\tCycle\t{}".format(cycle))
+                    for path in val[1]:
+                        print("\tNo\t{}".format(path))
+
 
 
 if __name__ == "__main__":

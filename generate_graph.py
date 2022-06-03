@@ -64,13 +64,16 @@ def make_graph(config, graph):
         if config["acls"][acl]["lines"] is not None:
             for line in config["acls"][acl]["lines"]:
                 action = line["action"]
-                if "dstIps" in line:
-                    dst_address = ipaddress.IPv4Interface(line["dstIps"])
-                    graph.add_node(str(dst_address.network), type ="subnet", subnet=True)
-                    graph.add_edge(device_acl, str(dst_address.network), type=[action, "dst"])
-                src_address = ipaddress.IPv4Interface(line["srcIps"])
-                graph.add_node(str(src_address.network), type ="subnet", subnet=True)
-                graph.add_edge(device_acl, str(src_address.network), type=[action, "src"])
+                try:
+                    if "dstIps" in line:
+                        dst_address = ipaddress.IPv4Interface(line["dstIps"])
+                        graph.add_node(str(dst_address.network), type ="subnet", subnet=True)
+                        graph.add_edge(device_acl, str(dst_address.network), type=[action, "dst"])
+                    src_address = ipaddress.IPv4Interface(line["srcIps"])
+                    graph.add_node(str(src_address.network), type ="subnet", subnet=True)
+                    graph.add_edge(device_acl, str(src_address.network), type=[action, "src"])
+                except ipaddress.AddressValueError as ex:
+                    print(ex)
     
     for interface in config["interfaces"]:
         if interface.startswith("Vlan"):
