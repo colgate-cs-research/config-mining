@@ -11,9 +11,9 @@ def gen_rule_column(rules_df,total_rows,rule_no):
     rule_series = np.zeros(total_rows, dtype=int)[np.newaxis]
     rule_coverage = rules_df.loc[rule_no]['coverage']
     for i in rule_coverage:
-        #print(i,end=" ")
+        print(i,end=" ")
         rule_series[0][i]=1
-    #print(rule_series)
+    print(rule_series)
 
     return rule_series
     
@@ -25,10 +25,10 @@ def gen_rule_matrix(rules_df,total_rows,resuse=0):
     print("Starting Matrix generation:")
     rule_matrix = np.empty([total_rows, len(rules_df)], dtype=int)
     for i in range(len(rules_df)):
-        #if i%100 ==0: print(i,end=" ")
+        if i%100 ==0: print(i,end=" ")
         curr_rule = gen_rule_column(rules_df,total_rows,i)
         rule_matrix[:,i] = curr_rule
-        #print(rule_matrix[:,i])
+        print(rule_matrix[:,i])
 
 
     #print(type(a))
@@ -47,7 +47,7 @@ def stopping_condition(for_sum,option = 0):
     val = False
     if option==0:
 
-        threshold = 0.009
+        threshold = 0.70
         
         ratio = untouched_rows/total_rows
         
@@ -131,7 +131,7 @@ def get_rule_set(rule_matrix,total_rows,initial_weight,weight_reduction):
 
 
 def main():
-    keyword = 'l3'
+    keyword = 'staff'
     depth = 2
     group = '-1'  # 0 for not present | 1 for present | -1 for both
 
@@ -141,7 +141,7 @@ def main():
     # selecting rules with precision:1
     rules_df = rules_df.loc[rules_df['precision'] > 0.950]
 
-    aggregate_df = pd.read_csv("./csl_output/workingDB/aggregate_df_workDB.csv")
+    aggregate_df = pd.read_csv("./csl_output/workingDB/colgate_workDB.csv")
     rules_df.reset_index(drop=True, inplace=True)
     # testing import
     print(rules_df.head)

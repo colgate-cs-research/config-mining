@@ -172,10 +172,10 @@ class ContrastSetLearner:
             # remove all features which few unique items; low quality
             if len(unique_objs) < min_unique_objects:
                 bad_cols.append(col)
-                logging.debug("'{}' lacks objects: {}".format(col, unique_objs))
+                #logging.debug("'{}' lacks objects: {}".format(col, unique_objs))
                 continue
 
-            logging.debug("Discretizing type-object feature: '{}'".format(col))
+            #logging.debug("Discretizing type-object feature: '{}'".format(col))
             frame[col] = col + sep + subset[col].astype(str)
 
         # retrieve continuous features, i.e. float and int, as number
@@ -195,7 +195,7 @@ class ContrastSetLearner:
                 continue
 
             # if numeric feature has many unique values, partition into chunks
-            logging.debug('{}; {:,} unique items'.format(col, len(arr)))
+            #logging.debug('{}; {:,} unique items'.format(col, len(arr)))
             if len(arr) > max_unique_reals:
 
                 # if there are so-few unique places, only make 1 partition
@@ -226,7 +226,7 @@ class ContrastSetLearner:
 
             # add all the states pointing to their features to the metadata
             states = list(frame[col].unique())
-            logging.debug("'{}' has {:,} states".format(col, len(states)))
+            #logging.debug("'{}' has {:,} states".format(col, len(states)))
             for ix, state in enumerate(states):
                 element = {state: {'pos': ix, 'feature': col}}
                 metadata.setdefault('states', {}).update(element)
@@ -290,7 +290,7 @@ class ContrastSetLearner:
                 logging.info("i={}; n(matrix)={:,}".format(i, len(self.counts)))
 
             for rule in canonical_combination(items, max_length):
-                logging.debug('i={}; rule={}; state={}'.format(i, rule, state))
+                #logging.debug('i={}; rule={}; state={}'.format(i, rule, state))
                 if rule not in self.counts:
                     self.counts[rule] = np.zeros((2, num_states))
                     if len(self.counts) == max_contingency_matrix:
@@ -313,7 +313,7 @@ class ContrastSetLearner:
 
             # given rule, compute all not-rules possibilities
             rule_negations = self.get_rule_negations(rule)
-            logging.debug('{} negations are {}'.format(rule, rule_negations))
+            #logging.debug('{} negations are {}'.format(rule, rule_negations))
 
             # for each not-rule, fetch its counts and add to not-rule (row 1)
             for rule_negated in rule_negations:

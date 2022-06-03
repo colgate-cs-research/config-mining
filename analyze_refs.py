@@ -113,7 +113,10 @@ def getAclLineIps(line):
                 if net.prefixlen > 0:
                     ret_val.append([str(net.network_address), str(net.hostmask)])
         except:
-            print("ERROR parsing: "+line[criteria])
+            if line[criteria] is not None:
+                print("ERROR parsing: "+line[criteria])
+            else:
+                print("ERROR parsing: None")
     return ret_val
 
 #1 function

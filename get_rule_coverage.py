@@ -107,7 +107,7 @@ def get_rules(keyword,depth,group,raw=0):
     for future more complex implementationg of importing rules
     '''
     # reading rule csv file
-    rules_df = pd.read_csv("./csl_output/rules/aggregate_df_depth_"+str(depth)+"keyword: "+keyword+"_pr.csv",header=0)
+    rules_df = pd.read_csv("./csl_output/rules/aggregate_df_colgate_depth_"+str(depth)+"keyword: "+keyword+"_pr.csv",header=0)
     if raw==1: return rules_df
     # extracting the rules from strings
     # print(rules_df.head)
@@ -117,13 +117,14 @@ def get_rules(keyword,depth,group,raw=0):
     return rules_df
 
 def main():
-    keyword = 'l3'
+    keyword = 'staff'
     depth = 2
     group = '-1'  # 0 for not present | 1 for present | -1 for both
 
 
     # networkwide dataframe
-    aggregate_df = pd.read_csv("./csl_output/workingDB/aggregate_df_workDB.csv")
+    #aggregate_df = pd.read_csv("./csl_output/workingDB/aggregate_df_workDB.csv")
+    aggregate_df = pd.read_csv("./csl_output/workingDB/colgate_workDB.csv")
     table_hash_dict = table_hash(aggregate_df)
 
     print("Columns:")
