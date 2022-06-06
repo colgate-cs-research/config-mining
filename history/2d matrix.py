@@ -1,25 +1,55 @@
 import json
+import filecmp
 import difflib
 from difflib import *
-import argparse
-import os
 
-def write_report(input_dict, file1, file2):
-  # Initialize the report
-  outfile = open("Change between " + file1.split(" ")[1].split(".")[0] + " and " + file2.split(" ")[1].split(".")[0] + " at " + file1.split(" ")[0], "w")
+def make_matrix (all_diffs, stanza_type_dict):
+  # Make a dictionary of the stanza types in configuration logs
+  # Key: Stanza types, Value: Integers
 
-  # Record changes in file
-  for (key, value) in input_dict.items():
-    for (specific_location, current_list) in value.items():
-      if (len(current_list) < 3):
-        for i in range (len(current_list)):
-          outfile.write(current_list[i][1] + " at " + specific_location + " in " + current_list[i][0] + "\n")
-          outfile.write("Details: " + json.dumps(current_list[i][2]) + "\n\n")
-      else:
-        outfile.write(current_list[1] + " at " + specific_location + " in " + current_list[0] + "\n")
-        outfile.write("Details: " + json.dumps(current_list[2]) + "\n\n")
+  '''
+  # To change: place holder for 0...
+  with open(file1) as f1, open(file2) as f2:
+    data1 = json.load(f1)
+    data2 = json.load(f2)
+  
+  # Find the file with more stanza types and construct stanza type dict based on it
+  stanza_type_dict = {}
+  index = 0
 
-  outfile.close()
+  if (len(data1.keys()) >= len(data2.keys())):
+    for (key, value) in data1.items():
+      stanza_type_dict[key] = index
+      index += 1
+  else:
+    for (key, value) in data2.items():
+      stanza_type_dict[key] = index
+      index += 1
+  '''
+
+  # Construct the matrix
+  output_matrix = []
+
+#  for i in range(len(dict_list)):
+  for date, date_diffs in all_diffs.items():
+    #input_dict = dict_list[i]
+    temp_list = [0] * len(stanza_type_dict.keys())
+
+    for (device_name, device_diffs) in date_diffs.items():
+      for (element_name, small_value) in device_diffs.items():
+
+        # Capture multiple changes at same location
+        if (len(small_value) < 3): # Not general enough, change later
+          for i in range(len(small_value)):
+            if (small_value[i][0] in stanza_type_dict):
+              temp_list[stanza_type_dict[small_value[i][0]]] = 1
+        else:
+          if (small_value[0] in stanza_type_dict):
+            temp_list[stanza_type_dict[small_value[0]]] = 1
+
+    output_matrix.append(temp_list)
+
+  return output_matrix
 
 def make_dict(input, location):
   output_dict = {}
@@ -62,13 +92,9 @@ def extract_change(input):
       elif (current[2] == "Modification"):
         diff_dict = {}
         for (key, value) in v2.items():
-          try:
-            if (v2[key] != v1[key]):
-              temp_list = [v1[key], v2[key]]
-              diff_dict[key] = temp_list
-          except Exception as ex:
-            print("Key", key, "did not exist in both files")
-            raise ex
+          if (v2[key] != v1[key]):
+            temp_list = [v1[key], v2[key]]
+            diff_dict[key] = temp_list
       else:
         diff_dict = {}
         for (key, value) in v1.items():
@@ -111,7 +137,7 @@ def diff_detector (dict1, dict2, section):
     if (key not in dict1.keys()):
       temp_list = [key, section, value]
       to_return.append(temp_list)
-
+  
   return to_return
 
 def find_difference_between (file1, file2):
@@ -121,16 +147,8 @@ def find_difference_between (file1, file2):
   # Value: List of List [[Specific Information of change 1, type, section], [Specific Information of change 2, type, section]]
 
   with open(file1) as f1, open(file2) as f2:
-    try:
-      data1 = json.load(f1)
-    except Exception as ex:
-      print("Failed to load:", file1)
-      return {}
-    try:
-      data2 = json.load(f2)
-    except Exception as ex:
-      print("Failed to load:", file2)
-      return {}
+    data1 = json.load(f1)
+    data2 = json.load(f2)
 
   # Itereate over all the sections (Port, ACL, ...), and get differences in each section
   diff_list = []
@@ -152,44 +170,32 @@ def find_difference_between (file1, file2):
   classify_difference(diff_list_v2)
 
   # Get specific information of the change
-  try:
-    extract_change(diff_list_v2)
-  except:
-    print("Failed to extract changes from",file1, file2)
+  extract_change(diff_list_v2)
 
   # Arrange information into a dictionary
-  output_dict = make_dict(diff_list_v2, os.path.basename(file1).split(".")[0])
-
-  # Write Report
-  #write_report(output_dict, file1, file2)
+  output_dict = make_dict(diff_list_v2, file1.split(" ")[0])
 
   return output_dict
 
-def helper (list1, list2, outfile=None):
+def helper (dates, stanza_type_dict):
+  # Find difference between configuration logs
+  #dict_list = []
+  #for i in range(len(list1)):
+  #  output_dict = find_difference_between(list1[i], list2[i])
+  #  dict_list.append(output_dict)
+
   all_diffs = {}
-  for i in range(len(list1)):
-    output_dict = find_difference_between(list1[i], list2[i])
-    all_diffs.update(output_dict)
+  for date in dates:
+    with open(date, 'r') as infile:
+      date_diffs = json.load(infile)
+    all_diffs[date.split('.')[0]] = date_diffs
+  
+  # Record differences in matrix
+  matrix = make_matrix(all_diffs, stanza_type_dict)
+  dates = list(all_diffs.keys())
+  for i in range(len(dates)):
+    print(dates[i],matrix[i])
 
-  with open(outfile, 'w') as out:
-    json.dump(all_diffs, out, indent=4)
-
-def main():
-  #Parse command-line arguments
-  parser = argparse.ArgumentParser(description='Commandline arguments')
-  parser.add_argument('baseline_path',type=str, 
-          help='Path for a baseline directory containing JSON configs')
-  parser.add_argument('comparison_path',type=str, 
-          help='Path for a comparison directory containing JSON configs')
-  arguments=parser.parse_args()
-
-  filenames = sorted(os.listdir(arguments.baseline_path))
-  baseline_filenames = [os.path.join(arguments.baseline_path, filename) for filename in filenames]
-  baseline_date = os.path.basename(arguments.baseline_path)
-  comparison_filenames = [os.path.join(arguments.comparison_path, filename) for filename in filenames]
-  comparison_date = os.path.basename(arguments.comparison_path)
-  outfile_name = "{}vs{}.json".format(baseline_date, comparison_date)
-  helper(baseline_filenames, comparison_filenames, outfile_name) 
-
-if __name__ == "__main__":
-  main()
+stanza_type_dict = { "Interface" : 0, "ACL" : 1, "Port" : 2, "System": 3, "VRF": 4 }
+dates = ['2021-08-09vs2021-09-09.json', '2021-09-09vs2021-10-09.json', '2021-10-09vs2021-11-09.json', '2021-11-09vs2021-12-09.json']
+helper(dates, stanza_type_dict)
