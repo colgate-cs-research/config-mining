@@ -5,7 +5,7 @@ import sys
 
 # Load code to test
 sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import analyze_keywords
+import association.analyze_keywords as analyze_keywords
 
 keywords = {
     "interfaces": {

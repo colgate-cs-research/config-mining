@@ -8,7 +8,7 @@ import sys
 # Load code to test
 testing_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.dirname(testing_dir))
-import link_prediction
+import graphs.link_prediction as link_prediction
 
 def load_graph(filename):
     # Flush caches
