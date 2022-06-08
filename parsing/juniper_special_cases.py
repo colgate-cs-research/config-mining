@@ -55,8 +55,9 @@ def community_cleanup(details):
 
 def prefix_list_cleanup(value):
     lst = []
-    for key in value:
-        lst.append(key)
+    if value is not None:
+        for key in value:
+            lst.append(key.replace('"', "'"))
     #lst = value.keys()
     return lst
 
@@ -82,7 +83,7 @@ def policy_statement_cleanup(dict):
                         if word in key2:
                             keyword = word
                     #print("Keyword: " + keyword)
-                    el = key2[len(keyword):]
+                    el = key2[len(keyword)+1:]
                     if val2 != None:
                         el += " " + val2
                     lst2.append(el)
@@ -90,20 +91,31 @@ def policy_statement_cleanup(dict):
                     new_value[new_key][keyword] = lst2
                     
                 elif dict[key][key2] != None:
-                    lst2 = []
-                    for key3 in dict[key][key2]:
-                        #print("Key3: " + key3)
-                        el = key3
-                        val3 = dict[key][key2][key3]
-                        if val3 != None:
-                            el += " " + val3
-                        lst2.append(el)
+                    if isinstance(dict[key][key2], list):
+                        lst2 = dict[key][key2]
+                    else:
+                        lst2 = []
+                        for key3 in dict[key][key2]:
+                            #print("Key3: " + key3)
+                            el = key3
+                            print(key, key2, key3)
+                            val3 = dict[key][key2][key3]
+                            print(key, val3)
+                            if val3 != None:
+                                el += " " + str(val3)
+                            lst2.append(el)
                     new_value[new_key][key2] = lst2
         # 5. term "then"
         if "then" in key:
-            new_value["then"] = key[5:]
+            new_value["then"] = [key[5:]]
             if dict[key] != None:
-                new_value["then"] += dict[key]
+                if isinstance(dict[key], str):
+                    new_value["then"] = [key[5:] + dict[key]]
+                else:
+                    new_value["then"] = []
+                    for subkey, subval in dict[key].items():
+                        subval = (subkey + " " + subval if subval is not None else subkey)
+                        new_value["then"].append(subval)
 
     return new_value
 

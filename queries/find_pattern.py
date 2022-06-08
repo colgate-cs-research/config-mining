@@ -1,6 +1,11 @@
 import argparse
 import networkx as nx
-from link_prediction import load_graph
+import os
+import sys
+
+graphs_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(1, os.path.dirname(graphs_dir))
+from graphs.link_prediction import load_graph
 
 #find vlans that are connected to both argument keyword and acl 110
 def find_pattern(graph, keyword):

@@ -8,7 +8,7 @@ import tempfile
 # Load code to test
 testing_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.dirname(testing_dir))
-import analyze_refs
+import association.analyze_refs as analyze_refs
 
 def test_intraconfig_refs_acls_IfaceName2AppliedAclNames():
     configs_dir = os.path.join(testing_dir, "analysis", "configs_json")
