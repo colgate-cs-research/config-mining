@@ -91,6 +91,7 @@ def analyze_configuration(file, outf, extra=None):
                 keyword_dict[word].append(iName)
             #add_keywords(iface_dict, iName, keywords)
 
+    # extract keywords that are variations of a common term (hardcoded in list common_starts on lin 17-18)
     common_keyword_dict = {}
     for word2 in common_starts:
         common_keyword_dict[word2] = []
@@ -110,6 +111,7 @@ def analyze_configuration(file, outf, extra=None):
     for word in keys_to_remove:
         keyword_dict.pop(word)
 
+    # final list of keywords for Ifaces and Vlans
     for word in keyword_dict:
         for iName in keyword_dict[word]:
             add_keywords(iface_dict, iName, [word])
