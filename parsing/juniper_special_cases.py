@@ -4,8 +4,29 @@ import argparse
 import os
 import json
 
-def interfaces_cleanup():
-    pass
+def interfaces_cleanup(interfaces):
+    for iface in interfaces.values():
+        attrib_names = list(iface.keys())
+        for attrib_name in attrib_names:
+            if attrib_name.startswith("description "):
+                iface["description"] = attrib_name[len("description "):].strip('"')
+                del iface[attrib_name]
+            elif attrib_name.startswith("unit "):
+                unit = iface[attrib_name]
+                unit_cleanup(unit)
+                unit_name = attrib_name[len("unit "):]
+                if "unit" not in iface:
+                    iface["unit"] = {}
+                iface["unit"][unit_name] = unit
+                del iface[attrib_name]
+    return interfaces
+
+def unit_cleanup(unit):
+    for attrib_name in unit.keys():
+        if attrib_name.startswith("description "):
+            unit["description"] = attrib_name[len("description "):].strip('"')
+            del unit[attrib_name]
+            break
 
 def policy_options_cleanup(policy_options):
     # Determine types of policy options
@@ -98,9 +119,9 @@ def policy_statement_cleanup(dict):
                         for key3 in dict[key][key2]:
                             #print("Key3: " + key3)
                             el = key3
-                            print(key, key2, key3)
+                            #print(key, key2, key3)
                             val3 = dict[key][key2][key3]
-                            print(key, val3)
+                            #print(key, val3)
                             if val3 != None:
                                 el += " " + str(val3)
                             lst2.append(el)
@@ -124,7 +145,8 @@ def cleanup_config(config_filepath, output_dir):
     with open(config_filepath, 'r') as cfg_file:
         config = json.load(cfg_file)
 
-    config["policy-options"]= policy_options_cleanup(config["policy-options"])
+    config["policy-options"] = policy_options_cleanup(config["policy-options"])
+    config["interfaces"] = interfaces_cleanup(config["interfaces"])
 
     with open(os.path.join(output_dir, os.path.basename(config_filepath)), 'w') as out_file:
         json.dump(config, out_file, indent=4, sort_keys=False)
