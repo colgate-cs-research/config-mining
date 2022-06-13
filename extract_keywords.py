@@ -91,7 +91,7 @@ def analyze_configuration(file, outf, extra=None):
                 keyword_dict[word].append(iName)
             #add_keywords(iface_dict, iName, keywords)
 
-    # extract keywords that are variations of a common term (hardcoded in list common_starts on lin 17-18)
+    # extract keywords that are variations of a common term (hardcoded in list common_starts on line 17-18)
     common_keyword_dict = {}
     for word2 in common_starts:
         common_keyword_dict[word2] = []
