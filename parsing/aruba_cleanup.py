@@ -2,25 +2,19 @@
 
 import argparse
 import fileinput
-import ipaddress
-import json
 import os
-import sys
 
 def main():
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Commandline arguments')
-    parser.add_argument('snapshot_path', help='provide path to the network snapshot')
+    parser.add_argument('configs_path', help='Path to directory of Aruba configs')
     arguments = parser.parse_args()
-
-    # Determine paths
-    configs_path = os.path.join(arguments.snapshot_path, "configs")
     
     # Parse each configuration
-    for filename in sorted(os.listdir(configs_path)):
+    for filename in sorted(os.listdir(arguments.configs_path)):
         node = filename.replace(".colgate.edu.json", "")
         print(node)
-        infilepath = os.path.join(configs_path, filename)
+        infilepath = os.path.join(arguments.configs_path, filename)
         fix_aruba_json(infilepath)
 
 def fix_aruba_json(filepath):
