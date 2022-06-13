@@ -81,7 +81,7 @@ def jsonify_config(config_filepath, output_dir):
 
         d = {}
         get_dict(lst, 0, len(lst)-1, d)
-        with open(os.path.join(output_dir, os.path.basename(config_filepath)), 'w') as out_file:
+        with open(os.path.join(output_dir, os.path.basename(config_filepath).replace(".cfg", ".json")), 'w') as out_file:
             json.dump(d, out_file, indent=4, sort_keys=False)
 
 def main():

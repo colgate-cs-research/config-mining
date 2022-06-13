@@ -148,7 +148,7 @@ def cleanup_config(config_filepath, output_dir):
     config["policy-options"] = policy_options_cleanup(config["policy-options"])
     config["interfaces"] = interfaces_cleanup(config["interfaces"])
 
-    with open(os.path.join(output_dir, os.path.basename(config_filepath)), 'w') as out_file:
+    with open(os.path.join(output_dir, os.path.basename(config_filepath).replace(".cfg", ".json")), 'w') as out_file:
         json.dump(config, out_file, indent=4, sort_keys=False)
 
 def main():
