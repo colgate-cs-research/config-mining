@@ -79,6 +79,20 @@ def process_configs(function, in_path, out_path, extra=None, generate_global=Fal
                 result = future.result()
                 if (result is not None):
                     print(in_filepath)
+
+                    ''' r2 = [ "iface_dict" , "acl_dict"]
+                    for i in range(1):
+                        d = result[i]
+                        print()
+                        print(r2[i])
+                        print(len(result[i]))
+                        print()
+                        for key in d:
+                            print(key + " : [", end="")
+                            for el in d[key]:
+                                print(el, end=", ")
+                            print("]")'''
+
                     print(result)
                     print()
             except Exception as ex:
