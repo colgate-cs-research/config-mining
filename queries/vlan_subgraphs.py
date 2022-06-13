@@ -118,8 +118,15 @@ def analyze_vlan_pairs(graph):
     print("Keyword in common")
     keyword_pairs = common_neighbor_types["keyword"]
     interface_pairs = common_neighbor_types["interface"]
+    keyword_and_interface_pairs = keyword_pairs.intersection(interface_pairs)
     keyword_only_pairs = keyword_pairs.difference(interface_pairs)
-    for pair in keyword_pairs:
+    print(len(keyword_and_interface_pairs), "VLAN pairs with common interface AND keyword")
+    for pair in keyword_and_interface_pairs:
+      k1 = set(sorted(graph_utils.get_neighbors(pair[0], graph, "keyword")))
+      k2 = set(sorted(graph_utils.get_neighbors(pair[1], graph, "keyword")))
+      print(pair, k1.intersection(k2), k1, k2)
+    print(len(keyword_only_pairs), "VLAN pairs with common keyword only")
+    for pair in keyword_only_pairs:
       k1 = set(sorted(graph_utils.get_neighbors(pair[0], graph, "keyword")))
       k2 = set(sorted(graph_utils.get_neighbors(pair[1], graph, "keyword")))
       print(pair, k1.intersection(k2), k1, k2)
