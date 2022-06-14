@@ -28,6 +28,88 @@ def unit_cleanup(unit):
             del unit[attrib_name]
             break
 
+def protocols_cleanup(protocols):
+    if "mpls" in protocols:
+        protocols["mpls"] = mpls_cleanup(protocols["mpls"])
+    if "bgp" in protocols:
+        protocols["bgp"] = bgp_cleanup(protocols["bgp"])
+    if "isis" in protocols:
+        protocols["isis"] = isis_cleanup(protocols["isis"])
+    return protocols
+
+def mpls_cleanup(mpls):
+    new_mpls = {}
+    lsps = {}
+    paths = []
+    for key, value in mpls.items():
+        if key.startswith("label-switched-path "):
+            key = key[len("label-switched-path "):]
+            lsps[key] = label_switched_path_cleanup(value)
+        elif key == "path":
+            paths.append(value)
+        elif key.startswith("path "):
+            paths.append(key.split(" ")[1])
+        else:
+            new_mpls[key] = value
+    new_mpls["label-switched-path"] = lsps
+    new_mpls["path"] = paths
+    return new_mpls
+
+def label_switched_path_cleanup(lsp):
+    for key, value in lsp.items():
+        if key.startswith("secondary"):
+            new_key, new_value = key.split(" ")
+            lsp[new_key] = new_value
+            del lsp[key]
+            break
+    return lsp
+
+def bgp_cleanup(bgp):
+    new_bgp = {}
+    groups = {}
+    for key, value in bgp.items():
+        if key.startswith("group "):
+            key = key[len("group "):]
+            groups[key] = bgp_group_cleanup(value)
+        else:
+            new_bgp[key] = value
+    new_bgp["group"] = groups
+    return new_bgp
+
+def bgp_group_cleanup(group):
+    new_group = {}
+    neighbors = {}
+    for key, value in group.items():
+        if key.startswith("neighbor "):
+            key = key[len("neighbor "):]
+            neighbors[key] = bgp_neighbor_cleanup(value)
+        else:
+            new_group[key] = value
+    new_group["neighbor"] = neighbors
+    return new_group
+
+def bgp_neighbor_cleanup(neighbor):
+    new_neighbor = {}
+    for key, value in neighbor.items():
+        if key.startswith("description "):
+            value = key[len("description "):].strip('"')
+            new_neighbor["description"] = value
+        else:
+            new_neighbor[key] = value
+    return new_neighbor
+
+def isis_cleanup(isis):
+    new_isis = {}
+    interfaces = {}
+    for key, value in isis.items():
+        if key.startswith("interface "):
+            key = key[len("interface "):]
+            interfaces[key] = value
+        else:
+            new_isis[key] = value
+    new_isis["interface"] = interfaces
+    return new_isis
+
 def policy_options_cleanup(policy_options):
     # Determine types of policy options
     new_policy_options = {}
@@ -140,15 +222,56 @@ def policy_statement_cleanup(dict):
 
     return new_value
 
+def firewall_cleanup(firewall):
+    if "family inet" in firewall:
+        new_family_inet = {}
+        for key, value in firewall["family inet"].items():
+            if key.startswith("filter "):
+                key = key[len("filter "):]
+                value = firewall_filter_cleanup(value)
+                new_family_inet[key] = value
+            else:
+                print("!Unexpected key in firewall family inet:", key)
+    firewall["family inet"] = new_family_inet
+    return firewall
+
+def firewall_filter_cleanup(filter):
+    new_filter = {}
+    for key, value in filter.items():
+        if key.startswith("term "):
+            key = key[len("term "):]
+            value = firewall_term_cleanup(value)
+        new_filter[key] = value
+    return new_filter
+
+def firewall_term_cleanup(term):
+    if "then" in term:
+        new_then = []
+        if isinstance(term["then"], dict):
+            for key, value in term["then"].items():
+                if value is not None:
+                    key += " " + value
+                new_then.append(key)
+        else:
+            new_then = [term["then"]]
+        term["then"] = new_then
+
+    if "from" in term:
+        for key, value in term["from"].items():
+            if isinstance(value, dict):
+                term["from"][key] = list(value.keys())
+    return term
 
 def cleanup_config(config_filepath, output_dir):
     with open(config_filepath, 'r') as cfg_file:
         config = json.load(cfg_file)
 
-    config["policy-options"] = policy_options_cleanup(config["policy-options"])
     config["interfaces"] = interfaces_cleanup(config["interfaces"])
+    config["protocols"] = protocols_cleanup(config["protocols"])
+    config["policy-options"] = policy_options_cleanup(config["policy-options"])
+    config["firewall"] = firewall_cleanup(config["firewall"])
 
-    with open(os.path.join(output_dir, os.path.basename(config_filepath).replace(".cfg", ".json")), 'w') as out_file:
+    with open(os.path.join(output_dir, os.path.basename(config_filepath)), 'w') as out_file:
         json.dump(config, out_file, indent=4, sort_keys=False)
 
 def main():
