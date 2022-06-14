@@ -102,7 +102,7 @@ def merge_table(pattern_table, patterns):
                 curr[0] += val[0]
                 curr[1] += val[1]
 
-def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False):
+def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False, value_types=[]):
     """Do neighbors <degrees> degrees away from node X have a direct connection with node X?"""
     nodes = get_nodes(graph, node_type)
     
@@ -110,7 +110,7 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False)
     pbar = tqdm.tqdm(total=len(nodes))
     pbar.set_description("Computing paths from {}s".format(node_type))
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        future_to_node = {executor.submit(compute_paths_start, node, graph, degrees, verbose) : node for node in nodes}
+        future_to_node = {executor.submit(compute_paths_start, node, graph, degrees, verbose, value_types) : node for node in nodes}
         for future in concurrent.futures.as_completed(future_to_node):
             try:
                 patterns = future.result()
@@ -131,31 +131,31 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False)
               
     return
 
-def count_path(path, graph, pattern_table, verbose=False):
+def count_path(path, graph, pattern_table, verbose=False, value_types=[]):
     start_node = path[0]
     last_node = path[-1]
     types = []
     for node in path:
-        if types_cache[node] == "keyword": #or types_cache[node] == "acl":
+        if types_cache[node] in value_types:
             types.append(node)
         else:
             types.append(types_cache[node])
     count_patterns(tuple(types), graph.has_edge(start_node, last_node), pattern_table, (path if verbose else None))
 
-def compute_paths_start(node, graph, max_degree, verbose=False):
+def compute_paths_start(node, graph, max_degree, verbose=False, value_types=[]):
     #all_paths = []
     pattern_table = {}
-    structural_rel_helper([node], graph, max_degree, pattern_table, verbose) #all_paths)
+    structural_rel_helper([node], graph, max_degree, pattern_table, verbose, value_types) #all_paths)
     return pattern_table
 #    return all_paths
 
-def structural_rel_helper(path, graph, max_degree, pattern_table, verbose=False): #all_paths):
+def structural_rel_helper(path, graph, max_degree, pattern_table, verbose=False, value_types=[]): #all_paths):
     """helper function for find_structural_rel()
     generates lists of paths with <max_degree> number of nodes and
     aggregates all paths into global var (all_paths)"""
     #base case
     if len(path)-1 == max_degree:
-        count_path(path, graph, pattern_table, verbose)
+        count_path(path, graph, pattern_table, verbose, value_types)
 #        all_paths.append(path)
 #        if set(path) not in set_paths:
 #            set_paths.append(set(path))
@@ -165,7 +165,7 @@ def structural_rel_helper(path, graph, max_degree, pattern_table, verbose=False)
     neighbors = get_neighbors(path[-1], graph) #get neighbors of last node in path
     for neighbor in neighbors:
         if neighbor not in path:
-            structural_rel_helper(path + [neighbor], graph, max_degree, pattern_table, verbose) #all_paths)
+            structural_rel_helper(path + [neighbor], graph, max_degree, pattern_table, verbose, value_types) #all_paths)
     return
 
 def load_graph(graph_path):
@@ -189,13 +189,17 @@ def main():
         help='Type of starting node')
     parser.add_argument('-t', '--threshold', type=int, default=0.01,
         help="Miniminum precentage of paths that must have a cycle")
+    parser.add_argument('-n','--node', type=str, action='append', 
+        help="Treat nodes of specified type(s) as values")
     parser.add_argument('-v', '--verbose', action='store_true', help="Display verbose output")
     arguments=parser.parse_args()
+    print(arguments)
 
     graph = load_graph(arguments.graph_path)
 
     pattern_table = {}
-    find_structural_rel(graph, arguments.degree, arguments.starting, pattern_table, arguments.verbose)
+    find_structural_rel(graph, arguments.degree, arguments.starting, pattern_table, arguments.verbose, 
+        ([] if arguments.node is None else arguments.node))
     with open(arguments.output_path, 'w') as outfile:
         for key, val in pattern_table.items():
             if isinstance(val[0], list):

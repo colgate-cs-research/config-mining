@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
-import analyze_refs
 import argparse
 import json
+import os
+import sys
+
+association_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(1, os.path.dirname(association_dir))
+import association.analyze_refs as analyze_refs
 import analyze
 
 #returns a list of keywords

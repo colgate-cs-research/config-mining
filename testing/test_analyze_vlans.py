@@ -8,7 +8,7 @@ import tempfile
 # Load code to test
 testing_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.dirname(testing_dir))
-import analyze_vlans
+import association.analyze_vlans as analyze_vlans
 
 def test_generate_vlan_pairs_one():
     vlan_list = [10]

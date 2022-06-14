@@ -14,6 +14,9 @@ abbreviations = {
     "pub" : "public"
 }
 
+# list of common keyword beginnings
+common_starts = ["student", "ems", "bg", "voip"]
+
 def main():
     #parsing command-line arguments
     parser = argparse.ArgumentParser(description='Extract keywords for interfaces and ACLs')
@@ -48,6 +51,14 @@ def add_keywords(dictionary, key, words):
         if word not in dictionary[key]:
             dictionary[key].append(word)
 
+def make_dict(word):
+    d = {}
+    inner_d = d
+    for ch in word:
+        inner_d[ch] = {}
+        inner_d = inner_d[ch]
+    return d
+
 def analyze_configuration(file, outf, extra=None):
     # print("Current working FILE: " + file)
     # Load config
@@ -56,16 +67,54 @@ def analyze_configuration(file, outf, extra=None):
     iface_dict = {}
     acl_dict = {}
 
+    # dictionary -  keywords are keys and values are lists of ifaces and vlans the keyword appears in
+    keyword_dict = {}
     # Iterate over interfaces
     for iface in config["interfaces"].values():
         iName = iface["name"]
         if (iface["description"] is not None):
-            add_keywords(iface_dict, iName, get_keywords(iface["description"]))
+            keywords = get_keywords(iface["description"])
+            for word in keywords:
+                if word not in keyword_dict:
+                    keyword_dict[word] = []
+                keyword_dict[word].append(iName)
+            #add_keywords(iface_dict, iName, keywords)
 
     # Iterate over VLANs
     for vlan in config["vlans"].values():
         iName = "Vlan%d" % vlan["num"]
-        add_keywords(iface_dict, iName, get_keywords(vlan["name"], delims=[" ", "-", "_"]))
+        if vlan["name"] is not None:
+            keywords = get_keywords(vlan["name"], delims=[" ", "-", "_"])
+            for word in keywords:
+                if word not in keyword_dict:
+                    keyword_dict[word] = []
+                keyword_dict[word].append(iName)
+            #add_keywords(iface_dict, iName, keywords)
+
+    # extract keywords that are variations of a common term (hardcoded in list common_starts on line 17-18)
+    common_keyword_dict = {}
+    for word2 in common_starts:
+        common_keyword_dict[word2] = []
+    
+    keys_to_remove = []
+    for word in keyword_dict:
+        for word2 in common_starts:
+            if word2 in word:
+                if word not in keys_to_remove:
+                    keys_to_remove.append(word)
+                for iface_or_vlan in keyword_dict[word]:
+                    (common_keyword_dict[word2]).append(iface_or_vlan)
+
+    for word in common_keyword_dict:
+        keyword_dict[word] = common_keyword_dict[word]
+
+    for word in keys_to_remove:
+        keyword_dict.pop(word)
+
+    # final list of keywords for Ifaces and Vlans
+    for word in keyword_dict:
+        for iName in keyword_dict[word]:
+            add_keywords(iface_dict, iName, [word])
 
     # Iterate over ACL names
     for name in config["acls"]:

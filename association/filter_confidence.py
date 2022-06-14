@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
-import analyze
 import argparse
 import json
+import os
+import sys
+
+association_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(1, os.path.dirname(association_dir))
+import analyze
 
 def main():
     #parsing command-line arguments

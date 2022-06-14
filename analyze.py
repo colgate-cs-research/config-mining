@@ -2,6 +2,7 @@ import glob
 import json
 import os
 from concurrent.futures import ThreadPoolExecutor
+import traceback
 
 def determine_path_types(in_path, out_path):
     # Check if all arguments are files
@@ -60,7 +61,12 @@ def process_configs(function, in_path, out_path, extra=None, generate_global=Fal
             if generate_global:
                 in_filepath = [in_filepath]
             future = executor.submit(function, in_filepath, out_filepath, extra)
-            futures[(tuple(in_filepath[0]) if generate_global else tuple(in_filepath))] = future
+            key = in_filepath
+            if generate_global:
+                key = in_filepath[0]
+            if isinstance(key, list):
+                key = tuple(key)
+            futures[key] = future
         
         #aggregate
         if len(in_filepaths) > 1 and generate_global:
@@ -77,7 +83,7 @@ def process_configs(function, in_path, out_path, extra=None, generate_global=Fal
                     print()
             except Exception as ex:
                 print(in_filepath)
-                print("ERROR",ex)
+                traceback.print_exc()
                 print()
 
 def compute_confidence(numerator, denominator):

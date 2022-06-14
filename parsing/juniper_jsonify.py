@@ -35,7 +35,7 @@ def get_dict(lst, start, end, dict):
             key = line
             # for lists of things as values for keys
             if "[" in line and line[-1] == "]":
-                key = line.split(' ')[0];
+                key = line.split('[')[0].strip();
                 values = line.split('[')[1].strip()
                 values = values.split(']')[0].strip()
                 value = values.split(' ')
@@ -46,7 +46,7 @@ def get_dict(lst, start, end, dict):
                     # if "\"" in line[-1]:
                     #     key = ' '.join(line[0:-1])
                     #     value = line[-1]
-                    if len(line)==2:
+                    if len(line)==2 and line[0] not in dict:
                         key = line[0]
                         value = line[1]
                     else:
@@ -54,6 +54,8 @@ def get_dict(lst, start, end, dict):
                         value = None
                 else:
                     value = None
+            if key in dict:
+                print("!Duplicate key {} on line {}".format(key, i))
             dict[key] = value
 
         # uncomment to include comments from config files in the .json file
@@ -79,7 +81,7 @@ def jsonify_config(config_filepath, output_dir):
 
         d = {}
         get_dict(lst, 0, len(lst)-1, d)
-        with open(os.path.join(output_dir, os.path.basename(config_filepath)), 'w') as out_file:
+        with open(os.path.join(output_dir, os.path.basename(config_filepath).replace(".cfg", ".json")), 'w') as out_file:
             json.dump(d, out_file, indent=4, sort_keys=False)
 
 def main():
