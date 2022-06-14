@@ -5,9 +5,10 @@ import os
 import pandas as pd
 import ipaddress
 import logging
+import tqdm
 
 # module-wide logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.WARN)
 logging.getLogger(__name__)
 
 def one_hot_encode(node, graph, node_type):
@@ -65,7 +66,8 @@ def col_prefixes(ip, startlen=20, endlen=32):
 
         ########################
         #' IPv4Network nodeul Code (start)
-        # #######################'    
+        # #######################:96
+        # '    
 
 
         for prefixlen in range(startlen, endlen):
@@ -92,7 +94,9 @@ def col_prefixes(ip, startlen=20, endlen=32):
 def create_dataframe(graph):
     nodes = get_nodes(graph, "interface")
     df_dict={}
-    for node in nodes:
+    pbar = tqdm.tqdm(nodes)
+    pbar.set_description("Creating dataframe")
+    for node in pbar:
         logging.debug(" NODE: {}".format(node))
 
         vlans = one_hot_encode(node, graph, "vlan")
@@ -179,7 +183,7 @@ def main():
 
     graph = load_graph(arguments.graph_path)
     dataframe = create_dataframe(graph)
-    filename = arguments.graph_path.split("/")[-1] if arguments.graph_path.split("/")[-1] is not "" else arguments.graph_path.split("/")[-2]
+    filename = (arguments.graph_path.split("/")[-1] if arguments.graph_path.split("/")[-1] != "" else arguments.graph_path.split("/")[-2])
     
     path = arguments.out_path+filename+'.csv'
     logging.info("  Saving dataframe @:{}".format(path))
