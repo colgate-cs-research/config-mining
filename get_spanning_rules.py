@@ -1,4 +1,5 @@
 import pandas as pd
+import argparse
 import time
 import numpy as np
 import re
@@ -11,9 +12,9 @@ def gen_rule_column(rules_df,total_rows,rule_no):
     rule_series = np.zeros(total_rows, dtype=int)[np.newaxis]
     rule_coverage = rules_df.loc[rule_no]['coverage']
     for i in rule_coverage:
-        print(i,end=" ")
+        #print(i,end=" ")
         rule_series[0][i]=1
-    print(rule_series)
+    #print(rule_series)
 
     return rule_series
     
@@ -25,10 +26,10 @@ def gen_rule_matrix(rules_df,total_rows,resuse=0):
     print("Starting Matrix generation:")
     rule_matrix = np.empty([total_rows, len(rules_df)], dtype=int)
     for i in range(len(rules_df)):
-        if i%100 ==0: print(i,end=" ")
+        #if i%100 ==0: print(i,end=" ")
         curr_rule = gen_rule_column(rules_df,total_rows,i)
         rule_matrix[:,i] = curr_rule
-        print(rule_matrix[:,i])
+        #print(rule_matrix[:,i])
 
 
     #print(type(a))
@@ -131,17 +132,27 @@ def get_rule_set(rule_matrix,total_rows,initial_weight,weight_reduction):
 
 
 def main():
-    keyword = 'staff'
-    depth = 2
-    group = '-1'  # 0 for not present | 1 for present | -1 for both
 
-    rules_df = get_rule_coverage.main()
+    parser = argparse.ArgumentParser(description='Run rule_spanning on a dataset')
+    parser.add_argument('org_df_path',type=str, help='Path for a CSV file containing the pruned dataframe')
+    parser.add_argument('rules_path',type=str, help='Path for a CSV file which stores the rules')
+    parser.add_argument('feature',type=str, help='Select the group-feature name.')
+    parser.add_argument('-g','--group',type=str,default='-1', help='Select the group-feature value.')
+    parser.add_argument('-d', '--depth', type=int, default=1, help="Maximum rule depth")
+    parser.add_argument('-p', '--precision', type=float, default=0.950, help="Only select rules with precison above the given value")
+    arguments = parser.parse_args()
+
+    grp_feature = arguments.feature
+    depth = arguments.depth
+    group = arguments.group  # 0 for not present | 1 for present | -1 for both
+
+    rules_df = get_rule_coverage.main(arguments.org_df_path,arguments.rules_path,arguments.feature)
 
 
     # selecting rules with precision:1
-    rules_df = rules_df.loc[rules_df['precision'] > 0.950]
+    rules_df = rules_df.loc[rules_df['precision'] > arguments.precision]
 
-    aggregate_df = pd.read_csv("./csl_output/workingDB/colgate_workDB.csv")
+    aggregate_df = pd.read_csv(arguments.org_df_path)
     rules_df.reset_index(drop=True, inplace=True)
     # testing import
     print(rules_df.head)
