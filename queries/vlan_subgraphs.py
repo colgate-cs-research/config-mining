@@ -152,6 +152,18 @@ def vlan_distance(graph):
             diff_ifaces = total_ifaces.difference(common_ifaces)
             print(",".join([str(v1),str(v2),str(len(common_ifaces)),str(len(total_ifaces)-len(common_ifaces))," ".join(diff_ifaces)]))
 
+def keyword_neighbors(graph):
+    keywords = graph_utils.get_nodes(graph, "keyword")
+    neighbor_types = {}
+    for keyword in keywords:
+        neighbors = graph_utils.get_neighbors(keyword, graph)
+        for neighbor in neighbors:
+            neighbor_type = graph_utils.get_type(neighbor, graph)
+            if neighbor_type not in neighbor_types:
+                neighbor_types[neighbor_type] = 0
+            neighbor_types[neighbor_type] += 1
+    print(neighbor_types)
+        
 
 def main():
     # Parse command-line arguments
@@ -162,8 +174,9 @@ def main():
 
     graph = graph_utils.load_graph(arguments.graph_path)
 #    analyze_subgraphs(graph)
-    analyze_vlan_pairs(graph)
+#    analyze_vlan_pairs(graph)
 #    vlan_distance(graph)
+    keyword_neighbors(graph)
     
 
 if __name__ == "__main__":
