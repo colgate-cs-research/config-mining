@@ -81,15 +81,31 @@ def make_graph(config, graph, device_name):
 
         # FIXME: ADD VLAN AND SUBNET NODES
 
-        if "unit" in config["interfaces"][interface]:
+        if "unit" in config["interfaces"][interface] and isinstance(config["interfaces"][interface]["unit"], dict):
             units = config["interfaces"][interface]["unit"]
-            for unit_name, unit_details in units.items():
+            for unit_name in units:
+                unit_details = units[unit_name]
                 # Add VLAN node
+                unit_node_name = "VLAN_" + unit_name
+                graph.add_node(unit_node_name, type="VLAN")
+
                 # Add edge from interface to VLAN
+                graph.add_edge(node_name, unit_node_name) # got rid of type
+
                 # Add subnet node
                 # Add edge from VLAN to subnet
-                pass
-        
+                for key in unit_details:
+                    if ("inet6" in key) and ("address" in unit_details[key]):
+                        address = unit_details[key]["address"]
+                        network_obj = ipaddress.IPv6Interface(address)
+                        graph.add_node(str(network_obj.network), type="subnet", subnet=True)
+                        graph.add_edge(unit_node_name, str(network_obj.network))
+                    elif ("inet" in key) and ("address" in unit_details[key]):
+                        address = unit_details[key]["address"]
+                        network_obj = ipaddress.IPv4Interface(address)
+                        graph.add_node(str(network_obj.network), type="subnet", subnet=True)
+                        graph.add_edge(unit_node_name, str(network_obj.network))
+
         '''if config["interfaces"][interface]["address"] is not None:
             address = config["interfaces"][interface]["address"]
             network_obj = ipaddress.IPv4Interface(address)
