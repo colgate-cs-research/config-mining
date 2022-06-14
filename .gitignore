@@ -1,3 +1,7 @@
 input
 output
 __pycache__
+/TO_REMOVE/
+/libraries/
+tmep_df.csv
+learn_runtime_dataset.txt

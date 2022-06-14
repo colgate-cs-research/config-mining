@@ -2,8 +2,14 @@ import argparse
 import json
 import networkx as nx
 import os
-import pandas
+import pandas as pd
 import ipaddress
+import logging
+import tqdm
+
+# module-wide logging
+logging.basicConfig(level=logging.WARN)
+logging.getLogger(__name__)
 
 def one_hot_encode(node, graph, node_type):
     neighbor_nodes = get_neighbors(node, graph, node_type)
@@ -22,6 +28,7 @@ def col_prefixes(ip, startlen=20, endlen=32):
     #>>> col_prefixes("85.36.219.170", 20, 31)
     ['85.36.208.0/20', '85.36.216.0/21', '85.36.216.0/22', '85.36.218.0/23', '85.36.219.0/24', '85.36.219.128/25', '85.36.219.128/26', '85.36.219.160/27', '85.36.219.160/28', '85.36.219.168/29', '85.36.219.168/30', '85.36.219.170/31']
     """
+    prefixes = {}       # the list of prefixes to be added to the one of the greater lists in the parent function
     if(ip!=None and "/" in ip):
         
         ip_original,subnet =ip.split("/")[0] ,ip.split("/")[1]
@@ -53,13 +60,14 @@ def col_prefixes(ip, startlen=20, endlen=32):
         # We got the starting point, now we need to generate the list of subnets.
         # Step2: WE start the largets subnet;  from the middle of the third octet.
 
-        prefixes = {}       # the list of prefixes to be added to the one of the greater lists in the parent function
+        
         #for two in powers_of_two[4:]:
 
 
         ########################
         #' IPv4Network nodeul Code (start)
-        # #######################'    
+        # #######################:96
+        # '    
 
 
         for prefixlen in range(startlen, endlen):
@@ -85,20 +93,47 @@ def col_prefixes(ip, startlen=20, endlen=32):
 
 def create_dataframe(graph):
     nodes = get_nodes(graph, "interface")
-    for node in nodes:
-        print(node)
+    df_dict={}
+    pbar = tqdm.tqdm(nodes)
+    pbar.set_description("Creating dataframe")
+    for node in pbar:
+        logging.debug(" NODE: {}".format(node))
+
         vlans = one_hot_encode(node, graph, "vlan")
-        print(vlans)
+        logging.debug("     VLANS: {}".format(vlans))
+        if vlans is not None:
+            df_dict[node] = {**vlans}
+
         keywords = one_hot_encode(node, graph, "keyword")
-        print(keywords)
+        logging.debug("     Keyword: {}".format(keywords))
+        if keywords is not None:
+            df_dict[node].update(keywords)#, **keywords}
+            pass
+
+
         subnets = get_neighbors(node, graph, "subnet")
         if (len(subnets) != 1):
-            print("!Interface {} has {} subnets".format(node, len(subnets)))
+            logging.debug("     !Interface {} has {} subnets".format(node, len(subnets)))
             prefixes = col_prefixes(None)
         else:
             addr = list(subnets)[0]
             prefixes = col_prefixes(addr)
-        print(prefixes)
+            df_dict[node].update(prefixes)  
+        logging.debug(" prefixes: {}".format(prefixes))
+
+        # Adding elemnts to record
+    logging.debug(" \ndf_dict[]:\n {}".format(df_dict))
+
+    # Converting df_dict to dataframe
+    records= []
+    for key, value in df_dict.items():
+        value["interface"] = key
+        records.append(value)
+    df = pd.DataFrame.from_records(records)
+    df.set_index('interface')
+    logging.info(" final df->\n{}".format(df.head))
+
+    return df
 
 
         
@@ -142,10 +177,18 @@ def main():
     parser = argparse.ArgumentParser(description='Commandline arguments')
     parser.add_argument('graph_path',type=str, 
             help='Path for a file containing a JSON representation of graph')
+    parser.add_argument('out_path',type=str, 
+        help='Path for a file containing a pandas Dataframe representation of graph')
     arguments=parser.parse_args()
 
     graph = load_graph(arguments.graph_path)
-    create_dataframe(graph)
+    dataframe = create_dataframe(graph)
+    filename = (arguments.graph_path.split("/")[-1] if arguments.graph_path.split("/")[-1] != "" else arguments.graph_path.split("/")[-2])
+    
+    path = arguments.out_path+filename+'.csv'
+    logging.info("  Saving dataframe @:{}".format(path))
+    dataframe.to_csv(path, index=False)
+    
 
 if __name__ == "__main__":
     main()
