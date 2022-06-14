@@ -102,12 +102,12 @@ def all_rules_coverage(df,table_hash_dict,column_hash_dict):
 
     
 
-def get_rules(keyword,depth,group,raw=0):
+def get_rules(path,group,raw=0):
     '''
     for future more complex implementationg of importing rules
     '''
     # reading rule csv file
-    rules_df = pd.read_csv("./csl_output/rules/aggregate_df_colgate_depth_"+str(depth)+"keyword: "+keyword+"_pr.csv",header=0)
+    rules_df = pd.read_csv(path,header=0)
     if raw==1: return rules_df
     # extracting the rules from strings
     # print(rules_df.head)
@@ -116,15 +116,15 @@ def get_rules(keyword,depth,group,raw=0):
     
     return rules_df
 
-def main():
-    keyword = 'staff'
-    depth = 2
+def main(org_df_path,rules_path,feature):
+
+    keyword = feature
     group = '-1'  # 0 for not present | 1 for present | -1 for both
 
 
     # networkwide dataframe
     #aggregate_df = pd.read_csv("./csl_output/workingDB/aggregate_df_workDB.csv")
-    aggregate_df = pd.read_csv("./csl_output/workingDB/colgate_workDB.csv")
+    aggregate_df = pd.read_csv(org_df_path)
     table_hash_dict = table_hash(aggregate_df)
 
     print("Columns:")
@@ -136,7 +136,7 @@ def main():
     
     # loading rule dataframe
     print("Rules:")
-    rules_df = get_rules(keyword,depth,group)
+    rules_df = get_rules(rules_path,group)
     print(rules_df)
     
 
