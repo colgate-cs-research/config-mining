@@ -8,10 +8,10 @@ import logging
 import pprint
 
 TOP_LEVEL_TYPES_JUNIPER = [
-    #"groups", 
-    "interfaces", 
-    "policy-options", 
-    "firewall", 
+    "groups", 
+    #"interfaces", 
+    #"policy-options", 
+    #"firewall", 
 ]
 TOP_LEVEL_TYPES_ARUBA = [
     "Port", 
@@ -136,7 +136,11 @@ class SymbolExtractor:
     def __init__(self, config, symbol_table={}):
         self.config = config
         self.symbol_table = symbol_table
-        self.keykinds = {}
+        self.keykinds = {
+            (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
+            (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
+            (('name', '*'), ('type', 'groups')) : "name",
+        }
 
         # Iterate over top-level types of interest (e.g., ACLs, interfaces, etc.)
         for node in config:
