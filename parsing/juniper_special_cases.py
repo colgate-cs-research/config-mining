@@ -22,11 +22,15 @@ def interfaces_cleanup(interfaces):
     return interfaces
 
 def unit_cleanup(unit):
-    for attrib_name in unit.keys():
+    keys = list(unit.keys())
+    for attrib_name in keys:
         if attrib_name.startswith("description "):
             unit["description"] = attrib_name[len("description "):].strip('"')
             del unit[attrib_name]
-            break
+        elif attrib_name == "family":
+            new_name = attrib_name + " " + unit[attrib_name]
+            unit[new_name] = {}
+            del unit[attrib_name]
 
 def protocols_cleanup(protocols):
     if "mpls" in protocols:
@@ -138,13 +142,21 @@ def policy_options_cleanup(policy_options):
                 print("!Policy-options of type", typ, "not cleaned up")
                 new_value = value
             new_policy_options[typ][name] = new_value
-            
+            policy_options[key] = new_value
         # Policy option is just a name
         else:
-            name = policy_options[key]
-            new_policy_options[typ][name] = [] # changed this to a list
+            if typ == "prefix-list":
+                name = value
+                #new_key = typ + " " + name
+                #new_value = []
+                new_policy_options[typ][name] = [] # changed this to a list
+            else:
+                print("!Policy-options of type", typ, "not cleaned up")
+            #policy_options[new_key] = new_value
+            #new_policy_options[typ][name] = [] # changed this to a list
 
     return new_policy_options
+    #return policy_options
 
 def as_path_cleanup(key):
     parts = key.split(' ')
@@ -220,7 +232,7 @@ def policy_statement_cleanup(dict):
                         subval = (subkey + " " + subval if subval is not None else subkey)
                         new_value["then"].append(subval)
 
-    return new_value
+    return {"term" : new_value}
 
 def firewall_cleanup(firewall):
     if "family inet" in firewall:
@@ -232,7 +244,7 @@ def firewall_cleanup(firewall):
                 new_family_inet[key] = value
             else:
                 print("!Unexpected key in firewall family inet:", key)
-    firewall["family inet"] = new_family_inet
+    firewall["family inet"] = {"filter": new_family_inet}
     return firewall
 
 def firewall_filter_cleanup(filter):
@@ -241,7 +253,11 @@ def firewall_filter_cleanup(filter):
         if key.startswith("term "):
             key = key[len("term "):]
             value = firewall_term_cleanup(value)
-        new_filter[key] = value
+            if "term" not in new_filter:
+                new_filter["term"] = {}
+            new_filter["term"][key] = value
+        else:
+            new_filter[key] = value
     return new_filter
 
 def firewall_term_cleanup(term):
