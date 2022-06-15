@@ -5,15 +5,20 @@ import os
 import pandas as pd
 import ipaddress
 import logging
+import sys
 import tqdm
+
+graphs_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(1, os.path.dirname(graphs_dir))
+import graphs.graph_utils as graph_utils
 
 # module-wide logging
 logging.basicConfig(level=logging.WARN)
 logging.getLogger(__name__)
 
 def one_hot_encode(node, graph, node_type):
-    neighbor_nodes = get_neighbors(node, graph, node_type)
-    all_nodes = get_nodes(graph, node_type)
+    neighbor_nodes = graph_utils.get_neighbors(node, graph, node_type)
+    all_nodes = graph_utils.get_nodes(graph, node_type)
     encoding = {}
     for node in all_nodes:
         if node in neighbor_nodes:
@@ -92,10 +97,10 @@ def col_prefixes(ip, startlen=20, endlen=32):
             prefixes["subnet_/"+str(prefixlen)] = "n"
 
 def create_dataframe(graph):
-    nodes = get_nodes(graph, "interface")
+    nodes = graph_utils.get_nodes(graph, "interface")
     df_dict={}
     pbar = tqdm.tqdm(nodes)
-    pbar.set_description("Creating dataframe")
+    pbar.set_description("Creating dataframe dictionary")
     for node in pbar:
         logging.debug(" NODE: {}".format(node))
 
@@ -111,7 +116,7 @@ def create_dataframe(graph):
             pass
 
 
-        subnets = get_neighbors(node, graph, "subnet")
+        subnets = graph_utils.get_neighbors(node, graph, "subnet")
         if (len(subnets) != 1):
             logging.debug("     !Interface {} has {} subnets".format(node, len(subnets)))
             prefixes = col_prefixes(None)
@@ -125,6 +130,7 @@ def create_dataframe(graph):
     logging.debug(" \ndf_dict[]:\n {}".format(df_dict))
 
     # Converting df_dict to dataframe
+    print("Converting dictionary to dataframe...")
     records= []
     for key, value in df_dict.items():
         value["interface"] = key
@@ -134,37 +140,6 @@ def create_dataframe(graph):
     logging.info(" final df->\n{}".format(df.head))
 
     return df
-
-
-        
-
-def get_nodes(graph, target_type=None):
-    """Returns list of all nodes of target_type in graph"""
-    # Compute
-    types_cache = nx.get_node_attributes(graph, "type")
-    node_list = []
-    for node in graph:
-        if target_type is None or types_cache[node] == target_type:
-            node_list.append(node)
-
-    # return result
-    return node_list
-
-def get_neighbors(node, graph, target_type=None):
-    """Get a set of node's neighbors of target_type"""
-    # Compute
-    types_cache = nx.get_node_attributes(graph, "type")
-    all_neighbors = nx.neighbors(graph, node)
-    if target_type is None:
-        neighbor_list = set(all_neighbors)
-    else:
-        neighbor_list = set()
-        for neighbor in all_neighbors:
-            if types_cache[neighbor] == target_type:
-                neighbor_list.add(neighbor)
-
-    # Cache and return result
-    return neighbor_list
 
 def load_graph(graph_path):
     """Load a graph from a JSON representation"""
