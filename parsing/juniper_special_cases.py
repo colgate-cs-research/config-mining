@@ -142,13 +142,21 @@ def policy_options_cleanup(policy_options):
                 print("!Policy-options of type", typ, "not cleaned up")
                 new_value = value
             new_policy_options[typ][name] = new_value
-            
+            policy_options[key] = new_value
         # Policy option is just a name
         else:
-            name = policy_options[key]
-            new_policy_options[typ][name] = [] # changed this to a list
+            if typ == "prefix-list":
+                name = value
+                #new_key = typ + " " + name
+                #new_value = []
+                new_policy_options[typ][name] = [] # changed this to a list
+            else:
+                print("!Policy-options of type", typ, "not cleaned up")
+            #policy_options[new_key] = new_value
+            #new_policy_options[typ][name] = [] # changed this to a list
 
     return new_policy_options
+    #return policy_options
 
 def as_path_cleanup(key):
     parts = key.split(' ')
