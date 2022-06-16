@@ -1,10 +1,15 @@
 import argparse
 import json
+from attr import has
 import networkx as nx
 import os
 import pandas as pd
 import ipaddress
 import logging
+import numpy as np
+# module-wide logging
+logging.basicConfig(filename="./graph_to_db.log",level=logging.DEBUG)
+
 import sys
 import tqdm
 
@@ -12,8 +17,8 @@ graphs_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.dirname(graphs_dir))
 import graphs.graph_utils as graph_utils
 
-# module-wide logging
-logging.basicConfig(level=logging.WARN)
+
+
 logging.getLogger(__name__)
 
 def one_hot_encode(node, graph, node_type):
@@ -96,7 +101,7 @@ def col_prefixes(ip, startlen=20, endlen=32):
         for prefixlen in range(startlen, endlen):
             prefixes["subnet_/"+str(prefixlen)] = "n"
 
-def create_dataframe(graph):
+def create_dataframe(graph,has_type_toggle=False):
     nodes = graph_utils.get_nodes(graph, "interface")
     df_dict={}
     pbar = tqdm.tqdm(nodes)
@@ -106,13 +111,24 @@ def create_dataframe(graph):
 
         vlans = one_hot_encode(node, graph, "vlan")
         logging.debug("     VLANS: {}".format(vlans))
-        if vlans is not None:
+        df_dict[node] = {**vlans}
+        if len(np.unique(vlans.values())) >1 and has_type_toggle:
+            temp = {"has_vlans":"1"}
+            df_dict[node].update(temp) 
+        elif has_type_toggle:
             df_dict[node] = {**vlans}
+            logging.debug("\t\tNo VLANs found")
+            df_dict[node].update({"has_vlans":0}) if has_type_toggle else None 
+
+
 
         keywords = one_hot_encode(node, graph, "keyword")
         logging.debug("     Keyword: {}".format(keywords))
-        if keywords is not None:
+        if len(np.unique(keywords.values())) >1 and has_type_toggle:
             df_dict[node].update(keywords)#, **keywords}
+            df_dict[node].update({"has_keywords":"1"}) if has_type_toggle else None
+        elif has_type_toggle:
+            df_dict[node].update({"has_keywords":"0"}) if has_type_toggle else None 
             pass
 
 
@@ -120,10 +136,12 @@ def create_dataframe(graph):
         if (len(subnets) != 1):
             logging.debug("     !Interface {} has {} subnets".format(node, len(subnets)))
             prefixes = col_prefixes(None)
+            df_dict[node].update({"has_subnets":"0"}) if has_type_toggle else None  
         else:
             addr = list(subnets)[0]
             prefixes = col_prefixes(addr)
-            df_dict[node].update(prefixes)  
+            df_dict[node].update(prefixes)
+            df_dict[node].update({"has_subnets":"1"}) if has_type_toggle else None  
         logging.debug(" prefixes: {}".format(prefixes))
 
         # Adding elemnts to record

@@ -31,6 +31,26 @@ def unit_cleanup(unit):
             new_name = attrib_name + " " + unit[attrib_name]
             unit[new_name] = {}
             del unit[attrib_name]
+        elif attrib_name.startswith("family "):
+            if isinstance(unit[attrib_name], dict):
+                unit[attrib_name] = family_cleanup(unit[attrib_name])
+
+
+def family_cleanup(family):
+    keys = list(family.keys())
+    addresses = {}
+    for attrib_name in keys:
+        attrib_value = family[attrib_name]
+        if attrib_name == "address":
+            addresses[attrib_value] = {}
+        elif attrib_name.startswith("address "):
+            addr = attrib_name.split(" ")[1]
+            addresses[addr] = attrib_value
+            del family[attrib_name]
+    if len(addresses) > 0:
+        family["address"] = addresses
+    return family
+            
 
 def protocols_cleanup(protocols):
     if "mpls" in protocols:
@@ -142,13 +162,21 @@ def policy_options_cleanup(policy_options):
                 print("!Policy-options of type", typ, "not cleaned up")
                 new_value = value
             new_policy_options[typ][name] = new_value
-            
+            policy_options[key] = new_value
         # Policy option is just a name
         else:
-            name = policy_options[key]
-            new_policy_options[typ][name] = [] # changed this to a list
+            if typ == "prefix-list":
+                name = value
+                #new_key = typ + " " + name
+                #new_value = []
+                new_policy_options[typ][name] = [] # changed this to a list
+            else:
+                print("!Policy-options of type", typ, "not cleaned up")
+            #policy_options[new_key] = new_value
+            #new_policy_options[typ][name] = [] # changed this to a list
 
     return new_policy_options
+    #return policy_options
 
 def as_path_cleanup(key):
     parts = key.split(' ')
