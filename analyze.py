@@ -79,7 +79,12 @@ def process_configs(function, in_path, out_path, extra=None, generate_global=Fal
                 result = future.result()
                 if (result is not None):
                     print(in_filepath)
-                    print(result)
+                    iface_dict, acl_dict = result
+                    print("Iface keywords: ")
+                    print(iface_dict)
+                    print("ACL keywords: ")
+                    print(acl_dict)
+                    #print(result)
                     print()
             except Exception as ex:
                 print(in_filepath)

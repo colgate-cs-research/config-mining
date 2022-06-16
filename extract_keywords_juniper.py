@@ -72,6 +72,7 @@ def make_dict(word):
 def analyze_configuration(file, outf, extra=None):
     # print("Current working FILE: " + file)
     # Load config
+    name = file[:-5]
     with open(file, "r") as infile:
         config = json.load(infile)
     iface_dict = {}
@@ -83,33 +84,25 @@ def analyze_configuration(file, outf, extra=None):
     for iface in config["interfaces"]:  # removed .values()
         iName = iface  #in juniper, the keys are the names of the ifaces
         if ("description" in config["interfaces"][iface]):
-            keywords = get_keywords(config["interfaces"][iface]["description"], " |")
+            desc = config["interfaces"][iface]["description"]
+            keywords = get_keywords(desc, " ")
             for word in keywords:
                 if word not in keyword_dict:
                     keyword_dict[word] = []
                 keyword_dict[word].append(iName)
-            #add_keywords(iface_dict, iName, keywords)
+
         if "unit" in config["interfaces"][iface]:
             units = config["interfaces"][iface]["unit"]
-            print(type(units))
-            '''for unit in units:
-                if ((isinstance(units[unit], dict)) and ("description" in units[unit])):
-                    keywords = get_keywords(units[unit]["description"], " |")
-                    for word in keywords:
-                        if word not in keyword_dict:
-                            keyword_dict[word] = []
-                        keyword_dict[word].append(iName)'''
-
-    '''# Iterate over VLANs
-    for vlan in config["vlans"].values():
-        iName = "Vlan%d" % vlan["num"]
-        if vlan["name"] is not None:
-            keywords = get_keywords(vlan["name"], delims=[" ", "-", "_"])
-            for word in keywords:
-                if word not in keyword_dict:
-                    keyword_dict[word] = []
-                keyword_dict[word].append(iName)
-            #add_keywords(iface_dict, iName, keywords)'''
+            if isinstance(units, str):
+                pass
+            else:
+                for unit in units:
+                    if ((isinstance(units[unit], dict)) and ("description" in units[unit])):
+                        keywords = get_keywords(units[unit]["description"], " |")
+                        for word in keywords:
+                            if word not in keyword_dict:
+                                keyword_dict[word] = []
+                            keyword_dict[word].append("vlan_" + unit)
 
     # extract keywords that are variations of a common term (hardcoded in list common_starts on line 17-18)
     common_keyword_dict = {}
@@ -137,22 +130,25 @@ def analyze_configuration(file, outf, extra=None):
             add_keywords(iface_dict, iName, [word])
 
     # Iterate over ACL names
-    '''for name in config["acls"]:
-        add_keywords(acl_dict, name, get_keywords(name, delims=[" ", "-"]))
-        # Iterate over remarks
-        for remark in config["acls"][name]["remarks"]:
-            add_keywords(acl_dict, name, get_keywords(remark))'''
+    if "firewall" in config:
+        if "family inet" in config["firewall"]:
+            if "filter" in config["firewall"]["family inet"]:
+                for acl in config["firewall"]["family inet"]["filter"]:
+                    acl_attributes = config["firewall"]["family inet"]["filter"][acl]
+                    if ("term" in acl_attributes) and (isinstance(acl_attributes["term"], dict)):
+                        for term_name in acl_attributes["term"].keys():
+                            add_keywords(acl_dict, acl, get_keywords(term_name, delims=[" ", "-"]))
 
     aggregate = {
         "interfaces" : iface_dict,
-        #"acls" : acl_dict,
-        #"name" : config["name"]
+        "acls" : acl_dict,
+        "name" : name
     }
 
     with open(outf, 'w') as outfile:
         json.dump(aggregate, outfile, indent = 4)
 
-    return iface_dict #, acl_dict
+    return iface_dict , acl_dict
 
 
 if __name__ == "__main__":
