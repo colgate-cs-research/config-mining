@@ -7,7 +7,6 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 import re
 import analyze
-import numpy
 import time
 
 abbreviations = {
@@ -20,7 +19,9 @@ abbreviations = {
 common_starts = ["student", "ems", "bg", "voip"]
 
 def main():
+
     start = time.time()
+
     #parsing command-line arguments
     parser = argparse.ArgumentParser(description='Extract keywords for interfaces and ACLs')
     parser.add_argument('config_path', help='Path for a file (or directory) containing a JSON representation of configuration(s)')
@@ -31,7 +32,7 @@ def main():
 
     end = time.time()
     print()
-    print("Time taken: " + str(end-start))
+    print("Time taken: " + str(end - start))
     print()
 
 """Get keywords from a phrase"""
@@ -79,17 +80,27 @@ def analyze_configuration(file, outf, extra=None):
     # dictionary -  keywords are keys and values are lists of ifaces and vlans the keyword appears in
     keyword_dict = {}
     # Iterate over interfaces
-    for iface in config["interfaces"].values():
-        iName = iface["name"]
-        if (iface["description"] is not None):
-            keywords = get_keywords(iface["description"])
+    for iface in config["interfaces"]:  # removed .values()
+        iName = iface  #in juniper, the keys are the names of the ifaces
+        if ("description" in config["interfaces"][iface]):
+            keywords = get_keywords(config["interfaces"][iface]["description"], " |")
             for word in keywords:
                 if word not in keyword_dict:
                     keyword_dict[word] = []
                 keyword_dict[word].append(iName)
             #add_keywords(iface_dict, iName, keywords)
+        if "unit" in config["interfaces"][iface]:
+            units = config["interfaces"][iface]["unit"]
+            print(type(units))
+            '''for unit in units:
+                if ((isinstance(units[unit], dict)) and ("description" in units[unit])):
+                    keywords = get_keywords(units[unit]["description"], " |")
+                    for word in keywords:
+                        if word not in keyword_dict:
+                            keyword_dict[word] = []
+                        keyword_dict[word].append(iName)'''
 
-    # Iterate over VLANs
+    '''# Iterate over VLANs
     for vlan in config["vlans"].values():
         iName = "Vlan%d" % vlan["num"]
         if vlan["name"] is not None:
@@ -98,34 +109,12 @@ def analyze_configuration(file, outf, extra=None):
                 if word not in keyword_dict:
                     keyword_dict[word] = []
                 keyword_dict[word].append(iName)
-            #add_keywords(iface_dict, iName, keywords)
-
-    similarity_dict = {}
-    for word in keyword_dict:
-        similarity_dict[word] = []
-    for i in range(len(keyword_dict)):
-        word1 = list(keyword_dict.keys())[i]
-        list1 = list(set(word1))
-        for j in range(i,len(keyword_dict)):
-            similarity = 0
-            word2 = list(keyword_dict.keys())[j]
-            list2 = list(set(word2))
-            for el in list1:
-                if el in list2:
-                    similarity += 1
-                if similarity > 1:
-                    similarity_dict[word1].append(word2)
-                    similarity_dict[word2].append(word1)
-
-    for key in similarity_dict:
-        print("Key: " + key)
-        print("List of similar words: " + str(similarity_dict[key]))
+            #add_keywords(iface_dict, iName, keywords)'''
 
     # extract keywords that are variations of a common term (hardcoded in list common_starts on line 17-18)
     common_keyword_dict = {}
     for word2 in common_starts:
         common_keyword_dict[word2] = []
-
     
     keys_to_remove = []
     for word in keyword_dict:
@@ -148,22 +137,22 @@ def analyze_configuration(file, outf, extra=None):
             add_keywords(iface_dict, iName, [word])
 
     # Iterate over ACL names
-    for name in config["acls"]:
+    '''for name in config["acls"]:
         add_keywords(acl_dict, name, get_keywords(name, delims=[" ", "-"]))
         # Iterate over remarks
         for remark in config["acls"][name]["remarks"]:
-            add_keywords(acl_dict, name, get_keywords(remark))
+            add_keywords(acl_dict, name, get_keywords(remark))'''
 
     aggregate = {
         "interfaces" : iface_dict,
-        "acls" : acl_dict,
-        "name" : config["name"]
+        #"acls" : acl_dict,
+        #"name" : config["name"]
     }
 
     with open(outf, 'w') as outfile:
         json.dump(aggregate, outfile, indent = 4)
 
-    return iface_dict, acl_dict
+    return iface_dict #, acl_dict
 
 
 if __name__ == "__main__":
