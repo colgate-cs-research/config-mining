@@ -19,6 +19,7 @@ def main():
 
     analyze.process_configs(analyze_configuration, [arguments.config_path, arguments.keyword_path], arguments.out_path, (arguments.images, arguments.prune), arguments.aggregate)
 
+
 def analyze_configuration(in_paths, out_path=None, extras=(False,False)):
     generate_image, prune = extras
     print("Current working files: %s" % (in_paths))
@@ -27,8 +28,9 @@ def analyze_configuration(in_paths, out_path=None, extras=(False,False)):
         in_paths = [in_paths]
     for path in in_paths:
         config_path, keyword_path = path
+        keywords  = load_config(keyword_path)
         config = load_config(config_path)
-        make_graph(config, graph, os.path.basename(config_path).split(".")[0])
+        make_graph(config, keywords, graph, os.path.basename(config_path).split(".")[0])
         #add_keywords(keyword_path, graph)
         #if (prune):
         #    prune_degree_one(graph)
@@ -55,9 +57,23 @@ def load_config(file):
         config = json.load(infile)
     return config
 
+# return true is IP address is in the right format
+# ipv is either 4 or 6
+def check_addr(address, ipv):
+    if ipv == 4:
+        for ch in address:
+            if (ch != ".") and (ch != "/") and (not ch.isdigit()):
+                return False
+    else:
+        for ch in address:
+            if (ch != ":") and (ch != "/") and (not ch.isdigit()) and (not ch.isalpha()):
+                return False
+    return True 
+
+
 # constructs graph based on argument config file
 # Nodetypes: acl, vlan, interface, subnet (call add_keywords to add keyword nodetype)
-def make_graph(config, graph, device_name):
+def make_graph(config, keywords, graph, device_name):
     '''for acl in config["acls"]:
         device_acl = device_name +  "_" + acl
         graph.add_node(device_acl, type= "acl")
@@ -96,15 +112,36 @@ def make_graph(config, graph, device_name):
                 # Add edge from VLAN to subnet
                 for key in unit_details:
                     if ("inet6" in key) and ("address" in unit_details[key]):
-                        address = unit_details[key]["address"]
-                        network_obj = ipaddress.IPv6Interface(address)
-                        graph.add_node(str(network_obj.network), type="subnet", subnet=True)
-                        graph.add_edge(unit_node_name, str(network_obj.network))
+                        address = list(unit_details[key]["address"].keys())[0]
+                        if check_addr(address, 6):
+                            network_obj = ipaddress.IPv6Interface(address)
+                            graph.add_node(str(network_obj.network), type="subnet", subnet=True)
+                            graph.add_edge(unit_node_name, str(network_obj.network))
+                        else:
+                            print("Weird IPv6 address: " + str(address))
                     elif ("inet" in key) and ("address" in unit_details[key]):
-                        address = unit_details[key]["address"]
-                        network_obj = ipaddress.IPv4Interface(address)
-                        graph.add_node(str(network_obj.network), type="subnet", subnet=True)
-                        graph.add_edge(unit_node_name, str(network_obj.network))
+                        address = list(unit_details[key]["address"].keys())[0]
+                        if check_addr(address, 4):
+                            network_obj = ipaddress.IPv4Interface(address)
+                            graph.add_node(str(network_obj.network), type="subnet", subnet=True)
+                            graph.add_edge(unit_node_name, str(network_obj.network))
+                        else:
+                            print("Weird IPv4 address: " + str(address))
+
+    print(keywords)
+    # Add keyword nodes
+    for iface in keywords["interfaces"]:
+        for keyword in keywords["interfaces"][iface]:
+            graph.add_node(keyword, type="Keyword")
+            # Add edge from interface to keyword
+            graph.add_edge(iface, keyword) # got rid of type
+
+    for acl in keywords["acls"]:
+        graph.add_node(acl, type="ACL")
+        for keyword in keywords["acls"][acl]:
+            graph.add_node(keyword, type="Keyword")
+            # Add edge from interface to keyword
+            graph.add_edge(acl, keyword) # got rid of type
 
         '''if config["interfaces"][interface]["address"] is not None:
             address = config["interfaces"][interface]["address"]
