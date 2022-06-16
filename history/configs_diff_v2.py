@@ -1,4 +1,3 @@
-
 import json
 import difflib
 from difflib import *
@@ -111,11 +110,11 @@ def compare (prior, later):
   result_dict = find_diff_between(prior, later)
 
   # Print Dictionary
-  for (key, value) in result_dict.items():
+  '''for (key, value) in result_dict.items():
     print(key)
     for i in range (len(value)):
       print(value[i])
-    print("")
+    print("")'''
 
   return result_dict
 
