@@ -7,6 +7,9 @@ Original file is located at
     https://colab.research.google.com/drive/1qboZnyCj0-w1NWH83Ov2m1DBy0qybti6
 """
 
+import argparse
+import json
+import logging
 import pandas as pd
 
 def printout (matrix):
@@ -25,7 +28,7 @@ def printout (matrix):
     print(stanza_type[i], matrix[i])
   print("")
 
-def XOR_matrix (matrix, output_matrix):
+def generate_XOR_matrix (matrix, output_matrix):
   for i in range (len(matrix)):
     line = matrix[i]
     for j in range (len(line) - 1):
@@ -36,7 +39,7 @@ def XOR_matrix (matrix, output_matrix):
   
   return output_matrix
 
-def AND_matrix (matrix, output_matrix):
+def generate_AND_matrix (matrix, output_matrix):
   for i in range (len(matrix)):
     line = matrix[i]
     for j in range (len(line) - 1):
@@ -53,38 +56,56 @@ def spearman_matrix(matrix, stanza_type):
   output_matrix = matrix_updated.corr (method = "spearman")
   return output_matrix
 
-matrix = [[0, 1, 0, 1, 0, 1, 0, 0, 1, 1],
-          [0, 1, 0, 1, 0, 1, 0, 0, 1, 1],
-          [1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-          [0, 1, 0, 1, 0, 0, 0, 0, 1, 0]]
+def main():
+  # Parse command-line arguments
+  parser = argparse.ArgumentParser(description='Generate matrix of change types')
+  parser.add_argument('matrix_file',type=str,
+                      help='Path for a JSON file containing a matrix')
+  parser.add_argument('-v', '--verbose', action='count', help="Display verbose output", default=0)
+  arguments=parser.parse_args()
 
-output_matrix = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+  # Configure logging
+  if (arguments.verbose == 0):
+      logging.basicConfig(level=logging.WARNING)
+  elif (arguments.verbose == 1):
+      logging.basicConfig(level=logging.INFO)
+  else:
+      logging.basicConfig(level=logging.DEBUG)
+  logging.getLogger(__name__)
 
-stanza_type = ["ACL",
-               "Interface",
-               "PKI_TA_Profile",
-               "Port",
-               "SNMP_Trap",
-               "System",
-               "User",
-               "User_Group",
-               "VLAN",
-               "VRF"]
+  with open(arguments.matrix_file, 'r') as infile:
+    input_matrix = json.load(infile)
+  
+  output_matrix = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-# spearman_matrix = spearman_matrix (matrix, stanza_type)
-# print(spearman_matrix)
+  stanza_type = ["ACL",
+                "Interface",
+                "PKI_TA_Profile",
+                "Port",
+                "SNMP_Trap",
+                "System",
+                "User",
+                "User_Group",
+                "VLAN",
+                "VRF"]
 
-# XOR_matrix = XOR_matrix (matrix, output_matrix)
-# printout(XOR_matrix)
+  # spearman_matrix = spearman_matrix (matrix, stanza_type)
+  # print(spearman_matrix)
 
-AND_matrix = AND_matrix (matrix, output_matrix)
-printout(AND_matrix)
+  # XOR_matrix = XOR_matrix (matrix, output_matrix)
+  # printout(XOR_matrix)
+
+  AND_matrix = generate_AND_matrix (input_matrix, output_matrix)
+  printout(AND_matrix)
+
+if __name__ == "__main__":
+  main()
