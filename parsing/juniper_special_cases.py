@@ -31,6 +31,26 @@ def unit_cleanup(unit):
             new_name = attrib_name + " " + unit[attrib_name]
             unit[new_name] = {}
             del unit[attrib_name]
+        elif attrib_name.startswith("family "):
+            if isinstance(unit[attrib_name], dict):
+                unit[attrib_name] = family_cleanup(unit[attrib_name])
+
+
+def family_cleanup(family):
+    keys = list(family.keys())
+    addresses = {}
+    for attrib_name in keys:
+        attrib_value = family[attrib_name]
+        if attrib_name == "address":
+            addresses[attrib_value] = {}
+        elif attrib_name.startswith("address "):
+            addr = attrib_name.split(" ")[1]
+            addresses[addr] = attrib_value
+            del family[attrib_name]
+    if len(addresses) > 0:
+        family["address"] = addresses
+    return family
+            
 
 def protocols_cleanup(protocols):
     if "mpls" in protocols:
