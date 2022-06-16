@@ -19,6 +19,9 @@ def interfaces_cleanup(interfaces):
                     iface["unit"] = {}
                 iface["unit"][unit_name] = unit
                 del iface[attrib_name]
+            elif attrib_name == "unit":
+                unit_num = iface[attrib_name]
+                iface[attrib_name] = {unit_num: {}}
     return interfaces
 
 def unit_cleanup(unit):

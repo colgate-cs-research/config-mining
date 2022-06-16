@@ -84,7 +84,7 @@ def main():
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Commandline arguments')
     parser.add_argument('configs_path', help='Path to directory of configurations')
-    parser.add_argument('output_dir', help='Path to directory in which to store symbols')
+    parser.add_argument('output_dir', help='Path to directory in which to store symbol files')
     parser.add_argument('-v', '--verbose', action='count', help="Display verbose output", default=0)
     arguments = parser.parse_args()
 
@@ -115,12 +115,15 @@ def main():
 
     extractor = SymbolExtractor(all_configs, symbol_table)
 
-    inverted_symbol_table = summarize_types(symbol_table)
+    inverted_table = summarize_types(symbol_table)
 
     with open(os.path.join(arguments.output_dir, "symbols.json"), 'w') as symbols_file:
         json.dump(symbol_table, symbols_file, indent=4, sort_keys=True)
-    with open(os.path.join(arguments.output_dir, "symbols_inverted.json"), 'w') as symbols_file:
-        json.dump(inverted_symbol_table, symbols_file, indent=4, sort_keys=True)
+    with open(os.path.join(arguments.output_dir, "inverted.json"), 'w') as inverted_file:
+        json.dump(inverted_table, inverted_file, indent=4, sort_keys=True)
+    pickle_keykinds = {str(k) : v for k,v in extractor.keykinds.items()}
+    with open(os.path.join(arguments.output_dir, "keykinds.json"), 'w') as keykinds_file:
+        json.dump(pickle_keykinds, keykinds_file, indent=4, sort_keys=True)
 
 def summarize_types(symbol_table):
     inverted_symbol_table = {}
