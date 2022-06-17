@@ -17,10 +17,26 @@ def is_alias(s1, s2):
         bigger = s1
     if smaller in bigger:
         return True
+    # first pass to see if they have similar letters
+    if similar_letters(s1,s2):
+        pass
     # FIXME
-    # check is they are similar
+    # check if they are similar
     # or if they contain a similar sequence of characters
     return False 
+
+# returns true is two strings have similar letters
+# helper function for is_alias()
+def similar_letters(s1, s2):
+    list1 = list(set(s1))
+    list2 = list(set(s2))
+    similarity = 0
+    for el in list1:
+        if el in list2:
+            similarity += 1
+    if (similarity > 1): # might need to set threshold here instead of hardcoding the value
+        return True
+    return False
 
 
 def main():
