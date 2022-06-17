@@ -31,7 +31,7 @@ def analyze_configuration(in_paths, out_path=None, extras=(False,False)):
         keywords  = load_config(keyword_path)
         config = load_config(config_path)
         make_graph(config, keywords, graph, os.path.basename(config_path).split(".")[0])
-        #add_keywords(keyword_path, graph)
+        add_keywords(keyword_path, graph)
         #if (prune):
         #    prune_degree_one(graph)
         #add_supernets(graph, prefix_length)
@@ -128,20 +128,7 @@ def make_graph(config, keywords, graph, device_name):
                         else:
                             print("Weird IPv4 address: " + str(address))
 
-    print(keywords)
-    # Add keyword nodes
-    for iface in keywords["interfaces"]:
-        for keyword in keywords["interfaces"][iface]:
-            graph.add_node(keyword, type="Keyword")
-            # Add edge from interface to keyword
-            graph.add_edge(iface, keyword) # got rid of type
-
-    for acl in keywords["acls"]:
-        graph.add_node(acl, type="ACL")
-        for keyword in keywords["acls"][acl]:
-            graph.add_node(keyword, type="Keyword")
-            # Add edge from interface to keyword
-            graph.add_edge(acl, keyword) # got rid of type
+    
 
         '''if config["interfaces"][interface]["address"] is not None:
             address = config["interfaces"][interface]["address"]

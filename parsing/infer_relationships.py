@@ -51,7 +51,7 @@ def main():
     keykinds = {ast.literal_eval(k) : v for k, v in pickle_keykinds.items()}
     
     # Load configurations
-    all_configs = {}
+    all_configs = {} # keys are device names and values are config jsons
     for filename in sorted(os.listdir(arguments.configs_path)):
         node = filename.replace(".json", "")
         filepath = os.path.join(arguments.configs_path, filename)
@@ -126,6 +126,8 @@ class RelationshipExtractor:
             if symbol != None:
                 if len(symbols) >= 1:
                     logging.info("{} --- {}".format(symbols[-1], symbol))
+            #else:
+                # log symbols that were not found
             if isinstance(symbol_value, dict):
                 self.parse_dict(symbol_value, path + [('name', symbol_name)], symbols + [symbol])
 

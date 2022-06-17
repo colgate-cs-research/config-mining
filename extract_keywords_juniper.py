@@ -8,6 +8,7 @@ from nltk.corpus import stopwords
 import re
 import analyze
 import time
+import os
 
 abbreviations = {
     "bldg" : "building",
@@ -28,6 +29,7 @@ def main():
     parser.add_argument('out_path', help='Name of file (or directory) to write JSON file(s) containing keywords')
 
     arguments = parser.parse_args()
+    os.makedirs(arguments.out_path, exist_ok=True)
     analyze.process_configs(analyze_configuration, arguments.config_path, arguments.out_path)
 
     end = time.time()
