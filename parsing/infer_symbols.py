@@ -9,9 +9,9 @@ import pprint
 
 TOP_LEVEL_TYPES_JUNIPER = [
     #"groups", 
-    #"interfaces", 
+    "interfaces", 
     "policy-options", 
-    #"firewall", 
+    "firewall", 
 ]
 TOP_LEVEL_TYPES_ARUBA = [
     "Port", 
@@ -199,7 +199,9 @@ class SymbolExtractor:
         if (kind == "name"):
             self.extract_symbols_list_name(lst, path)
         elif (kind == "type"):
-            logging.warning("!Not recursing on list of types: {}".format(path))
+            logging.debug("!Not recursing on list of types: {}".format(path))
+        elif (kind == "mixed"):
+            logging.warning("!Not recursing on list of mixed: {}".format(path))
 
     def get_path_signature(self, path):
         signature = []
@@ -284,9 +286,13 @@ class SymbolExtractor:
     def infer_keykind(self, instances):
         num_inst = len(instances)
         if (num_inst == 1):
-            logging.debug("\tNeed to examine subdictionaries")   
-            return self.infer_dict_keykind(instances[0])
-
+            if isinstance(instances[0], dict):
+                logging.debug("\tNeed to examine subdictionaries")   
+                return self.infer_dict_keykind(instances[0])
+            elif isinstance(instances[0], list):
+                logging.error("!Cannot infer key kind for a single list") 
+                return "unknown"  
+ 
         unique_keys = set()
         num_keys = 0
         for inst in instances:
@@ -302,9 +308,17 @@ class SymbolExtractor:
         logging.debug("\tTotal sub keys {}".format(num_keys))
         if (num_keys == 0):
             logging.error("Cannot infer key kind!")
-            return "type"
+            return "unknown"
         if (num_unique_keys / num_keys > 0.2) or num_unique_keys > 100:
-            return "name"
+            num_unique_keys_with_spaces = 0
+            for key in unique_keys:
+                if " " in key:
+                   num_unique_keys_with_spaces += 1 
+            logging.debug("\tUnique sub keys with spaces {}".format(num_unique_keys_with_spaces)) 
+            if (num_unique_keys_with_spaces / num_unique_keys > 0.9):
+                return "mixed"
+            else:
+                return "name"
         else:
             return "type"
     
@@ -335,7 +349,12 @@ class SymbolExtractor:
                 #    self.add_to_symbol_table(str(subvalue), symbol_type)
 
     def extract_symbols_list_name(self, lst, path):
-        logging.warning("!Not extracting names from list {}...".format(path))
+        # Treat values as symbol names
+        symbol_type = None
+        if path[-1][0] == "type":
+            symbol_type = path[-1][1]
+        for symbol_name in lst:
+            self.add_to_symbol_table(symbol_name, symbol_type)
 
     def add_to_symbol_table(self, symbol_name, symbol_type):
         # Put type in canonical form
