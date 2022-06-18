@@ -4,6 +4,8 @@ import argparse
 import os
 import json
 
+from pydantic import NoneBytes
+
 def interfaces_cleanup(interfaces):
     for iface in interfaces.values():
         attrib_names = list(iface.keys())
@@ -202,6 +204,7 @@ def prefix_list_cleanup(value):
 # hard codes for juniper specific syntax
 def policy_statement_cleanup(dict):
     new_value = {}
+    then = None
     for key in dict:
         #print("Key1: " + key)
         # 1. "term"
@@ -245,17 +248,20 @@ def policy_statement_cleanup(dict):
                     new_value[new_key][key2] = lst2
         # 5. term "then"
         if "then" in key:
-            new_value["then"] = [key[5:]]
+            then = [key[5:]]
             if dict[key] != None:
                 if isinstance(dict[key], str):
-                    new_value["then"] = [key[5:] + dict[key]]
+                    then = [key[5:] + dict[key]]
                 else:
-                    new_value["then"] = []
+                    then = []
                     for subkey, subval in dict[key].items():
                         subval = (subkey + " " + subval if subval is not None else subkey)
-                        new_value["then"].append(subval)
+                        then.append(subval)
 
-    return {"term" : new_value}
+    new_dict = {"term" : new_value}
+    if then != None:
+        new_dict["then"] = then
+    return new_dict
 
 def firewall_cleanup(firewall):
     if "family inet" in firewall:
