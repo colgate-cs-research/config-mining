@@ -9,9 +9,9 @@ import pprint
 
 TOP_LEVEL_TYPES_JUNIPER = [
     #"groups", 
-    "interfaces", 
+    #"interfaces", 
     "policy-options", 
-    "firewall", 
+    #"firewall", 
 ]
 TOP_LEVEL_TYPES_ARUBA = [
     "Port", 
@@ -160,26 +160,46 @@ class SymbolExtractor:
         logging.info("\t{}".format(pprint.pformat(self.keykinds)))
 
     def parse_dict(self, dct, path):
-        logging.debug("Processing {}...".format(path))
+        logging.debug("Processing dict {}...".format(path))
         path_signature = self.get_path_signature(path)
         if path_signature in self.keykinds:
             kind = self.keykinds[path_signature]
         else:
             logging.debug("Need to infer keykind for {}".format(path_signature))
-            dictionaries = self.get_dictionaries(self.config, path_signature)
+            dictionaries = self.get_instances(self.config, path_signature)
 
             logging.debug("Dictionaries:")
             for d in dictionaries:
                 logging.debug("\t{}".format(d.keys()))
 
-            #kind = self.infer_dict_keykind(dct)
-            kind = self.infer_dictionaries_keykind(dictionaries)
+            kind = self.infer_keykind(dictionaries)
             self.keykinds[path_signature] = kind
         logging.debug("Dict keys are {}s".format(kind))
         if (kind == "name"):
             self.extract_symbols_key_name(dct, path)
         elif (kind == "type"):
             self.extract_symbols_key_type(dct, path)
+
+    def parse_list(self, lst, path):
+        logging.debug("Processing list {}...".format(path))
+        path_signature = self.get_path_signature(path)
+        if path_signature in self.keykinds:
+            kind = self.keykinds[path_signature]
+        else:
+            logging.debug("Need to infer keykind for {}".format(path_signature))
+            lists = self.get_instances(self.config, path_signature)
+
+            logging.debug("Lists:")
+            for l in lists:
+                logging.debug("\t{}".format(l))
+
+            kind = self.infer_keykind(lists)
+            self.keykinds[path_signature] = kind
+        logging.debug("List values are {}s".format(kind))
+        if (kind == "name"):
+            self.extract_symbols_list_name(lst, path)
+        elif (kind == "type"):
+            logging.warning("!Not recursing on list of types: {}".format(path))
 
     def get_path_signature(self, path):
         signature = []
@@ -190,20 +210,22 @@ class SymbolExtractor:
                 signature.append(component)
         return tuple(signature)
 
-    def get_dictionaries(self, dct, signature):
+    def get_instances(self, dct, signature):
         result = []
         kind, id = signature[0]
 
         # Base case
         if len(signature) == 1:
             if kind == "type":
-                if id in dct and isinstance(dct[id], dict):
+                if id in dct and (isinstance(dct[id], dict) or isinstance(dct[id], list)):
                     #result.append({id : dct[id]})
                     result.append(dct[id])
             elif kind == "name":
                 for key, value in dct.items():
                     #result.append({key: value})
                     if isinstance(value, dict):
+                        result.append(value)
+                    elif isinstance(value, list):
                         result.append(value)
             else:
                 raise Exception("Unknown kind {} in signature {}".format(kind, signature))
@@ -212,11 +234,11 @@ class SymbolExtractor:
             kind, value = signature[0]
             if kind == "type":
                 if value in dct and isinstance(dct[value], dict):
-                    result = self.get_dictionaries(dct[value],signature[1:])
+                    result = self.get_instances(dct[value],signature[1:])
             elif kind == "name":
                 for value in dct.values():
                     if isinstance(value, dict):
-                        result.extend(self.get_dictionaries(value, signature[1:]))
+                        result.extend(self.get_instances(value, signature[1:]))
             else:
                 raise Exception("Unknown kind {} in signature {}".format(kind, signature))
 
@@ -259,19 +281,23 @@ class SymbolExtractor:
         else:
             return "type"
 
-    def infer_dictionaries_keykind(self, dictionaries):
-        num_dict = len(dictionaries)
-        if (num_dict == 1):
+    def infer_keykind(self, instances):
+        num_inst = len(instances)
+        if (num_inst == 1):
             logging.debug("\tNeed to examine subdictionaries")   
-            return self.infer_dict_keykind(dictionaries[0])
+            return self.infer_dict_keykind(instances[0])
 
         unique_keys = set()
         num_keys = 0
-        for dct in dictionaries:
-            num_keys += len(dct.keys())
-            unique_keys.update(dct.keys())
+        for inst in instances:
+            if isinstance(inst, dict):
+                num_keys += len(inst.keys())
+                unique_keys.update(inst.keys())
+            elif isinstance(inst, list):
+                num_keys += len(inst)
+                unique_keys.update(inst)
         num_unique_keys = len(unique_keys)
-        logging.debug("\tTotal dict: {}".format(num_dict))
+        logging.debug("\tTotal dict: {}".format(num_inst))
         logging.debug("\tUnique sub keys {}".format(num_unique_keys))
         logging.debug("\tTotal sub keys {}".format(num_keys))
         if (num_keys == 0):
@@ -284,14 +310,18 @@ class SymbolExtractor:
     
     def extract_symbols_key_name(self, dct, path):
         # Treat keys as symbol names
-        symbol_type = path[-1][1]
+        symbol_type = None
+        if path[-1][0] == "type":
+            symbol_type = path[-1][1]
         for symbol_name, symbol_value in dct.items():
             self.add_to_symbol_table(symbol_name, symbol_type)
             if isinstance(symbol_value, dict):
                 self.parse_dict(symbol_value, path + [('name', symbol_name)])
+            elif isinstance(symbol_value, list):
+                self.parse_list(symbol_value, path + [('name', symbol_name)])
 
     def extract_symbols_key_type(self, dct, path):
-        # Treat keys as symbol typs 
+        # Treat keys as symbol types 
         for symbol_type, value in dct.items():
             '''if isinstance(symbol_value, bool) or symbol_value == "true" or symbol_value == "false":
                 continue'''
@@ -300,18 +330,17 @@ class SymbolExtractor:
             elif isinstance(value, str) or isinstance(value, int):
                 self.add_to_symbol_table(str(value), symbol_type)
             elif isinstance(value, list):
-                for subvalue in value:
-                    self.add_to_symbol_table(str(subvalue), symbol_type)
-            '''elif isinstance(symbol_value, dict):
-                if symbol_type in SUB_TYPES_VALUES:
-                    extract_symbols_value_name(symbol_type, symbol_value, symbol_table)
-                elif symbol_type in SUB_TYPES_KEYS:
-                    extract_symbols_key_name(symbol_type, symbol_value, symbol_table)
-                else:
-                    extract_symbols_key_type(symbol_value, symbol_table)'''
+                self.parse_list(value, path + [('type', symbol_type)])
+                #for subvalue in value:
+                #    self.add_to_symbol_table(str(subvalue), symbol_type)
+
+    def extract_symbols_list_name(self, lst, path):
+        logging.warning("!Not extracting names from list {}...".format(path))
 
     def add_to_symbol_table(self, symbol_name, symbol_type):
-        symbol_type = symbol_type.lower()
+        # Put type in canonical form
+        if symbol_type != None:
+            symbol_type = symbol_type.lower()
 
         # Don't add booleans
         if str(symbol_name).lower() in ["true", "false"]:
@@ -324,7 +353,7 @@ class SymbolExtractor:
             logging.debug("!{} is not a valid symbol type".format(symbol_type))
 
         # Normalize IP addresses
-        if "address" in symbol_type:
+        if symbol_type != None and "address" in symbol_type:
             try:
                 symbol_name = str(ipaddress.ip_interface(symbol_name))
             except:
@@ -338,7 +367,7 @@ class SymbolExtractor:
         # Add to symbol table
         if symbol_name not in self.symbol_table:
             self.symbol_table[symbol_name] = []
-        if symbol_type not in self.symbol_table[symbol_name]:
+        if symbol_type != None and symbol_type not in self.symbol_table[symbol_name]:
             self.symbol_table[symbol_name].append(symbol_type)
 
 if __name__ == "__main__":
