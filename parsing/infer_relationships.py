@@ -5,13 +5,12 @@ import json
 import os
 import ipaddress
 import logging
-import pprint
 import ast
 
 TOP_LEVEL_TYPES_JUNIPER = [
     #"groups", 
-    "interfaces", 
-    #"policy-options", 
+    #"interfaces", 
+    "policy-options", 
     #"firewall", 
 ]
 TOP_LEVEL_TYPES_ARUBA = [
@@ -94,6 +93,21 @@ class RelationshipExtractor:
         elif (kind == "type"):
             self.extract_relationships_key_type(dct, path, symbols)
 
+    def parse_list(self, lst, path, symbols):
+        logging.debug("Processing {}...".format(path))
+        path_signature = self.get_path_signature(path)
+        if path_signature not in self.keykinds:
+            logging.error("!Unknown keykind for {}".format(path_signature))
+            return
+
+        kind = self.keykinds[path_signature]
+
+        logging.debug("List values are {}s".format(kind))
+        if (kind == "name"):
+            self.extract_relationships_list_name(lst, path, symbols)
+        elif (kind == "type"):
+            logging.warning("!Not extracting relationships from list of types: {}".format(path))
+
     def get_path_signature(self, path):
         signature = []
         for component in path:
@@ -104,6 +118,17 @@ class RelationshipExtractor:
         return tuple(signature)
 
     def get_symbol(self, symbol_name, symbol_type):
+        # Check if symbol_type needs to be inferred
+        if symbol_type is None:
+            if symbol_name not in self.symbol_table:
+                logging.warning("!Cannot infer type for symbol {}: symbol not in table".format(symbol_name))
+                return None 
+            if len(self.symbol_table[symbol_name]) > 1:
+                logging.warning("!Cannot infer type for symbol {}: {} possible types".format(symbol_name, len(self.symbol_table[symbol_name])))
+                return None 
+            
+            symbol_type = self.symbol_table[symbol_name][0] 
+
         # Check if symbol_type exists
         if symbol_type not in self.inverted_table:
             return None
@@ -120,67 +145,51 @@ class RelationshipExtractor:
    
     def extract_relationships_key_name(self, dct, path, symbols):
         # Treat keys as symbol names
-        symbol_type = path[-1][1]
+        symbol_type = None
+        if path[-1][0] == "type":
+            symbol_type = path[-1][1]
         for symbol_name, symbol_value in dct.items():
             symbol = self.get_symbol(symbol_name, symbol_type)
             if symbol != None:
                 if len(symbols) >= 1:
                     logging.info("{} --- {}".format(symbols[-1], symbol))
-            #else:
-                # log symbols that were not found
+            else:
+                logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))
             if isinstance(symbol_value, dict):
-                self.parse_dict(symbol_value, path + [('name', symbol_name)], symbols + [symbol])
+                self.parse_dict(symbol_value, path + [('name', symbol_name)], (symbols + [symbol] if symbol != None else symbols))
+            elif isinstance(symbol_value, list):
+                self.parse_list(symbol_value, path + [('name', symbol_name)], (symbols + [symbol] if symbol != None else symbols))
 
     def extract_relationships_key_type(self, dct, path, symbols):
-        # Treat keys as symbol typs 
+        # Treat keys as symbol types 
         for symbol_type, value in dct.items():
-            '''if isinstance(symbol_value, bool) or symbol_value == "true" or symbol_value == "false":
-                continue'''
-            if isinstance(value, dict):
+            if isinstance(value, bool) or value == "true" or value == "false":
+                continue
+            elif isinstance(value, dict):
                 self.parse_dict(value, path + [('type', symbol_type)], symbols)
-            '''elif isinstance(value, str) or isinstance(value, int):
-                self.add_to_symbol_table(str(value), symbol_type)
+            elif isinstance(value, str) or isinstance(value, int):
+                symbol = self.get_symbol(value, symbol_type)
+                if symbol != None:
+                    if len(symbols) >= 1:
+                        logging.info("{} --- {}".format(symbols[-1], symbol)) 
+                else:
+                    logging.debug("No matching symbol for {} : {}".format(symbol_type, value))
             elif isinstance(value, list):
                 for subvalue in value:
-                    self.add_to_symbol_table(str(subvalue), symbol_type)'''
-            '''elif isinstance(symbol_value, dict):
-                if symbol_type in SUB_TYPES_VALUES:
-                    extract_symbols_value_name(symbol_type, symbol_value, symbol_table)
-                elif symbol_type in SUB_TYPES_KEYS:
-                    extract_symbols_key_name(symbol_type, symbol_value, symbol_table)
-                else:
-                    extract_symbols_key_type(symbol_value, symbol_table)'''
+                    logging.debug("Check for matching symbol for {} : {}".format(symbol_type, subvalue))
 
-    def add_to_symbol_table(self, symbol_name, symbol_type):
-        symbol_type = symbol_type.lower()
-
-        # Don't add booleans
-        if str(symbol_name).lower() in ["true", "false"]:
-            return
-        
-        logging.debug("Adding {} {} to symbol table".format(symbol_type, symbol_name))
-
-        # Sanity checking
-        if symbol_type not in VALID_TYPES:
-            logging.debug("!{} is not a valid symbol type".format(symbol_type))
-
-        # Normalize IP addresses
-        if "address" in symbol_type:
-            try:
-                symbol_name = str(ipaddress.ip_interface(symbol_name))
-            except:
-                pass
-
-        # Normalize descriptions and names
-        if symbol_type == "description" or symbol_type == "name":
-            symbol_name = symbol_name.strip(" *").lower()
-            #.replace('-', " ").replace("_", " ")
-
-        # Add to symbol table
-        if symbol_name not in self.symbol_table:
-            self.symbol_table[symbol_name] = []
-        if symbol_type not in self.symbol_table[symbol_name]:
-            self.symbol_table[symbol_name].append(symbol_type)
+    def extract_relationships_list_name(self, lst, path, symbols):
+        # Treat values as symbol names
+        symbol_type = None
+        if path[-1][0] == "type":
+            symbol_type = path[-1][1]
+        for symbol_name in lst:
+            symbol = self.get_symbol(symbol_name, symbol_type)
+            if symbol != None:
+                if len(symbols) >= 1:
+                    logging.info("{} --- {}".format(symbols[-1], symbol))
+            else:
+                logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))
 
 if __name__ == "__main__":
     main()
