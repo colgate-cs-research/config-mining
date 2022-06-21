@@ -9,6 +9,8 @@ import re
 import analyze
 import numpy
 import time
+import logging
+logging.basicConfig(filename="./TO_REMOVE/temp/graph_to_db.log",level=logging.DEBUG,filemode = 'w')
 
 abbreviations = {
     "bldg" : "building",
@@ -18,6 +20,25 @@ abbreviations = {
 
 # list of common keyword beginnings
 common_starts = ["student", "ems", "bg", "voip"]
+
+def longest_shared_sequence(keyword1,keyword2):
+    longest_shared_seq = ""
+    for i in range(len(keyword1)-1):
+        for j in range(i+1,len(keyword1)):
+            if keyword1[i:j] in keyword2 and len(keyword1[i:j])>len(longest_shared_seq):
+                longest_shared_seq = keyword1[i:j]
+
+    logging.debug("\t\t words:{} {}| seq:{}| ".format(keyword1,keyword2,longest_shared_seq))
+    return longest_shared_seq
+            
+def reduce_similarity(word,similar_words,min_len=3):
+    to_return = []
+    for i in similar_words:
+        if len(longest_shared_sequence(word,i))>=min_len:
+            to_return.append(i)
+    return to_return
+
+
 
 def main():
     start = time.time()
@@ -68,6 +89,8 @@ def make_dict(word):
         inner_d = inner_d[ch]
     return d
 
+
+
 def analyze_configuration(file, outf, extra=None):
     # print("Current working FILE: " + file)
     # Load config
@@ -101,8 +124,11 @@ def analyze_configuration(file, outf, extra=None):
             #add_keywords(iface_dict, iName, keywords)
 
     similarity_dict = {}
+    logging.debug("All he keywords:{}".format(keyword_dict.keys()))
+    
     for word in keyword_dict:
-        similarity_dict[word] = []
+        #logging.debug("\t\tkeywords:{}|\n\t\t\toccurences:{}".format(word,keyword_dict[word]))
+        similarity_dict[word] = list(keyword_dict.keys()).remove(word)
     for i in range(len(keyword_dict)):
         word1 = list(keyword_dict.keys())[i]
         list1 = list(set(word1))
@@ -116,10 +142,18 @@ def analyze_configuration(file, outf, extra=None):
                 if similarity > 1:
                     similarity_dict[word1].append(word2)
                     similarity_dict[word2].append(word1)
-
+    # Checking similarity dict
+    new_dict={}
     for key in similarity_dict:
-        print("Key: " + key)
-        print("List of similar words: " + str(similarity_dict[key]))
+        #logging.debug("Key: " + key)
+        #logging.debug("\tList of similar words: " + str(similarity_dict[key]))
+        
+
+        new_dict[key] = reduce_similarity(key,similarity_dict[key])
+        #logging.debug("\told_list similar words: " + str(similarity_dict[key]))
+        logging.debug("\tUpdated_list similar words: " + str(new_dict[key]))
+
+
 
     # extract keywords that are variations of a common term (hardcoded in list common_starts on line 17-18)
     common_keyword_dict = {}
