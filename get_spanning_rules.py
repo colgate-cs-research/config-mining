@@ -6,7 +6,11 @@ import re
 from sklearn.preprocessing import LabelEncoder as le
 import get_rule_coverage 
 from sklearn.metrics import f1_score
+import logging
 
+# module-wide logging
+logging.basicConfig(level=logging.DEBUG)#,filemode='w',filename="./TO_REMOVE/temp/spanning_rules.log")
+logging.getLogger(__name__)
 
 def gen_rule_column(rules_df,total_rows,rule_no):
     rule_series = np.zeros(total_rows, dtype=int)[np.newaxis]
@@ -23,7 +27,7 @@ def gen_rule_column(rules_df,total_rows,rule_no):
 def gen_rule_matrix(rules_df,total_rows,resuse=0):
 
 
-    print("Starting Matrix generation:")
+    logging.debug("Starting Matrix generation:")
     rule_matrix = np.empty([total_rows, len(rules_df)], dtype=int)
     for i in range(len(rules_df)):
         #if i%100 ==0: print(i,end=" ")
@@ -35,7 +39,7 @@ def gen_rule_matrix(rules_df,total_rows,resuse=0):
     #print(type(a))
     print(rule_matrix[:,1])
     #print(np.where(rule_matrix[:,1]==1))
-    print("MATRIX SHAPE:"+str(rule_matrix.shape))
+    logging.debug("MATRIX SHAPE:"+str(rule_matrix.shape))
     #print(rule_matrix)
 
 
@@ -48,20 +52,20 @@ def stopping_condition(for_sum,option = 0):
     val = False
     if option==0:
 
-        threshold = 0.70
+        threshold = 0.97
         
         ratio = untouched_rows/total_rows
         
         val =  True if (ratio)<threshold else False
         #print("Untouched_rows:"+str(untouched_rows))
 
-    print(" Untouched percentage:"+str(round(untouched_rows/total_rows*100)) + '%',end =' ')
+    print(" Untouched percentage:"+str(round(untouched_rows/total_rows*100)) + '%', end="\r")
     
     return val
     pass
 
 def get_rule_set(rule_matrix,total_rows,initial_weight,weight_reduction):
-    print("Starting rule_set generation:")
+    logging.warning("Starting rule_set generation:")
     for_sum = np.full((total_rows), initial_weight,dtype=float)
     for_reduction = np.full((total_rows), weight_reduction,dtype=float)[np.newaxis]
     
@@ -93,7 +97,7 @@ def get_rule_set(rule_matrix,total_rows,initial_weight,weight_reduction):
         if(int(best_rule_loc) not in rule_set):
             rule_set.append(int(best_rule_loc))    # +2 for off-setting python + header line
         else:
-            print("\n\n\nREPETitions detected")
+            logging.debug("\n\n\nREPETitions detected")
             break
 
         # if rule ={ 0 0 1 0 }
@@ -125,7 +129,7 @@ def get_rule_set(rule_matrix,total_rows,initial_weight,weight_reduction):
     
     untouched_rows = len(np.where(for_sum == 1.0)[0])
     time.sleep(1) 
-    print("\nUntouched_rows:"+str(untouched_rows))
+    logging.debug("\nUntouched_rows:"+str(untouched_rows))
     
     #print("REPETitions detected")
     return rule_set
@@ -137,25 +141,29 @@ def main():
     parser.add_argument('org_df_path',type=str, help='Path for a CSV file containing the pruned dataframe')
     parser.add_argument('rules_path',type=str, help='Path for a CSV file which stores the rules')
     parser.add_argument('feature',type=str, help='Select the group-feature name.')
-    parser.add_argument('-g','--group',type=str,default='-1', help='Select the group-feature value.')
+    parser.add_argument('-g','--group',type=str,default=-1, help='Select the group-feature value.')
     parser.add_argument('-d', '--depth', type=int, default=1, help="Maximum rule depth")
     parser.add_argument('-p', '--precision', type=float, default=0.950, help="Only select rules with precison above the given value")
     arguments = parser.parse_args()
 
+    outfile = "./tmep_df.csv"
     grp_feature = arguments.feature
     depth = arguments.depth
     group = arguments.group  # 0 for not present | 1 for present | -1 for both
 
-    rules_df = get_rule_coverage.main(arguments.org_df_path,arguments.rules_path,arguments.feature)
+    logging.debug("\tget_rule_coverage-> START")
+    rules_df = get_rule_coverage.main(arguments.org_df_path,arguments.rules_path,grp_feature,group)
+    logging.debug("\tget_rule_coverage->END")
 
-
+    logging.debug("Selecting rules with precision:{}".format(arguments.precision))
     # selecting rules with precision:1
     rules_df = rules_df.loc[rules_df['precision'] > arguments.precision]
 
     aggregate_df = pd.read_csv(arguments.org_df_path)
     rules_df.reset_index(drop=True, inplace=True)
     # testing import
-    print(rules_df.head)
+    
+    logging.debug("Testing rule import:\n{}".format(rules_df.head))
     #print(len(aggregate_df))
 
     total_rows = len(aggregate_df)
@@ -163,14 +171,17 @@ def main():
     rule_matrix=gen_rule_matrix(rules_df,total_rows)
 
     print(len(np.where(np.sum(rule_matrix,axis=1) == 0.0)[0]))
-    print("DONE HERE")
-
-    rule_list= get_rule_set(rule_matrix,total_rows,1.0,0.5)
     
+    logging.debug("\tget_rule_set->START")
+    rule_list= get_rule_set(rule_matrix,total_rows,initial_weight=1.0,weight_reduction=0.5)
+    logging.debug("\tget_rule_set->END")
+
+    # Dropping coverage column
     rules_df.drop(["coverage"], axis=1, inplace=True)
     selected_rules = rules_df.loc[rule_list]
     #selected_rules.to_csv("./csl_output/rules/spanning_rules/span_aggregate_df_depth_"+str(depth)+"keyword: "+keyword+"_pr",index=False)
-    selected_rules.to_csv("./tmep_df.csv",index=False)
+    logging.debug("Saving to outfile:{}|".format(outfile))
+    selected_rules.to_csv(outfile,index=False)
     return rules_df
 
 
