@@ -101,33 +101,45 @@ def get_possibly_related_pairs():
         #print(lst[1:])
         for i in range(1,len(lst)):
             if int(lst[i]) > 0:
-                print(lst[i], end= ',')
+                #print(lst[i], end= ',')
                 t1 = stanza_type[line_num-1].lower()
                 t2 = stanza_type[i-1].lower()
                 stanza_pairs1.append((t1,t2))
-                print(str((t1, t2)), end = ',')
+                #print(str((t1, t2)), end = ',')
             else:
                 t1 = stanza_type[line_num-1].lower()
                 t2 = stanza_type[i-1].lower()
                 stanza_pairs2.append((t1,t2))
         line_num += 1
-        print()
+        #print()
     f.close()
+
+    # print pairs with non-zero and_matrix values to a file
     f = open('important_pairs.txt','w')
-    f2= open('important_pairs_zero_reg.txt','w')
-    stanza_pairs1 = get_rid_of_duplicates(stanza_pairs1)
+    f2 = open('important_pairs_reg.txt', 'w')
+    #stanza_pairs1 = get_rid_of_duplicates(stanza_pairs1)
     #stanza_pairs2 = get_rid_of_duplicates(stanza_pairs2)
-    #print(stanza_pairs1)
     for i in range(len(stanza_pairs1)):
         s = 'reg ' + stanza_pairs1[i][0] + ' '+ stanza_pairs1[i][1] + '\n' + 'outreg2 using greater_than_zero.doc, append\n'
         f.write(str(stanza_pairs1[i]) + '\n')
-        #f2.write(s)
-    for i in range(len(stanza_pairs2)):
-        s = 'reg ' + stanza_pairs2[i][0] + ' '+ stanza_pairs2[i][1] + '\n' + 'outreg2 using zero.doc, append\n'
         f2.write(s)
     f.close()
     f2.close()
-    #return stanza_pairs1.extend(stanz_pairs2)
+
+    # print reg code for pairs with zeros in the and_matrix
+    f= open('important_pairs_zero_reg.txt','w')
+    x = 1
+    i = 0
+    while i < len(stanza_pairs2):
+        j = 0
+        while (j < 10) and (i < len(stanza_pairs2)):
+            s = 'reg ' + stanza_pairs2[i][0] + ' '+ stanza_pairs2[j][1] + '\n' + 'outreg2 using zero' + str(x) + '.doc, append\n'
+            f.write(s)
+            j += 1
+            i += 1
+        x += 1
+    f.close()
+
 
 # helper function for getting relevant pairs of stanza_types
 def get_rid_of_duplicates(list_of_tuples):
@@ -145,8 +157,7 @@ def combinations_per_timeperiod():
 def get_point_freq():
     point_freq_dict = {}
     points = [(0,0), (0,1), (1,1), (1,0)]
-
-    # initial values
+    # construct dictionary
     for i in range(len(stanza_type)):
         t1 = stanza_type[i]
         for j in range(i+1, len(stanza_type)):
@@ -155,7 +166,6 @@ def get_point_freq():
             point_freq_dict[t] = {}
             for point in points:
                 point_freq_dict[t][point] = 0 # initial count for each point for each pair
-    #print(point_freq_dict)
 
     # iterate for each time period
     f = open('144days_cleaned.csv','r')
@@ -163,7 +173,6 @@ def get_point_freq():
     # for each time period
     for line in f:
         lst = line.strip().split(',')
-        #print(lst[1:])
         # check each unique pair of stanza_types 
         # and increment count of the coordinate found from time_period matrix
         for i in range(1,len(lst)):
@@ -175,23 +184,9 @@ def get_point_freq():
                 stanza_tuple = (t1, t2)
                 change_tuple = (change1, change2)
                 point_freq_dict[stanza_tuple][change_tuple] += 1
-            
-            # t1 = stanza_type[line_num-1].lower()
-            # t2 = stanza_type[i-1].lower()
     f.close()
-    #print(point_freq_dict)
-    return point_freq_dict
 
-
-
-def main():
-    #add_stanza_names()
-    #add_names_to_summary()
-    #all_pairs = get_possibly_related_pairs()
-    # function to calculate frequencies
-    point_freq_dict = get_point_freq()
-
-    # print frequencies
+    # print frequencies to file
     f = open('point_frequencies.csv', 'w')
     f.write("Pairs, (0,0), (0,1), (1,1), (1,0)\n")
     for key in point_freq_dict:
@@ -199,7 +194,17 @@ def main():
         f.write(s)
     f.close()
 
+    return point_freq_dict
 
+
+
+def main():
+    #add_stanza_names()
+    #add_names_to_summary()
+
+    #get_possibly_related_pairs()
+    
+    #get_point_freq() # function to calculate frequencies
 
 
 

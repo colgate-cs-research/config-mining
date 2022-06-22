@@ -1,0 +1,30 @@
+{\rtf1\fs24
+\trowd\trgaph75\trleft-75\intbl\trqc\clbrdrt\brdrs\cellx1872\clbrdrt\brdrs\cellx3168\clbrdrt\brdrs\cellx4464\clbrdrt\brdrs\cellx5760\clbrdrt\brdrs\cellx7056\clbrdrt\brdrs\cellx8496\clbrdrt\brdrs\cellx9936\clbrdrt\brdrs\cellx11376\clbrdrt\brdrs\cellx12816\clbrdrt\brdrs\cellx14256\clbrdrt\brdrs\cellx15552
+\ql \cell\qc (1)\cell\qc (2)\cell\qc (3)\cell\qc (4)\cell\qc (5)\cell\qc (6)\cell\qc (7)\cell\qc (8)\cell\qc (9)\cell\qc (10)\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx1872\cellx3168\cellx4464\cellx5760\cellx7056\cellx8496\cellx9936\cellx11376\cellx12816\cellx14256\cellx15552
+\trowd\trgaph75\trleft-75\trqc\clbrdrb\brdrs\cellx1872\clbrdrb\brdrs\cellx3168\clbrdrb\brdrs\cellx4464\clbrdrb\brdrs\cellx5760\clbrdrb\brdrs\cellx7056\clbrdrb\brdrs\cellx8496\clbrdrb\brdrs\cellx9936\clbrdrb\brdrs\cellx11376\clbrdrb\brdrs\cellx12816\clbrdrb\brdrs\cellx14256\clbrdrb\brdrs\cellx15552
+\ql VARIABLES\cell\qc acl\cell\qc acl\cell\qc acl\cell\qc acl\cell\qc interface\cell\qc interface\cell\qc interface\cell\qc interface\cell\qc interface\cell\qc port\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx1872\cellx3168\cellx4464\cellx5760\cellx7056\cellx8496\cellx9936\cellx11376\cellx12816\cellx14256\cellx15552
+\ql \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\row
+\ql interface\cell\qc 0.0269\cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\row
+\ql \cell\qc (0.0326)\cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\row
+\ql port\cell\qc \cell\qc 0.0588**\cell\qc \cell\qc \cell\qc \cell\qc 0.269***\cell\qc \cell\qc \cell\qc \cell\qc \cell\row
+\ql \cell\qc \cell\qc (0.0246)\cell\qc \cell\qc \cell\qc \cell\qc (0.0602)\cell\qc \cell\qc \cell\qc \cell\qc \cell\row
+\ql system\cell\qc \cell\qc \cell\qc 0.135***\cell\qc \cell\qc \cell\qc \cell\qc 0.219**\cell\qc \cell\qc \cell\qc \cell\row
+\ql \cell\qc \cell\qc \cell\qc (0.0388)\cell\qc \cell\qc \cell\qc \cell\qc (0.102)\cell\qc \cell\qc \cell\qc \cell\row
+\ql vrf\cell\qc \cell\qc \cell\qc \cell\qc 0.103***\cell\qc \cell\qc \cell\qc \cell\qc \cell\qc 0.198**\cell\qc \cell\row
+\ql \cell\qc \cell\qc \cell\qc \cell\qc (0.0352)\cell\qc \cell\qc \cell\qc \cell\qc \cell\qc (0.0915)\cell\qc \cell\row
+\ql acl\cell\qc \cell\qc \cell\qc \cell\qc \cell\qc 0.177\cell\qc \cell\qc \cell\qc \cell\qc \cell\qc 0.660**\cell\row
+\ql \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc (0.215)\cell\qc \cell\qc \cell\qc \cell\qc \cell\qc (0.275)\cell\row
+\ql vlan\cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc 0.529***\cell\qc \cell\qc \cell\row
+\ql \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc (0.147)\cell\qc \cell\qc \cell\row
+\ql Constant\cell\qc 0.0165\cell\qc 0\cell\qc 0.00769\cell\qc 0.00794\cell\qc 0.156***\cell\qc 0.0645*\cell\qc 0.138***\cell\qc 0.138***\cell\qc 0.135***\cell\qc 0.340***\cell\row
+\ql \cell\qc (0.0130)\cell\qc (0.0146)\cell\qc (0.0121)\cell\qc (0.0124)\cell\qc (0.0310)\cell\qc (0.0358)\cell\qc (0.0318)\cell\qc (0.0301)\cell\qc (0.0323)\cell\qc (0.0398)\cell\row
+\ql \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\row
+\ql Observations\cell\qc 144\cell\qc 144\cell\qc 144\cell\qc 144\cell\qc 144\cell\qc 144\cell\qc 144\cell\qc 144\cell\qc 144\cell\qc 144\cell\row
+\trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx1872\clbrdrb\brdrs\cellx3168\clbrdrb\brdrs\cellx4464\clbrdrb\brdrs\cellx5760\clbrdrb\brdrs\cellx7056\clbrdrb\brdrs\cellx8496\clbrdrb\brdrs\cellx9936\clbrdrb\brdrs\cellx11376\clbrdrb\brdrs\cellx12816\clbrdrb\brdrs\cellx14256\clbrdrb\brdrs\cellx15552
+\ql R-squared\cell\qc 0.005\cell\qc 0.039\cell\qc 0.079\cell\qc 0.057\cell\qc 0.005\cell\qc 0.123\cell\qc 0.031\cell\qc 0.083\cell\qc 0.032\cell\qc 0.039\cell\row
+\pard\qc
+Standard errors in parentheses\par
+*** p<0.01, ** p<0.05, * p<0.1\par
+}

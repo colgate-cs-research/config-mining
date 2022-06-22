@@ -6,6 +6,8 @@ reg acl system
 outreg2 using greater_than_zero.doc, append
 reg acl vrf
 outreg2 using greater_than_zero.doc, append
+reg interface acl
+outreg2 using greater_than_zero.doc, append
 reg interface port
 outreg2 using greater_than_zero.doc, append
 reg interface system
@@ -14,15 +16,41 @@ reg interface vlan
 outreg2 using greater_than_zero.doc, append
 reg interface vrf
 outreg2 using greater_than_zero.doc, append
+reg port acl
+outreg2 using greater_than_zero.doc, append
+reg port interface
+outreg2 using greater_than_zero.doc, append
 reg port system
 outreg2 using greater_than_zero.doc, append
 reg port vlan
 outreg2 using greater_than_zero.doc, append
 reg port vrf
 outreg2 using greater_than_zero.doc, append
+reg system acl
+outreg2 using greater_than_zero.doc, append
+reg system interface
+outreg2 using greater_than_zero.doc, append
+reg system port
+outreg2 using greater_than_zero.doc, append
 reg system vlan
 outreg2 using greater_than_zero.doc, append
 reg system vrf
 outreg2 using greater_than_zero.doc, append
+reg vlan interface
+outreg2 using greater_than_zero.doc, append
+reg vlan port
+outreg2 using greater_than_zero.doc, append
+reg vlan system
+outreg2 using greater_than_zero.doc, append
 reg vlan vrf
+outreg2 using greater_than_zero.doc, append
+reg vrf acl
+outreg2 using greater_than_zero.doc, append
+reg vrf interface
+outreg2 using greater_than_zero.doc, append
+reg vrf port
+outreg2 using greater_than_zero.doc, append
+reg vrf system
+outreg2 using greater_than_zero.doc, append
+reg vrf vlan
 outreg2 using greater_than_zero.doc, append

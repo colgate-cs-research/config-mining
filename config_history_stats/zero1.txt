@@ -1,0 +1,20 @@
+	(1)	(2)	(3)	(4)	(5)	(6)	(7)	(8)
+VARIABLES	acl	acl	acl	acl	acl	interface	interface	interface
+								
+o.pki_ta_profile	-					-		
+								
+o.snmp_trap		-					-	
+								
+o.user			-					-
+								
+o.user_group				-				
+								
+vlan					-0.0217			
+					(0.0600)			
+Constant	0.0208*	0.0208*	0.0208*	0.0208*	0.0217*	0.160***	0.160***	0.160***
+	(0.0119)	(0.0119)	(0.0119)	(0.0119)	(0.0122)	(0.0306)	(0.0306)	(0.0306)
+								
+Observations	144	144	144	144	144	144	144	144
+R-squared	0.000	0.000	0.000	0.000	0.001	0.000	0.000	0.000
+Standard errors in parentheses								
+*** p<0.01, ** p<0.05, * p<0.1								
