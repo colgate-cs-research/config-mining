@@ -141,19 +141,21 @@ def isis_cleanup(isis):
 
 def policy_options_cleanup(policy_options):
     # Determine types of policy options
-    new_policy_options = {}
+    new_grouped_policy_options = {}
+    new_flat_policy_options = {}
     for key, value in policy_options.items():
         # Identify type of policy option (e.g., prefix-list)
         parts = key.split(' ')
         typ = parts[0]
 
         # First time seeing a specific type of policy option
-        if typ not in new_policy_options:
-            new_policy_options[typ] = {}
+        if typ not in new_grouped_policy_options:
+            new_grouped_policy_options[typ] = {}
 
         # If policy option has details
         if len(parts) > 1:
             name = parts[1]
+            new_key = typ + " " + name
             # Clean-up value
             if typ == "as-path":
                 new_value = as_path_cleanup(key)
@@ -166,22 +168,21 @@ def policy_options_cleanup(policy_options):
             else:
                 print("!Policy-options of type", typ, "not cleaned up")
                 new_value = value
-            new_policy_options[typ][name] = new_value
-            policy_options[key] = new_value
+            new_grouped_policy_options[typ][name] = new_value
+            new_flat_policy_options[new_key] = new_value
         # Policy option is just a name
         else:
             if typ == "prefix-list":
                 name = value
-                #new_key = typ + " " + name
-                #new_value = []
-                new_policy_options[typ][name] = [] # changed this to a list
+                new_key = typ + " " + name
+                new_value = []
+                new_grouped_policy_options[typ][name] = [] # changed this to a list
+                new_flat_policy_options[new_key] = new_value
             else:
                 print("!Policy-options of type", typ, "not cleaned up")
-            #policy_options[new_key] = new_value
-            #new_policy_options[typ][name] = [] # changed this to a list
 
-    return new_policy_options
-    #return policy_options
+    return new_grouped_policy_options
+    #return new_flat_policy_options
 
 def as_path_cleanup(key):
     parts = key.split(' ')
