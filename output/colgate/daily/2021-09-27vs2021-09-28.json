@@ -1,0 +1,38 @@
+{
+    "case-row04-sw": {
+        "2/1/10": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "admin": "down"
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "loop_protect_enable": true
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "stp_config": {
+                        "admin_edge_port_enable": "true",
+                        "bpdu_guard_enable": "true",
+                        "restricted_port_tcn_disable": "true"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vlan_tag": "140"
+                }
+            ]
+        ]
+    }
+}

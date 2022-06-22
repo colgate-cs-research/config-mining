@@ -1,0 +1,310 @@
+{
+    "hotelmaxwell-sw": {
+        "1/1/3": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "stp_config": {
+                        "loop_guard_enable": "true"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_mode": [
+                        "native-tagged",
+                        "native-untagged"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "3000"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "168",
+                            "156",
+                            "556",
+                            "24",
+                            "60",
+                            "500",
+                            "503",
+                            "164",
+                            "88",
+                            "56"
+                        ],
+                        [
+                            "168",
+                            "3000",
+                            "73",
+                            "156",
+                            "556",
+                            "24",
+                            "60",
+                            "611",
+                            "72",
+                            "503",
+                            "164",
+                            "88",
+                            "56",
+                            "882"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "loop_protect_vlan": [
+                        "168",
+                        "3000",
+                        "73",
+                        "156",
+                        "556",
+                        "24",
+                        "60",
+                        "611",
+                        "72",
+                        "503",
+                        "164",
+                        "88",
+                        "56",
+                        "882"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "qos_config": {
+                        "qos_trust": "dscp"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "1/1/4": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "stp_config": {
+                        "loop_guard_enable": "true"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_mode": [
+                        "native-tagged",
+                        "native-untagged"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "3000"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "168",
+                            "156",
+                            "556",
+                            "24",
+                            "60",
+                            "500",
+                            "503",
+                            "164",
+                            "88",
+                            "56"
+                        ],
+                        [
+                            "168",
+                            "3000",
+                            "73",
+                            "156",
+                            "556",
+                            "24",
+                            "60",
+                            "611",
+                            "72",
+                            "503",
+                            "164",
+                            "88",
+                            "56",
+                            "882"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "loop_protect_vlan": [
+                        "168",
+                        "3000",
+                        "73",
+                        "156",
+                        "556",
+                        "24",
+                        "60",
+                        "611",
+                        "72",
+                        "503",
+                        "164",
+                        "88",
+                        "56",
+                        "882"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "qos_config": {
+                        "qos_trust": "dscp"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "qos_config": [
+            [
+                "System",
+                "Addition",
+                {
+                    "qos_config": {
+                        "qos_trust": "dscp"
+                    }
+                }
+            ]
+        ]
+    },
+    "ocon6410": {
+        "1/6/38": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_mode": [
+                        "native-tagged",
+                        "native-untagged"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "3000"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "60",
+                            "500",
+                            "56",
+                            "168",
+                            "66",
+                            "88",
+                            "240",
+                            "611",
+                            "156",
+                            "164",
+                            "882",
+                            "556",
+                            "501"
+                        ],
+                        [
+                            "60",
+                            "73",
+                            "56",
+                            "168",
+                            "66",
+                            "88",
+                            "3000",
+                            "72",
+                            "611",
+                            "156",
+                            "164",
+                            "882",
+                            "556",
+                            "501"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "loop_protect_vlan": [
+                        "60",
+                        "73",
+                        "56",
+                        "168",
+                        "66",
+                        "88",
+                        "3000",
+                        "72",
+                        "611",
+                        "156",
+                        "164",
+                        "882",
+                        "556",
+                        "501"
+                    ]
+                }
+            ]
+        ]
+    }
+}

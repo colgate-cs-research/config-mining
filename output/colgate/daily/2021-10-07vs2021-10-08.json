@@ -1,0 +1,70 @@
+{
+    "oconnor-mail-sw": {
+        "2/1/25": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "port_access_auth_configurations": [
+                        {
+                            "mac-auth": {
+                                "auth_enable": true
+                            }
+                        },
+                        {
+                            "dot1x": {
+                                "auth_enable": true,
+                                "eapol_timeout": 30,
+                                "max_requests": 1,
+                                "max_retries": 1
+                            },
+                            "mac-auth": {
+                                "auth_enable": true
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "2/1/26": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "port_access_auth_configurations": [
+                        {
+                            "mac-auth": {
+                                "auth_enable": true
+                            }
+                        },
+                        {
+                            "dot1x": {
+                                "auth_enable": true,
+                                "eapol_timeout": 30,
+                                "max_requests": 1,
+                                "max_retries": 1
+                            },
+                            "mac-auth": {
+                                "auth_enable": true
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ]
+    }
+}

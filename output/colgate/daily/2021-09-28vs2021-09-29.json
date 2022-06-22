@@ -1,0 +1,40 @@
+{
+    "case-451-sw": {
+        "2/1/45": [
+            [
+                "Port",
+                "Addition",
+                {
+                    "admin": "down"
+                }
+            ]
+        ]
+    },
+    "oconnor-row01-sw": {
+        "1/1/22": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "admin": "down"
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vlan_tag": "140"
+                }
+            ]
+        ],
+        "2/1/22": [
+            [
+                "Port",
+                "Addition",
+                {
+                    "vlan_tag": "140"
+                }
+            ]
+        ]
+    }
+}

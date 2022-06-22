@@ -1,0 +1,7201 @@
+{
+    "100broad-2nd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8934181224128390",
+                        "-3010.28.50692680"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "100broad-base-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4871213468924353",
+                        "7120306962989191"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "100hamilton-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4711330206010.28",
+                        "7405697218147897"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "102broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3452298108953514",
+                        "3168309882038533"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "104broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4578915792315415",
+                        "-7517921741493113"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "10utica-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1772248298643727",
+                        "-4701402327655764"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "110broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "358547715994355",
+                        "-4700118250933442"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "113broad-brigham-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7524453456200759",
+                        "7682545943299659"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "113broad-core-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1604133811875407",
+                        "-4980234174509251"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3731395226615256",
+                        "7403138495588604"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "113broad-read-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6268252162893047",
+                        "931826844939539"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8933301143901102",
+                        "8238949325464419"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "113broad-shepardson-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8370372995204417",
+                        "2322930428199909"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1604415067131897",
+                        "-4138759866602198"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "113broad-whitnall-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7965434799670751",
+                        "2886585739226974"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4420942137904697",
+                        "367057311971086"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "114broad-2nd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8518764841925739",
+                        "2894126929911420"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4306270878211791",
+                        "-7241203916859583"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "114broad-base-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7236675799753556",
+                        "-2729828374539071"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8235502691303697",
+                        "6837321206419165"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "116broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2614531027753113",
+                        "8250626596618782"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8651893948969002",
+                        "-7512078319827772"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "118broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6955943350190412",
+                        "6835859984765560"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8806549455682846",
+                        "-198876798203489"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "20utica-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8087365413180642",
+                        "-768389513221792"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2621040307286847",
+                        "2887346527476264"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "40broad-annex-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1050074308410.3",
+                        "642249346578330"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "76858128010.111.",
+                        "-6671995963588520"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "40broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4026463912837175",
+                        "-4144167776753195"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5830464701567033",
+                        "318110.35.939096"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "49broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4149232686316021",
+                        "-3301310887520758"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2042329280059521",
+                        "-7242184642441493"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "52broad-2nd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "354287451832746",
+                        "-6112707350526863"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-201137477346814",
+                        "4304955878997612"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "52broad-base-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5984849046904921",
+                        "-6680315849543823"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7512990666713779",
+                        "2338143803610.31"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "65arena-119-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4580788679093366",
+                        "-487901391102463"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6675235338109627",
+                        "4871111006903193"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "65arena-144-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6552796530545215",
+                        "4587967690667090"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8086958344352756",
+                        "7676781729747187"
+                    ]
+                }
+            ]
+        ],
+        "2/1/48": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "66broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6114137738162069",
+                        "6556361625685645"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3864202940546083",
+                        "6841464968205632"
+                    ]
+                }
+            ]
+        ],
+        "1/1/47": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "port_access_clients_limit": 1
+                }
+            ]
+        ],
+        "1/1/48": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "port_access_clients_limit": 1
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "70broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5269910204124913",
+                        "4012535377358496"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6557728078133813",
+                        "5432476404722109"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "72broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7515611168883059",
+                        "-7244019659821217"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "915222304425782",
+                        "8242452068784166"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "76broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3169450360402781",
+                        "-3010149150177772"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1763906267982579",
+                        "-2458600137047191"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "80broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8531601419526370",
+                        "-1893854211346736"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6391575217336207",
+                        "-3305819976888410"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "84broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4416606008488074",
+                        "-3296609244842841"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8644363945782795",
+                        "-8366038503126221"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "88broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "928359356040366",
+                        "-3290617618960075"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8802257083001311",
+                        "64178710.4.962"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "92broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1613357726649088",
+                        "5.5.784698801"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1486496727980478",
+                        "-5276298940937270"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "94broad-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-762732435084675",
+                        "-1324678613677867"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "923976611340978",
+                        "-1326565718554298"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "alana-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6544813338655207",
+                        "-1613810308056956"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "76434576746666",
+                        "-1040735022691020"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "alumni-3rd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3737318482779994",
+                        "5996825388426073"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8808745621213222",
+                        "-1891265222368546"
+                    ]
+                }
+            ]
+        ],
+        "1/1/12": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "1/1/2": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "alumni-base-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8801543094263227",
+                        "7682175891004177"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5430483489713832",
+                        "-2176148737170899"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "andrews-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6559304048737832",
+                        "-1886587634800370"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8356598626226019",
+                        "-3573885761192342"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "andykerr-dunlapnorth-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3294293380220815",
+                        "-8078918477549592"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7683853142828899",
+                        "-5826216505157407"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "andykerr-dunlapsouth-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8082302195937812",
+                        "-8358811948535642"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1319507319541807",
+                        "5994188144995519"
+                    ]
+                }
+            ]
+        ],
+        "1/1/3": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "andykerr-pressbox-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5542081942043615",
+                        "4856289266664975"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4303232004754983",
+                        "8517033887102695"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "bandg-PM-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4982862169406089",
+                        "-7519837858688457"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3023280779798441",
+                        "8238010012763442"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "bandg-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-209855621987359",
+                        "-3577159607991798"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6279120699467830",
+                        "-8358322410.3.28"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "basecamp-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5985670042378362",
+                        "5706400202605857"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "650496321473766",
+                        "4583292411318696"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "benton-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1767590089576553",
+                        "7674267558567975"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4012339173886211",
+                        "7402690902446078"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "bookstore-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8921240342129790",
+                        "-1038430618917949"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7514555965030586",
+                        "2057071759726610"
+                    ]
+                }
+            ]
+        ],
+        "1/1/5": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "bryan-cobb-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2043093183856322",
+                        "8250210196627186"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "87196343064139",
+                        "-203586996029083"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "bryan-core-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5988527871582894",
+                        "1199811118967614"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3869601461743407",
+                        "-7528959623662429"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "bryan-crawshaw-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5275885871663986",
+                        "-8928927047425171"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4864352879093990",
+                        "-3012961717757260"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "bryan-parke-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2330994308544558",
+                        "-8372094089448450"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8366395836617764",
+                        "-4424416562283319"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "bryan-russell-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5435691939080226",
+                        "-5552798299484185"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3013299080290778",
+                        "2901345417778590"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "burke-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6834046345581571",
+                        "928563477233466"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1610218373583029",
+                        "-2461635394672065"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "campussafety-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4023941574314184",
+                        "3735194672006056"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3854473991352708",
+                        "-7806778118988199"
+                    ]
+                }
+            ]
+        ],
+        "1/1/1": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "case-100-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5148593645212548",
+                        "4026932730545941"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-149-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-761279259287004",
+                        "7678208814270841"
+                    ]
+                }
+            ]
+        ],
+        "1/1/3": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {}
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Deletion",
+                {
+                    "port_access_clients_limit": 1
+                }
+            ]
+        ],
+        "1/1/43": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "1/1/44": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "1/1/46": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "1/1/48": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        5,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        5,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-247-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4146461194746725",
+                        "-7244849259702463"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-298-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1603356050718890",
+                        "2042426151786444"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        1,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        1,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-299-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "917142359466853",
+                        "-7526891678538674"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-301-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-757936323438668",
+                        "3731228386767071"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-351-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4138899273367021",
+                        "-7526925998433279"
+                    ]
+                }
+            ]
+        ],
+        "1/1/1": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-401-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2898830869420218",
+                        "4576846064587798"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-451-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "57027651510.93.8",
+                        "-490808225764841"
+                    ]
+                }
+            ]
+        ],
+        "2/1/45": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "ntp_config_vrf": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "ntp_config_vrf": "default"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ],
+        "syslog_remotes": [
+            [
+                "System",
+                "Modification",
+                {
+                    "5.5.132.24": [
+                        {
+                            "include_auditable_events": false,
+                            "port_number": 13340,
+                            "remote_host": "5.5.132.24",
+                            "transport": "udp",
+                            "unsecure_tls_renegotiation": false,
+                            "vrf": "default"
+                        },
+                        {
+                            "include_auditable_events": false,
+                            "port_number": 13340,
+                            "rate_limit": {
+                                "burst": 0,
+                                "interval": 0
+                            },
+                            "remote_host": "5.5.132.24",
+                            "transport": "udp",
+                            "unsecure_tls_renegotiation": false,
+                            "vrf": "default"
+                        }
+                    ]
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        4,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        3,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-545b-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-610.35.430876105",
+                        "-5835922874803273"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        1,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        1,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "case6410": {
+        "1/10/48": [
+            [
+                "Port",
+                "Addition",
+                {
+                    "1/10/48": {
+                        "interfaces": [
+                            "1/10/48"
+                        ],
+                        "name": "1/10/48",
+                        "vlan_mode": "native-untagged",
+                        "vlan_trunks": [
+                            "140"
+                        ]
+                    }
+                }
+            ]
+        ],
+        "lag250": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "interfaces": [
+                        [
+                            "1/9/48",
+                            "1/10/48"
+                        ],
+                        [
+                            "1/9/48"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "mirrors": [
+            [
+                "System",
+                "Addition",
+                {
+                    "2": {
+                        "active": true,
+                        "comment": "dvsport",
+                        "id": 2,
+                        "output_port": "1/10/48",
+                        "select_rx_vlan": [
+                            "140"
+                        ],
+                        "select_tx_vlan": [
+                            "140"
+                        ],
+                        "session_type": "port"
+                    }
+                }
+            ]
+        ]
+    },
+    "chapel-booth-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6954449292480448",
+                        "-4138813456137184"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8080991977442570",
+                        "-8644360064819859"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "chapel-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1050910.51.98062",
+                        "-8370094486260178"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2327296426214360",
+                        "6557725602846671"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "chapelhouse-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3291924681760558",
+                        "3169968424083616"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2338458825117776",
+                        "3448456318752072"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "chillwater-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6949328395698108",
+                        "-13217410.29.2137"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-204534251254665",
+                        "-6676809458138102"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "colgateinn-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-771716885606998",
+                        "-8358149309294344"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4856665597422176",
+                        "-5273789323129781"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "conanthouse-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "915190958601227",
+                        "6837485625590484"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8928212698659577",
+                        "646319956822340"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "curtis-010-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3578918203198503",
+                        "2614474804856116"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3745342271558780",
+                        "6265644640511601"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "curtis-040-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2178479152379901",
+                        "-1887989614126577"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1488745457697780",
+                        "-10.93.9764840367"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "curtis-3rd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8250645110244949",
+                        "82311941623732"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8238939589115238",
+                        "5705141635674786"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "curtis-563-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8526846385053678",
+                        "-3300914647161619"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7109633403790220",
+                        "-2178279730220533"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "dana-picker-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4871750544587051",
+                        "4292553904173139"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-207152549554905",
+                        "-3022692464865080"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "dana-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2743045432564599",
+                        "7402946560877091"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4585563635414432",
+                        "7952888986635412"
+                    ]
+                }
+            ]
+        ],
+        "1/1/4": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "drake-3rd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "355344125259483",
+                        "84266639064846"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1046682460253839",
+                        "4018797441901547"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "drake-b13-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-10.51.2587106277",
+                        "3737852174412946"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7806837716324749",
+                        "-7526989474223308"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "drake-b20-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6559155813070996",
+                        "4306878804231128"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3576463556167621",
+                        "-2169020517439950"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "east-3rd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2609867561245996",
+                        "-6671200969828132"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3452966260879092",
+                        "-483250206168501"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "east-base-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5699930308169530",
+                        "3184092714827264"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6114722167690395",
+                        "-3295346894235293"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "frank-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2739764701222203",
+                        "7395579831784676"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3453657059578268",
+                        "6279889853922396"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "gatehouse-1st-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7400134250075363",
+                        "-5827662810.73.94"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4991954466248436",
+                        "-5551306746596015"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "gatehouse-2nd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4984961232655991",
+                        "1494393448129380"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6826137598188499",
+                        "-7239918675715955"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "hascall-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5548552651776148",
+                        "-7242169724351826"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4427136660001714",
+                        "6550498787613119"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "health-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-32910.19.5572797",
+                        "1199684818363563"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3171875806868636",
+                        "1493898128827461"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "ho-126-ems-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7956011280383417",
+                        "-2453115447925903"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7123038821585048",
+                        "-771434465059078"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "ho-126-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4300270394062016",
+                        "6277867476196922"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3861319913560115",
+                        "-3578282201383672"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "ho-240-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3018229038992160",
+                        "-197330656548242"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4985448782199349",
+                        "-4139927483238979"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "ho-348-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3858804619635106",
+                        "3172559015262839"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4149203184502551",
+                        "6263933420716794"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "ho-403-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8523177055230990",
+                        "7680886307876801"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8641059269585943",
+                        "2330297806564744"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "ho-b05-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5985372451029466",
+                        "-8638444324512833"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2168620973665116",
+                        "-3579584016887955"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "hotelmaxwell-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3853061331775556",
+                        "-5833535406548543"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2890027693004643",
+                        "1197727958820938"
+                    ]
+                }
+            ]
+        ],
+        "1/1/3": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "1/1/4": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "hrd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7966956415581405",
+                        "-196152789261184"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4148171924909316",
+                        "5423623901641248"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "huntington-1st-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4706451964586295",
+                        "71453796446348"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3732663314736699",
+                        "6831695336125645"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "huntington-2nd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1055403744722285",
+                        "915080371624972"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4309954069691673",
+                        "3747007011447499"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "jbc-1st-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7516986998249911",
+                        "-6677314482139058"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1607448864839335",
+                        "-3301316033348162"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "jbc-3rd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4587715037896906",
+                        "5984370336344623"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5268566683818551",
+                        "-7244379478580013"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "jbc-base-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8362015962748480",
+                        "4025674921102789"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3022149957604906",
+                        "-200840797762410"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "jbc-sub-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4295955710449648",
+                        "647194462990323"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8088381059923695",
+                        "-8931187472287338"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "jcc-1st-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "86992664000126",
+                        "8243024842434821"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-487414947517916",
+                        "-7797708632916551"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "jcc-2nd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7673565730184985",
+                        "-6964615783899352"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6273551932300063",
+                        "54310.111.067659"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "jcc-3rd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4577295205613753",
+                        "2889535334181272"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6393113541726507",
+                        "-2734443106679634"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "lathrop-110-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8919427089890310",
+                        "1483914544110512"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3731199979607429",
+                        "-8084467934222232"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "lathrop-228-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8075838482664553",
+                        "-7240215691517758"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2165523169775617",
+                        "1478297017211778"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "lawrence-16a-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3179259879368271",
+                        "-8358460861153955"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8244600009373259",
+                        "8797710722153832"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "lawrence-304a-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2448261520836114",
+                        "8248076474382662"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4574683976675382",
+                        "4017357233847310"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "little-105-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5426224618386708",
+                        "6268602804200587"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7526740361955933",
+                        "-10475347510.51.8"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "little-206-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3572854317679123",
+                        "-6954416383380379"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4420057643443724",
+                        "4585215561902836"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "little-208-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1481338945216520",
+                        "1483810711549738"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5545204253622008",
+                        "-484751306928654"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "little-310-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8370944169119188",
+                        "-5541980951229114"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4706982477702121",
+                        "-8083309009774156"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "little-base-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2729045160700776",
+                        "4296361836602429"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4292977701412471",
+                        "5712275120063276"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "mcgregory-210-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5424988932111901",
+                        "-7529443749737836"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2446210600442732",
+                        "-764311138558937"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "mcgregory-314-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2738951053638110",
+                        "7677603556225112"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7233883981184407",
+                        "-7243861624382985"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "mcgregory-401-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2729410719272324",
+                        "-1612679547170872"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-768128303526885",
+                        "7397147902405554"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "mcgregory-sb10-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6111908237051535",
+                        "-6949169623644684"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1771008424443689",
+                        "-5277334167542556"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "merrillhouse-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2737862944385309",
+                        "5714269020028126"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4708831679949303",
+                        "4869281733888030"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "newell1-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7398579998325329",
+                        "3455560356275561"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1495192494323807",
+                        "80162327704267"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "newell2-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7392476684629995",
+                        "6550316608419279"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4430684159412142",
+                        "-5823478286634645"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "newell3-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6951092708900840",
+                        "4579815368079732"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2336735354360359",
+                        "-3021248668455344"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "newell4-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7244674941848411",
+                        "4580349314720314"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6397971312769649",
+                        "-3863456273689324"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "observatory-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4025426781487062",
+                        "-6960324359687066"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "930068039295467",
+                        "-6953887507728078"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "oconnor-lab-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8090988901163321",
+                        "6826591330720663"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7796915010369381",
+                        "-765734421963936"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "oconnor-mail-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "72564801084330",
+                        "4303642733636689"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8238644588530019",
+                        "-6669490008461404"
+                    ]
+                }
+            ]
+        ],
+        "2/1/25": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "2/1/26": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "2/1/30": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "port_access_clients_limit": 1
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "oconnor-printshop-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1610565481737573",
+                        "-8076437886807567"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1486310601426043",
+                        "-1047939684037677"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ],
+        "mgmt": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "aclv4_control_plane_cfg_version": [
+                        2,
+                        0
+                    ]
+                }
+            ]
+        ]
+    },
+    "olin-225-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4141347919909364",
+                        "-2461227800387601"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8517957867807285",
+                        "5707837720490134"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "olin-230-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6279632123325987",
+                        "-2180629715363617"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "920010744711076",
+                        "-6387162597338366"
+                    ]
+                }
+            ]
+        ],
+        "1/1/4": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "ous-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1200263835325896",
+                        "6272506012134499"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6954265584775021",
+                        "928597852284606"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "parker-100-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8650476735001098",
+                        "-3584035386209200"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "645718740516318",
+                        "8240970418123713"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "parker-111-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7685755783239196",
+                        "1481886407386002"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4863160331051889",
+                        "-3294864471741427"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "parker-210-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1605173992395256",
+                        "-8936758769636241"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6268619442687162",
+                        "-8933047101114695"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "parker-302-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7958283074075547",
+                        "926208819528968"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7402979588790118",
+                        "2608313299705921"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "parker-commons-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8802973434458217",
+                        "-8083697398763615"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4136174304102038",
+                        "6829414486124153"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "persson-001-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6105880576441082",
+                        "-2179551138768549"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4020173961662380",
+                        "-4433217619109723"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "persson-008-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1768366247477803",
+                        "5143282125463934"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3182491846347299",
+                        "5994025232208160"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "pinchin-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6827058264163535",
+                        "-7234553942487979"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7403240422338840",
+                        "-2179569689379036"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "raab-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2730647731956334",
+                        "-527710510.75.524"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8370535229793282",
+                        "8801146747489600"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "radiotower-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8802118249945880",
+                        "-767737356207866"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2053115920016117",
+                        "2326037854929363"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "reid-107-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1480338759348061",
+                        "-8922623077114719"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7516792582662044",
+                        "-6963226611909113"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "reid-2nd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6393743177336014",
+                        "360117084083655"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3459276696970710",
+                        "-7524790208876049"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "reid-3rd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3870179678613318",
+                        "352965252379877"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-246233579110.7.",
+                        "4018066576142622"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "reid-cotterell-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2886205901259551",
+                        "2615964716800845"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4995176251835700",
+                        "-2729035960161363"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "reid-football-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2165944861042697",
+                        "4585160284389710"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7968276097897395",
+                        "2608244125536094"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "ryan-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5556911103325712",
+                        "2055076178565095"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5555037269499791",
+                        "1768459041906150"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "sanford-north-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "92910.65.612259",
+                        "-1887258246398268"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "927800457692020",
+                        "-1604223131333417"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "sanford-south-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3306725700853443",
+                        "6561880862942499"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7113757454821644",
+                        "3736947081037524"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "sanford-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3017089709999299",
+                        "2334177233479107"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1323260484436479",
+                        "3739987371953337"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "soccer-home-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5982489815033791",
+                        "-3009873677192769"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2052192414598892",
+                        "-7809350710112280"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "soccer-pressbox-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6386624498432117",
+                        "5710.3.31467554"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4864373584122173",
+                        "-8087604620142573"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "spearhouse-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5138540755831127",
+                        "2613852769656299"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "6547381184539151",
+                        "-196340933238986"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "stillman-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7957448300784260",
+                        "7966933991746451"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6115692598395127",
+                        "4300926008080777"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "townhouse1-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-35820163310.18.8",
+                        "2891723053325844"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4296357600643150",
+                        "-2180683954939222"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "townhouse2-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7966763171927191",
+                        "4577451575832444"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "373126410.7.110",
+                        "-7800638913038801"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "townhouse3-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1764148524352419",
+                        "1483850000283293"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3289934303505719",
+                        "-4709080027440258"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "townhouse4-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3175208126790560",
+                        "4578491703877371"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3572685767390218",
+                        "85915397046613"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "townhouse5-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-764982098607021",
+                        "-4992112842385455"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7398872250603925",
+                        "-488640310406226"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "townhouse6-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5831399865547668",
+                        "8238502836786844"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8518803537310823",
+                        "5982352574248878"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "townhouse7-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-2459665296126442",
+                        "-3015782771344639"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8080782775004103",
+                        "3166748869800713"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "townhouse8-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8370889526399195",
+                        "8246257608865891"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7685233625950275",
+                        "358283262882435"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "townhouse9-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8798357396095560",
+                        "4016385015335828"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6115364150072896",
+                        "638714949824338"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "trudy-2nd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1490825555413717",
+                        "-1325116940311172"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5430827198867440",
+                        "-1897606969877549"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "trudy-grnd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-10.111.885884327",
+                        "-7519440504204345"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1775810.28.19103",
+                        "-208096724292508"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "tyler-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6393288172428734",
+                        "-1606254140091203"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4982363200858866",
+                        "638007093451998"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "uc1-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8363886154537772",
+                        "-4982392379496121"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7793587821511117",
+                        "3739396597249202"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "uc10-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8084692312416701",
+                        "-4707229734658158"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1492230817517250",
+                        "1490402626224247"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "uc2-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2613573915915207",
+                        "-4980697640907387"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "77183318980283",
+                        "-8084959336053484"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "uc3-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7804230974562503",
+                        "-2176733541011124"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "8809802129137865",
+                        "-7527352024340810"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "uc4-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-489935194443558",
+                        "-2168757415941035"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7958377020227122",
+                        "2609173365479663"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "uc5-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-3018032148235464",
+                        "1487365796567239"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1203320248278411",
+                        "7405079669495867"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "uc6-7-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-4990917531405523",
+                        "-6392525566629886"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4865481290690383",
+                        "-8080954343677857"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "uc8-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-8925350507306140",
+                        "75702808945146"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "3178951459956918",
+                        "4857157910166157"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "uc9-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2338651705187203",
+                        "4578542308383368"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "7110412340725059",
+                        "8241475407314039"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "wendt-north-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "639426710108987",
+                        "5138755857503700"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "4020498144486878",
+                        "-4428327291961060"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Deletion",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "wendt-south-sw": {
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1207189769225798",
+                        "6834140070246568"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "west-3rd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "643464008292364",
+                        "4293323665110368"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "5149070282770968",
+                        "-6117517999844963"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "west-base-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-479875367867069",
+                        "-2447725112509771"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-5824142223891727",
+                        "7686533709755776"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "wynn-1st-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-7800845689520139",
+                        "8521039618877524"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "2618152594782383",
+                        "7960717571484063"
+                    ]
+                }
+            ]
+        ],
+        "1/1/3": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "port_access_clients_limit": 1
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "wynn-2nd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-6958436088901227",
+                        "5710097877356580"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "-1894515218946580",
+                        "1201325151759191"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    },
+    "wynn-3rd-sw": {
+        "control-plane-services/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "1762426309948763",
+                        "5706141115267012"
+                    ]
+                }
+            ]
+        ],
+        "control-plane/ipv4": [
+            [
+                "ACL",
+                "Modification",
+                {
+                    "cfg_version": [
+                        "369075282201409",
+                        "-6111972786043251"
+                    ]
+                }
+            ]
+        ],
+        "aaa": [
+            [
+                "System",
+                "Deletion",
+                {
+                    "portaccess_local_accounting_enable": "true"
+                }
+            ]
+        ]
+    }
+}
