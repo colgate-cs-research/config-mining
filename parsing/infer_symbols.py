@@ -146,6 +146,7 @@ class SymbolExtractor:
         self.keykinds = {
             (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
             (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
+            (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term'), ('name', '*'), ('type', 'to')): "mixed",
             (('name', '*'), ('type', 'groups')) : "name",
         }
         self.mixedkinds = {}
@@ -400,6 +401,7 @@ class SymbolExtractor:
     def extract_symbols_list_mixed(self, lst, path):
         # Treat values as combination of symbol type and symbol name
         for symbol in lst:
+            symbol = symbol.strip(' ')
             # Not a symbol type/name combination
             if ' ' not in symbol:
                 pass

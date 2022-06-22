@@ -64,12 +64,16 @@ def main():
 
     extractor = RelationshipExtractor(all_configs, symbol_table, inverted_table, keykinds)
 
+    with open(os.path.join(arguments.output_dir, "edges.json"), 'w') as edges_file:
+        json.dump(extractor.edges, edges_file, indent=4, sort_keys=True)
+
 class RelationshipExtractor:
     def __init__(self, config, symbol_table, inverted_table, keykinds):
         self.config = config
         self.symbol_table = symbol_table
         self.inverted_table = inverted_table
         self.keykinds = keykinds
+        self.edges = {}
 
         # Iterate over top-level types of interest (e.g., ACLs, interfaces, etc.)
         for node in config:
@@ -106,7 +110,7 @@ class RelationshipExtractor:
         if (kind == "name"):
             self.extract_relationships_list_name(lst, path, symbols)
         elif (kind == "type"):
-            logging.warning("!Not extracting relationships from list of types: {}".format(path))
+            logging.debug("!Not extracting relationships from list of types: {}".format(path))
         elif (kind == "mixed"):
             self.extract_relationships_list_mixed(lst, path, symbols)
 
@@ -125,7 +129,10 @@ class RelationshipExtractor:
             if symbol_name not in self.symbol_table:
                 logging.warning("!Cannot infer type for symbol {}: symbol not in table".format(symbol_name))
                 return None 
-            if len(self.symbol_table[symbol_name]) != 1:
+            if len(self.symbol_table[symbol_name]) == 0:
+                logging.debug("!Cannot infer type for symbol {}: no possible types".format(symbol_name, len(self.symbol_table[symbol_name])))
+                return None 
+            if len(self.symbol_table[symbol_name]) > 1:
                 logging.warning("!Cannot infer type for symbol {}: {} possible types".format(symbol_name, len(self.symbol_table[symbol_name])))
                 return None 
             
@@ -147,20 +154,18 @@ class RelationshipExtractor:
    
     def extract_relationships_key_name(self, dct, path, symbols):
         # Treat keys as symbol names
-        symbol_type = None
-        if path[-1][0] == "type":
-            symbol_type = path[-1][1]
         for symbol_name, symbol_value in dct.items():
-            symbol = self.get_symbol(symbol_name, symbol_type)
+            to_append = self.consider_edge(symbol_name, None, path, symbols)
+            '''symbol = self.get_symbol(symbol_name, symbol_type)
             if symbol != None:
                 if len(symbols) >= 1:
-                    logging.info("{} --- {}".format(symbols[-1], symbol))
+                    self.add_edge(symbols[-1], symbol, path)
             else:
-                logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))
+                logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))'''
             if isinstance(symbol_value, dict):
-                self.parse_dict(symbol_value, path + [('name', symbol_name)], (symbols + [symbol] if symbol != None else symbols))
+                self.parse_dict(symbol_value, path + [('name', symbol_name)], (symbols + to_append))
             elif isinstance(symbol_value, list):
-                self.parse_list(symbol_value, path + [('name', symbol_name)], (symbols + [symbol] if symbol != None else symbols))
+                self.parse_list(symbol_value, path + [('name', symbol_name)], (symbols + to_append))
 
     def extract_relationships_key_type(self, dct, path, symbols):
         # Treat keys as symbol types 
@@ -170,12 +175,13 @@ class RelationshipExtractor:
             elif isinstance(value, dict):
                 self.parse_dict(value, path + [('type', symbol_type)], symbols)
             elif isinstance(value, str) or isinstance(value, int):
-                symbol = self.get_symbol(value, symbol_type)
+                self.consider_edge(value, symbol_type, path, symbols)
+                '''symbol = self.get_symbol(value, symbol_type)
                 if symbol != None:
                     if len(symbols) >= 1:
-                        logging.info("{} --- {}".format(symbols[-1], symbol)) 
+                        self.add_edge(symbols[-1], symbol, path)
                 else:
-                    logging.debug("No matching symbol for {} : {}".format(symbol_type, value))
+                    logging.debug("No matching symbol for {} : {}".format(symbol_type, value))'''
             elif isinstance(value, list):
                 self.parse_list(value, path + [('type', symbol_type)], symbols)
                 #for subvalue in value:
@@ -183,20 +189,20 @@ class RelationshipExtractor:
 
     def extract_relationships_list_name(self, lst, path, symbols):
         # Treat values as symbol names
-        symbol_type = None
-        if path[-1][0] == "type":
-            symbol_type = path[-1][1]
         for symbol_name in lst:
-            symbol = self.get_symbol(symbol_name, symbol_type)
+            self.consider_edge(symbol_name, None, path, symbols)
+            '''symbol = self.get_symbol(symbol_name, symbol_type)
             if symbol != None:
                 if len(symbols) >= 1:
-                    logging.info("{} --- {}".format(symbols[-1], symbol))
+                    self.add_edge(symbols[-1], symbol, path)
             else:
-                logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))
+                logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))'''
 
     def extract_relationships_list_mixed(self, lst, path, symbols):
         # Treat values as combination of symbol type and symbol name
         for entry in lst:
+            entry = entry.strip(' ')
+
             # Not a symbol type/name combination
             if ' ' not in entry:
                 pass
@@ -205,12 +211,13 @@ class RelationshipExtractor:
             symbol_type = parts[0]
             for symbol_name in parts[1:]:
                 symbol_name = symbol_name.strip("""'"[), """)
-                symbol = self.get_symbol(symbol_name, symbol_type)
+                self.consider_edge(symbol_name, symbol_type, path, symbols)
+                '''symbol = self.get_symbol(symbol_name, symbol_type)
                 if symbol != None:
                     if len(symbols) >= 1:
-                        logging.info("{} --- {}".format(symbols[-1], symbol))
+                        self.add_edge(symbols[-1], symbol, path)
                 else:
-                    logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))
+                    logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))'''
 
             '''# Pair of symbol type and name
             elif symbol.count(' ') == 1:
@@ -235,6 +242,22 @@ class RelationshipExtractor:
             else:
                 logging.debug("!Cannot infer symbol name/type for mixed value: {}".format(symbol))'''
 
+    def consider_edge(self, symbol_name, symbol_type, path, symbols):
+        if symbol_type == None and path[-1][0] == "type":
+            symbol_type = path[-1][1]
+
+        symbol = self.get_symbol(symbol_name, symbol_type)
+        if symbol != None:
+            if len(symbols) >= 1:
+                device = path[0][1]
+                if device not in self.edges:
+                    self.edges[device] = []
+                self.edges[device].append((symbols[-1], symbol))
+                logging.info("{} --- {}".format(symbols[-1], symbol))
+            return [symbol]
+        else:
+            logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))
+            return []
 
 if __name__ == "__main__":
     main()
