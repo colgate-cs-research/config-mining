@@ -7,6 +7,9 @@ from sklearn.preprocessing import LabelEncoder as le
 import get_rule_coverage 
 from sklearn.metrics import f1_score
 import logging
+from datetime import datetime, date
+
+
 
 # module-wide logging
 logging.basicConfig(level=logging.DEBUG)#,filemode='w',filename="./TO_REMOVE/temp/spanning_rules.log")
@@ -58,6 +61,7 @@ def stopping_condition(for_sum,option = 0):
         
         val =  True if (ratio)<threshold else False
         #print("Untouched_rows:"+str(untouched_rows))
+    
 
     print(" Untouched percentage:"+str(round(untouched_rows/total_rows*100)) + '%', end="\r")
     
@@ -72,7 +76,10 @@ def get_rule_set(rule_matrix,total_rows,initial_weight,weight_reduction):
 
     rule_set =[]
     old_sum=np.Inf
-    while not stopping_condition(for_sum):
+    start_time = time.time()
+    #datetime.combine(date.today(), time.process_time()) - datetime.combine(date.today(), start_time)
+    while (not stopping_condition(for_sum)) and time.time() - start_time<600:#,option=0):
+
     
         
         # print("Current sum(for_sum):"+str(np.sum(for_sum)))
@@ -146,7 +153,7 @@ def main():
     parser.add_argument('-p', '--precision', type=float, default=0.950, help="Only select rules with precison above the given value")
     arguments = parser.parse_args()
 
-    outfile = "./tmep_df.csv"
+    outfile = "./vlan474_spanning_rules.csv"
     grp_feature = arguments.feature
     depth = arguments.depth
     group = arguments.group  # 0 for not present | 1 for present | -1 for both
