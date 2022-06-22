@@ -1,0 +1,21 @@
+{
+    "ocon6410": {
+        "1/6/17": [
+            [
+                "Interface",
+                "Modification",
+                {
+                    "user_config": [
+                        {
+                            "admin": "down",
+                            "mtu": "9198"
+                        },
+                        {
+                            "mtu": "9198"
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}

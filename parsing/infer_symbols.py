@@ -9,76 +9,42 @@ import pprint
 
 TOP_LEVEL_TYPES_JUNIPER = [
     #"groups", 
-    #"interfaces", 
+    "interfaces", 
     "policy-options", 
-    #"firewall", 
+    "firewall", 
 ]
 TOP_LEVEL_TYPES_ARUBA = [
-    "Port", 
-    "Interface", 
+    #"AAA_Accounting_Attributes",
+    #"AAA_Server_Group",
+    #"AAA_Server_Group_Prio",
     "ACL", 
+    "Class",
+    "Interface", 
+    "Port", 
     "VLAN", 
+    "VRF"
 ]
-VALID_TYPES_JUNIPER = [
-    "interfaces",
-    "unit",
-    "description",
-    "mtu",
-    "vlan-id",
-    "apply-groups",
-    "encapsulation",
-    "address",
-    "802.3ad",
-    "minimum-links",
-    "link-speed",
-    "input",
-    "policy-statement",
-    "term",
-    "community",
-    "members",
-    "filter",
-    "protocol",
-    "protocol-except",
-    "icmp-type",
-    "ip-options",
-    "source-port",
-    "destination-port",
-    "source-address",
-    "destination-address",
-    "prefix-list",
-    "source-prefix-list",
-    "from",
-    "then",
-    "to",
-]
-VALID_TYPES_ARUBA = [
-    "interface",
-    "interfaces",
-    "port",
-    "name",
-    "description",
-    "vlan_tag",
-    "vlan_trunks",
-    "loop_protect_vlan",
-    "lacp-aggregation-key",
-    "mtu",
-    "port_access_clients_limit",
-    "admin",
-    "ip4_address",
-    "ip_mtu",
-    "vlan_mode",
-    "qos_trust",
-    "type",
-    "duplex",
-    "autoneg",
-    "lacp",
-    "vrf",
-    "speeds",
-]
+KEYKINDS_JUNIPER = {
+    (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
+    (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
+    (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term'), ('name', '*'), ('type', 'to')): "mixed",
+    (('name', '*'), ('type', 'groups')) : "name",
+}
+KEYKINDS_ARUBA = {
+    (('name', '*'), ('type', 'AAA_Server_Group')) : "name",
+    (('name', '*'), ('type', 'ACL')) : "name",
+    (('name', '*'), ('type', 'Class'), ('name', '*')) : "type",
+    (('name', '*'), ('type', 'Port'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'VRF')) : "name",
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'NTP_Association')): 'name',
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Radius_Server')): 'name',
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Static_Route')): 'name',
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Tacacs_Server')): 'name',
+}
 TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER
-VALID_TYPES = VALID_TYPES_JUNIPER
-#TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_ARUBA
-#VALID_TYPES = VALID_TYPES_ARUBA
+KEYKINDS = KEYKINDS_JUNIPER
+TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_ARUBA
+KEYKINDS = KEYKINDS_ARUBA
 
 def main():
     # Parse command-line arguments
@@ -143,11 +109,8 @@ class SymbolExtractor:
     def __init__(self, config, symbol_table={}):
         self.config = config
         self.symbol_table = symbol_table
-        self.keykinds = {
-            (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
-            (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
-            (('name', '*'), ('type', 'groups')) : "name",
-        }
+        self.keykinds = KEYKINDS
+        self.mixedkinds = {}
 
         # Iterate over top-level types of interest (e.g., ACLs, interfaces, etc.)
         for node in config:
@@ -170,10 +133,17 @@ class SymbolExtractor:
 
             logging.debug("Dictionaries:")
             for d in dictionaries:
-                logging.debug("\t{}".format(d.keys()))
+                try:
+                    logging.debug("\t{}".format(d.keys()))
+                except Exception as ex:
+                    logging.error("Mixed subinstances for {}".format(path))
+                    raise ex
 
             kind = self.infer_keykind(dictionaries)
             self.keykinds[path_signature] = kind
+
+            if kind == "unknown":
+                logging.error("!Cannot infer key kind for {}".format(path))
         logging.debug("Dict keys are {}s".format(kind))
         if (kind == "name"):
             self.extract_symbols_key_name(dct, path)
@@ -195,11 +165,20 @@ class SymbolExtractor:
 
             kind = self.infer_keykind(lists)
             self.keykinds[path_signature] = kind
+
+            if kind == "unknown":
+                logging.error("!Cannot infer key kind for {}".format(path))
+            #elif kind == "mixed":
+            #    kinds = self.infer_mixedkinds(lists)
+            #    self.mixedkinds[path_signature] = kinds
+            #    logging.debug("Inferred kinds for mixed {}:\n{}".format(path, pprint.pformat(kinds))) 
         logging.debug("List values are {}s".format(kind))
         if (kind == "name"):
             self.extract_symbols_list_name(lst, path)
         elif (kind == "type"):
-            logging.warning("!Not recursing on list of types: {}".format(path))
+            logging.debug("!Not recursing on list of types: {}".format(path))
+        elif (kind == "mixed"):
+            self.extract_symbols_list_mixed(lst, path)
 
     def get_path_signature(self, path):
         signature = []
@@ -284,9 +263,12 @@ class SymbolExtractor:
     def infer_keykind(self, instances):
         num_inst = len(instances)
         if (num_inst == 1):
-            logging.debug("\tNeed to examine subdictionaries")   
-            return self.infer_dict_keykind(instances[0])
-
+            if isinstance(instances[0], dict):
+                logging.debug("\tNeed to examine subdictionaries")   
+                return self.infer_dict_keykind(instances[0])
+            elif isinstance(instances[0], list):
+                return "unknown"  
+ 
         unique_keys = set()
         num_keys = 0
         for inst in instances:
@@ -301,12 +283,51 @@ class SymbolExtractor:
         logging.debug("\tUnique sub keys {}".format(num_unique_keys))
         logging.debug("\tTotal sub keys {}".format(num_keys))
         if (num_keys == 0):
-            logging.error("Cannot infer key kind!")
-            return "type"
-        if (num_unique_keys / num_keys > 0.2) or num_unique_keys > 100:
-            return "name"
+            return "unknown"
+        if (num_unique_keys / num_keys > 0.2) or num_unique_keys > 25:
+            num_unique_keys_with_spaces = 0
+            for key in unique_keys:
+                if " " in key:
+                   num_unique_keys_with_spaces += 1 
+            logging.debug("\tUnique sub keys with spaces {}".format(num_unique_keys_with_spaces)) 
+            if (num_unique_keys_with_spaces / num_unique_keys > 0.9):
+                return "mixed"
+            else:
+                return "name"
         else:
             return "type"
+
+    def infer_mixedkinds(self, instances):
+        counts = {}
+        for inst in instances:
+            if isinstance(inst, dict):
+                symbols = inst.keys()
+            elif isinstance(inst, list):
+                symbols = inst
+            else:
+                logging.error("!Cannot infer mixed kinds for {}".format(type(inst)))
+                continue
+            
+            for symbol in symbols:
+                parts = symbol.split(" ")
+                for part in parts:
+                    if part not in counts:
+                        counts[part] = 0
+                    counts[part] += 1
+
+        denominator = max(counts.values())
+        counts = { k : v / denominator for k, v in counts.items() }        
+        return counts
+
+        '''kinds = {}
+        denominator = max(counts.values())
+        for symbol, count in counts.items():
+            if count/denominator > 0.15:
+                kinds[symbol] = "type"
+            else:
+                kinds[symbol] = "name"
+
+        return kinds'''
     
     def extract_symbols_key_name(self, dct, path):
         # Treat keys as symbol names
@@ -335,7 +356,42 @@ class SymbolExtractor:
                 #    self.add_to_symbol_table(str(subvalue), symbol_type)
 
     def extract_symbols_list_name(self, lst, path):
-        logging.warning("!Not extracting names from list {}...".format(path))
+        # Treat values as symbol names
+        symbol_type = None
+        if path[-1][0] == "type":
+            symbol_type = path[-1][1]
+        for symbol_name in lst:
+            self.add_to_symbol_table(symbol_name, symbol_type)
+
+    def extract_symbols_list_mixed(self, lst, path):
+        # Treat values as combination of symbol type and symbol name
+        for symbol in lst:
+            symbol = symbol.strip(' ')
+            # Not a symbol type/name combination
+            if ' ' not in symbol:
+                pass
+            # Pair of symbol type and name
+            elif symbol.count(' ') == 1:
+                symbol_type, symbol_name = symbol.split(' ')
+                self.add_to_symbol_table(symbol_name, symbol_type)
+            # Symbol type and list of names
+            elif ' [' in symbol and symbol[-1] == ']':
+                symbol_type, symbol_names = symbol[:-1].split('[')
+                symbol_type = symbol_type[:-1] # Strip space
+                symbol_names = symbol_names.split(',')
+                for symbol_name in symbol_names:
+                    symbol_name = symbol_name.strip("', ")
+                    self.add_to_symbol_table(symbol_name, symbol_type)
+            # Symbol type and list of names
+            elif ' (' in symbol and symbol[-1] == ')':
+                symbol_type, symbol_names = symbol[:-1].split('(')
+                symbol_type = symbol_type[:-1] # Strip space
+                symbol_names = symbol_names.split("&&")
+                for symbol_name in symbol_names:
+                    symbol_name = symbol_name.strip("', ")
+                    self.add_to_symbol_table(symbol_name, symbol_type)
+            else:
+                logging.warning("!Cannot infer symbol name/type for mixed value: {}".format(symbol))
 
     def add_to_symbol_table(self, symbol_name, symbol_type):
         # Put type in canonical form
@@ -347,10 +403,6 @@ class SymbolExtractor:
             return
         
         logging.debug("Adding {} {} to symbol table".format(symbol_type, symbol_name))
-
-        # Sanity checking
-        if symbol_type not in VALID_TYPES:
-            logging.debug("!{} is not a valid symbol type".format(symbol_type))
 
         # Normalize IP addresses
         if symbol_type != None and "address" in symbol_type:

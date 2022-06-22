@@ -1,0 +1,15 @@
+{
+    "ho-403-sw": {
+        "dlog_destination": [
+            [
+                "System",
+                "Addition",
+                {
+                    "dlog_destination": {
+                        "syslog": "debug"
+                    }
+                }
+            ]
+        ]
+    }
+}

@@ -1,0 +1,144 @@
+{
+    "bookstore-sw": {
+        "1/1/5": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "stp_config": {
+                        "loop_guard_enable": "true"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_mode": [
+                        "native-tagged",
+                        "native-untagged"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "3000"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "88",
+                            "168",
+                            "29",
+                            "56",
+                            "156",
+                            "500",
+                            "556",
+                            "164",
+                            "60",
+                            "882",
+                            "3128"
+                        ],
+                        [
+                            "88",
+                            "168",
+                            "72",
+                            "29",
+                            "56",
+                            "156",
+                            "556",
+                            "164",
+                            "73",
+                            "60",
+                            "882",
+                            "3000",
+                            "611"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "loop_protect_vlan": [
+                        "88",
+                        "168",
+                        "72",
+                        "29",
+                        "56",
+                        "156",
+                        "556",
+                        "164",
+                        "73",
+                        "60",
+                        "882",
+                        "3000",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "qos_config": {
+                        "qos_trust": "dscp"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ]
+    },
+    "oconnor-row01-sw": {
+        "1/1/30": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "admin": "down"
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "loop_protect_enable": true
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "stp_config": {
+                        "admin_edge_port_enable": "true",
+                        "bpdu_guard_enable": "true",
+                        "restricted_port_tcn_disable": "true"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vlan_tag": "48"
+                }
+            ]
+        ]
+    }
+}

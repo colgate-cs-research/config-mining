@@ -1,0 +1,103 @@
+{
+    "olin-230-sw": {
+        "1/1/4": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "stp_config": {
+                        "loop_guard_enable": "true"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_mode": [
+                        "native-tagged",
+                        "native-untagged"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "3002"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "56",
+                            "500",
+                            "60",
+                            "556",
+                            "164",
+                            "88",
+                            "156",
+                            "168"
+                        ],
+                        [
+                            "56",
+                            "72",
+                            "60",
+                            "73",
+                            "556",
+                            "3002",
+                            "164",
+                            "882",
+                            "88",
+                            "611",
+                            "156",
+                            "168"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "loop_protect_vlan": [
+                        "56",
+                        "72",
+                        "60",
+                        "73",
+                        "556",
+                        "3002",
+                        "164",
+                        "882",
+                        "88",
+                        "611",
+                        "156",
+                        "168"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "qos_config": {
+                        "qos_trust": "dscp"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ]
+    }
+}

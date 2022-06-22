@@ -48,7 +48,7 @@ def generate_AND_matrix (matrix, output_matrix):
         if (line[j] == 1 and line[k] == 1):
           output_matrix[j][k] += 1
           output_matrix[k][j] += 1
-  
+  print(output_matrix)
   return output_matrix
 
 def spearman_matrix(matrix, stanza_type):
@@ -106,6 +106,7 @@ def main():
 
   AND_matrix = generate_AND_matrix (input_matrix, output_matrix)
   printout(AND_matrix)
+  
 
 if __name__ == "__main__":
   main()

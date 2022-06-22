@@ -1,0 +1,2048 @@
+{
+    "76broad-sw": {
+        "lag250": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "164",
+                            "611",
+                            "73",
+                            "56",
+                            "475",
+                            "32",
+                            "66",
+                            "3240",
+                            "240",
+                            "60",
+                            "503",
+                            "882",
+                            "29",
+                            "96",
+                            "3128",
+                            "3020",
+                            "168",
+                            "192",
+                            "508",
+                            "3000",
+                            "556",
+                            "25",
+                            "500",
+                            "478",
+                            "476",
+                            "156",
+                            "413",
+                            "72",
+                            "24",
+                            "477",
+                            "474"
+                        ],
+                        [
+                            "475",
+                            "556",
+                            "164",
+                            "476",
+                            "3128",
+                            "240",
+                            "611",
+                            "474",
+                            "168",
+                            "477",
+                            "24",
+                            "192",
+                            "25",
+                            "478",
+                            "96",
+                            "73",
+                            "29",
+                            "882",
+                            "500",
+                            "32",
+                            "503",
+                            "3020",
+                            "508",
+                            "56",
+                            "72",
+                            "3240",
+                            "3000",
+                            "66",
+                            "60",
+                            "413",
+                            "156"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "164",
+                            "611",
+                            "73",
+                            "56",
+                            "475",
+                            "32",
+                            "66",
+                            "3240",
+                            "240",
+                            "60",
+                            "503",
+                            "882",
+                            "29",
+                            "96",
+                            "3128",
+                            "3020",
+                            "168",
+                            "192",
+                            "508",
+                            "3000",
+                            "556",
+                            "25",
+                            "500",
+                            "478",
+                            "476",
+                            "156",
+                            "413",
+                            "72",
+                            "24",
+                            "477",
+                            "474"
+                        ],
+                        [
+                            "475",
+                            "556",
+                            "164",
+                            "476",
+                            "3128",
+                            "240",
+                            "611",
+                            "474",
+                            "168",
+                            "477",
+                            "24",
+                            "192",
+                            "25",
+                            "478",
+                            "96",
+                            "73",
+                            "29",
+                            "882",
+                            "500",
+                            "32",
+                            "503",
+                            "3020",
+                            "508",
+                            "56",
+                            "72",
+                            "3240",
+                            "3000",
+                            "66",
+                            "60",
+                            "413",
+                            "156"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Addition",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Addition",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    },
+    "case-298-sw": {
+        "lag250": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "3020",
+                            "240",
+                            "3248",
+                            "476",
+                            "4",
+                            "25",
+                            "474",
+                            "65",
+                            "88",
+                            "3000",
+                            "40",
+                            "500",
+                            "168",
+                            "24",
+                            "80",
+                            "777",
+                            "66",
+                            "413",
+                            "60",
+                            "152",
+                            "3240",
+                            "20",
+                            "478",
+                            "164",
+                            "8",
+                            "29",
+                            "73",
+                            "477",
+                            "56",
+                            "506",
+                            "320",
+                            "556",
+                            "475",
+                            "508",
+                            "156",
+                            "3128",
+                            "882",
+                            "32",
+                            "3244",
+                            "72",
+                            "611"
+                        ],
+                        [
+                            "556",
+                            "240",
+                            "8",
+                            "152",
+                            "168",
+                            "3128",
+                            "32",
+                            "413",
+                            "320",
+                            "611",
+                            "508",
+                            "777",
+                            "3244",
+                            "29",
+                            "73",
+                            "4",
+                            "164",
+                            "3240",
+                            "475",
+                            "66",
+                            "25",
+                            "60",
+                            "477",
+                            "20",
+                            "474",
+                            "882",
+                            "500",
+                            "506",
+                            "65",
+                            "24",
+                            "3000",
+                            "156",
+                            "3020",
+                            "40",
+                            "476",
+                            "88",
+                            "478",
+                            "3248",
+                            "72",
+                            "56",
+                            "80"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "3020",
+                            "240",
+                            "3248",
+                            "476",
+                            "4",
+                            "25",
+                            "474",
+                            "65",
+                            "88",
+                            "3000",
+                            "40",
+                            "500",
+                            "168",
+                            "24",
+                            "80",
+                            "777",
+                            "66",
+                            "413",
+                            "60",
+                            "152",
+                            "3240",
+                            "20",
+                            "478",
+                            "164",
+                            "8",
+                            "29",
+                            "73",
+                            "477",
+                            "56",
+                            "506",
+                            "320",
+                            "556",
+                            "475",
+                            "508",
+                            "156",
+                            "3128",
+                            "882",
+                            "32",
+                            "3244",
+                            "72",
+                            "611"
+                        ],
+                        [
+                            "556",
+                            "240",
+                            "8",
+                            "152",
+                            "168",
+                            "3128",
+                            "32",
+                            "413",
+                            "320",
+                            "611",
+                            "508",
+                            "777",
+                            "3244",
+                            "29",
+                            "73",
+                            "4",
+                            "164",
+                            "3240",
+                            "475",
+                            "66",
+                            "25",
+                            "60",
+                            "477",
+                            "20",
+                            "474",
+                            "882",
+                            "500",
+                            "506",
+                            "65",
+                            "24",
+                            "3000",
+                            "156",
+                            "3020",
+                            "40",
+                            "476",
+                            "88",
+                            "478",
+                            "3248",
+                            "72",
+                            "56",
+                            "80"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Addition",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Addition",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Radius_Server": [
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Tacacs_Server": [
+                        {
+                            "default/5.5.132.201/49": {
+                                "address": "5.5.132.201",
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-tacacs",
+                                    "tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 1
+                            },
+                            "default/5.5.132.202/49": {
+                                "address": "5.5.132.202",
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-tacacs",
+                                    "tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/5.5.132.201/49": {
+                                "address": "5.5.132.201",
+                                "default_group_priority": 1,
+                                "group": [
+                                    "tacacs",
+                                    "clearpass-tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 1
+                            },
+                            "default/5.5.132.202/49": {
+                                "address": "5.5.132.202",
+                                "default_group_priority": 2,
+                                "group": [
+                                    "tacacs",
+                                    "clearpass-tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-545b-sw": {
+        "lag250": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "508",
+                            "56",
+                            "80",
+                            "475",
+                            "152",
+                            "3248",
+                            "413",
+                            "29",
+                            "500",
+                            "3240",
+                            "320",
+                            "20",
+                            "40",
+                            "777",
+                            "4",
+                            "506",
+                            "66",
+                            "25",
+                            "3000",
+                            "156",
+                            "556",
+                            "240",
+                            "478",
+                            "611",
+                            "24",
+                            "65",
+                            "168",
+                            "8",
+                            "88",
+                            "3128",
+                            "73",
+                            "32",
+                            "60",
+                            "477",
+                            "882",
+                            "476",
+                            "474",
+                            "3020",
+                            "72",
+                            "164",
+                            "3244"
+                        ],
+                        [
+                            "478",
+                            "56",
+                            "777",
+                            "25",
+                            "506",
+                            "60",
+                            "20",
+                            "65",
+                            "73",
+                            "413",
+                            "164",
+                            "152",
+                            "29",
+                            "3248",
+                            "3244",
+                            "500",
+                            "156",
+                            "66",
+                            "24",
+                            "477",
+                            "88",
+                            "168",
+                            "72",
+                            "611",
+                            "475",
+                            "80",
+                            "476",
+                            "882",
+                            "3128",
+                            "4",
+                            "240",
+                            "3020",
+                            "320",
+                            "556",
+                            "474",
+                            "32",
+                            "3000",
+                            "40",
+                            "8",
+                            "508",
+                            "3240"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "508",
+                            "56",
+                            "80",
+                            "475",
+                            "152",
+                            "3248",
+                            "413",
+                            "29",
+                            "500",
+                            "3240",
+                            "320",
+                            "20",
+                            "40",
+                            "777",
+                            "4",
+                            "506",
+                            "66",
+                            "25",
+                            "3000",
+                            "156",
+                            "556",
+                            "240",
+                            "478",
+                            "611",
+                            "24",
+                            "65",
+                            "168",
+                            "8",
+                            "88",
+                            "3128",
+                            "73",
+                            "32",
+                            "60",
+                            "477",
+                            "882",
+                            "476",
+                            "474",
+                            "3020",
+                            "72",
+                            "164",
+                            "3244"
+                        ],
+                        [
+                            "478",
+                            "56",
+                            "777",
+                            "25",
+                            "506",
+                            "60",
+                            "20",
+                            "65",
+                            "73",
+                            "413",
+                            "164",
+                            "152",
+                            "29",
+                            "3248",
+                            "3244",
+                            "500",
+                            "156",
+                            "66",
+                            "24",
+                            "477",
+                            "88",
+                            "168",
+                            "72",
+                            "611",
+                            "475",
+                            "80",
+                            "476",
+                            "882",
+                            "3128",
+                            "4",
+                            "240",
+                            "3020",
+                            "320",
+                            "556",
+                            "474",
+                            "32",
+                            "3000",
+                            "40",
+                            "8",
+                            "508",
+                            "3240"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Addition",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Addition",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Tacacs_Server": [
+                        {
+                            "default/5.5.132.201/49": {
+                                "address": "5.5.132.201",
+                                "default_group_priority": 1,
+                                "group": [
+                                    "tacacs",
+                                    "clearpass-tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 1
+                            },
+                            "default/5.5.132.202/49": {
+                                "address": "5.5.132.202",
+                                "default_group_priority": 2,
+                                "group": [
+                                    "tacacs",
+                                    "clearpass-tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/5.5.132.201/49": {
+                                "address": "5.5.132.201",
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-tacacs",
+                                    "tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 1
+                            },
+                            "default/5.5.132.202/49": {
+                                "address": "5.5.132.202",
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-tacacs",
+                                    "tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    },
+    "health-sw": {
+        "lag250": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "611",
+                            "72",
+                            "413",
+                            "156",
+                            "882",
+                            "12",
+                            "29",
+                            "503",
+                            "476",
+                            "475",
+                            "508",
+                            "3020",
+                            "240",
+                            "3128",
+                            "60",
+                            "73",
+                            "556",
+                            "477",
+                            "3000",
+                            "478",
+                            "56",
+                            "66",
+                            "474",
+                            "500"
+                        ],
+                        [
+                            "156",
+                            "500",
+                            "474",
+                            "72",
+                            "476",
+                            "556",
+                            "611",
+                            "66",
+                            "240",
+                            "477",
+                            "73",
+                            "29",
+                            "3128",
+                            "3020",
+                            "508",
+                            "478",
+                            "12",
+                            "882",
+                            "413",
+                            "503",
+                            "3000",
+                            "60",
+                            "56",
+                            "475"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "611",
+                            "72",
+                            "413",
+                            "156",
+                            "882",
+                            "12",
+                            "29",
+                            "503",
+                            "476",
+                            "475",
+                            "508",
+                            "3020",
+                            "240",
+                            "3128",
+                            "60",
+                            "73",
+                            "556",
+                            "477",
+                            "3000",
+                            "478",
+                            "56",
+                            "66",
+                            "474",
+                            "500"
+                        ],
+                        [
+                            "156",
+                            "500",
+                            "474",
+                            "72",
+                            "476",
+                            "556",
+                            "611",
+                            "66",
+                            "240",
+                            "477",
+                            "73",
+                            "29",
+                            "3128",
+                            "3020",
+                            "508",
+                            "478",
+                            "12",
+                            "882",
+                            "413",
+                            "503",
+                            "3000",
+                            "60",
+                            "56",
+                            "475"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Addition",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Addition",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Radius_Server": [
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Tacacs_Server": [
+                        {
+                            "default/5.5.132.201/49": {
+                                "address": "5.5.132.201",
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-tacacs",
+                                    "tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 1
+                            },
+                            "default/5.5.132.202/49": {
+                                "address": "5.5.132.202",
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-tacacs",
+                                    "tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/5.5.132.201/49": {
+                                "address": "5.5.132.201",
+                                "default_group_priority": 1,
+                                "group": [
+                                    "tacacs",
+                                    "clearpass-tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 1
+                            },
+                            "default/5.5.132.202/49": {
+                                "address": "5.5.132.202",
+                                "default_group_priority": 2,
+                                "group": [
+                                    "tacacs",
+                                    "clearpass-tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    },
+    "ho-126-sw": {
+        "1/1/3": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "88",
+                            "168",
+                            "56",
+                            "156",
+                            "500",
+                            "556",
+                            "60",
+                            "164"
+                        ],
+                        [
+                            "156",
+                            "556",
+                            "164",
+                            "500",
+                            "168",
+                            "56",
+                            "88",
+                            "60"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "1/1/4": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "88",
+                            "611",
+                            "168",
+                            "56",
+                            "3002",
+                            "72",
+                            "73",
+                            "882",
+                            "156",
+                            "556",
+                            "60",
+                            "164"
+                        ],
+                        [
+                            "156",
+                            "556",
+                            "3002",
+                            "164",
+                            "73",
+                            "72",
+                            "611",
+                            "168",
+                            "56",
+                            "882",
+                            "88",
+                            "60"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "88",
+                            "611",
+                            "168",
+                            "56",
+                            "3002",
+                            "72",
+                            "73",
+                            "882",
+                            "156",
+                            "556",
+                            "60",
+                            "164"
+                        ],
+                        [
+                            "156",
+                            "556",
+                            "3002",
+                            "164",
+                            "73",
+                            "72",
+                            "611",
+                            "168",
+                            "56",
+                            "882",
+                            "88",
+                            "60"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "1/1/5": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "88",
+                            "611",
+                            "168",
+                            "56",
+                            "3002",
+                            "72",
+                            "73",
+                            "882",
+                            "156",
+                            "556",
+                            "60",
+                            "164"
+                        ],
+                        [
+                            "156",
+                            "556",
+                            "3002",
+                            "164",
+                            "73",
+                            "72",
+                            "611",
+                            "168",
+                            "56",
+                            "882",
+                            "88",
+                            "60"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "88",
+                            "611",
+                            "168",
+                            "56",
+                            "3002",
+                            "72",
+                            "73",
+                            "882",
+                            "156",
+                            "556",
+                            "60",
+                            "164"
+                        ],
+                        [
+                            "156",
+                            "556",
+                            "3002",
+                            "164",
+                            "73",
+                            "72",
+                            "611",
+                            "168",
+                            "56",
+                            "882",
+                            "88",
+                            "60"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "1/1/6": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "88",
+                            "168",
+                            "56",
+                            "156",
+                            "500",
+                            "556",
+                            "60",
+                            "164"
+                        ],
+                        [
+                            "156",
+                            "556",
+                            "164",
+                            "500",
+                            "168",
+                            "56",
+                            "88",
+                            "60"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "lag250": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "interfaces": [
+                        [
+                            "1/1/51",
+                            "2/1/52"
+                        ],
+                        [
+                            "2/1/52",
+                            "1/1/51"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "88",
+                            "152",
+                            "508",
+                            "611",
+                            "477",
+                            "474",
+                            "25",
+                            "4",
+                            "507",
+                            "80",
+                            "168",
+                            "475",
+                            "56",
+                            "3128",
+                            "3000",
+                            "8",
+                            "3002",
+                            "32",
+                            "413",
+                            "476",
+                            "72",
+                            "240",
+                            "478",
+                            "24",
+                            "73",
+                            "29",
+                            "3020",
+                            "66",
+                            "882",
+                            "156",
+                            "500",
+                            "556",
+                            "3240",
+                            "60",
+                            "3244",
+                            "164",
+                            "40"
+                        ],
+                        [
+                            "156",
+                            "478",
+                            "66",
+                            "556",
+                            "3002",
+                            "8",
+                            "164",
+                            "474",
+                            "477",
+                            "73",
+                            "152",
+                            "3240",
+                            "25",
+                            "29",
+                            "413",
+                            "24",
+                            "3244",
+                            "3020",
+                            "4",
+                            "476",
+                            "32",
+                            "72",
+                            "240",
+                            "500",
+                            "611",
+                            "507",
+                            "475",
+                            "508",
+                            "3000",
+                            "3128",
+                            "168",
+                            "56",
+                            "882",
+                            "88",
+                            "80",
+                            "60",
+                            "40"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "88",
+                            "152",
+                            "508",
+                            "611",
+                            "477",
+                            "474",
+                            "25",
+                            "4",
+                            "507",
+                            "80",
+                            "168",
+                            "475",
+                            "56",
+                            "3128",
+                            "3000",
+                            "8",
+                            "3002",
+                            "32",
+                            "413",
+                            "476",
+                            "72",
+                            "240",
+                            "478",
+                            "24",
+                            "73",
+                            "29",
+                            "3020",
+                            "66",
+                            "882",
+                            "156",
+                            "500",
+                            "556",
+                            "3240",
+                            "60",
+                            "3244",
+                            "164",
+                            "40"
+                        ],
+                        [
+                            "156",
+                            "478",
+                            "66",
+                            "556",
+                            "3002",
+                            "8",
+                            "164",
+                            "474",
+                            "477",
+                            "73",
+                            "152",
+                            "3240",
+                            "25",
+                            "29",
+                            "413",
+                            "24",
+                            "3244",
+                            "3020",
+                            "4",
+                            "476",
+                            "32",
+                            "72",
+                            "240",
+                            "500",
+                            "611",
+                            "507",
+                            "475",
+                            "508",
+                            "3000",
+                            "3128",
+                            "168",
+                            "56",
+                            "882",
+                            "88",
+                            "80",
+                            "60",
+                            "40"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "lag251": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "477",
+                            "3000",
+                            "478"
+                        ],
+                        [
+                            "478",
+                            "477",
+                            "3000"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "477",
+                            "3000",
+                            "478"
+                        ],
+                        [
+                            "478",
+                            "477",
+                            "3000"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Addition",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Addition",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Radius_Server": [
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    },
+    "jcc-3rd-sw": {
+        "lag250": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "60",
+                            "475",
+                            "3128",
+                            "3000",
+                            "508",
+                            "56",
+                            "32",
+                            "2009",
+                            "3240",
+                            "164",
+                            "611",
+                            "88",
+                            "502",
+                            "3020",
+                            "29",
+                            "73",
+                            "168",
+                            "240",
+                            "24",
+                            "474",
+                            "477",
+                            "156",
+                            "25",
+                            "500",
+                            "72",
+                            "476",
+                            "413",
+                            "556",
+                            "882",
+                            "478"
+                        ],
+                        [
+                            "556",
+                            "2009",
+                            "3020",
+                            "474",
+                            "882",
+                            "24",
+                            "164",
+                            "60",
+                            "413",
+                            "168",
+                            "240",
+                            "500",
+                            "476",
+                            "32",
+                            "502",
+                            "475",
+                            "156",
+                            "29",
+                            "478",
+                            "72",
+                            "508",
+                            "56",
+                            "3240",
+                            "611",
+                            "73",
+                            "3128",
+                            "25",
+                            "3000",
+                            "477",
+                            "88"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "60",
+                            "475",
+                            "3128",
+                            "3000",
+                            "508",
+                            "56",
+                            "32",
+                            "2009",
+                            "3240",
+                            "164",
+                            "611",
+                            "88",
+                            "502",
+                            "3020",
+                            "29",
+                            "73",
+                            "168",
+                            "66",
+                            "240",
+                            "24",
+                            "474",
+                            "477",
+                            "156",
+                            "25",
+                            "500",
+                            "72",
+                            "476",
+                            "413",
+                            "556",
+                            "882",
+                            "478"
+                        ],
+                        [
+                            "556",
+                            "2009",
+                            "3020",
+                            "474",
+                            "882",
+                            "24",
+                            "164",
+                            "60",
+                            "413",
+                            "66",
+                            "168",
+                            "240",
+                            "500",
+                            "476",
+                            "32",
+                            "502",
+                            "475",
+                            "156",
+                            "29",
+                            "478",
+                            "72",
+                            "508",
+                            "56",
+                            "3240",
+                            "611",
+                            "73",
+                            "3128",
+                            "25",
+                            "3000",
+                            "477",
+                            "88"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Addition",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Addition",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Radius_Server": [
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Tacacs_Server": [
+                        {
+                            "default/5.5.132.201/49": {
+                                "address": "5.5.132.201",
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-tacacs",
+                                    "tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 1
+                            },
+                            "default/5.5.132.202/49": {
+                                "address": "5.5.132.202",
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-tacacs",
+                                    "tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/5.5.132.201/49": {
+                                "address": "5.5.132.201",
+                                "default_group_priority": 1,
+                                "group": [
+                                    "tacacs",
+                                    "clearpass-tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 1
+                            },
+                            "default/5.5.132.202/49": {
+                                "address": "5.5.132.202",
+                                "default_group_priority": 2,
+                                "group": [
+                                    "tacacs",
+                                    "clearpass-tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    },
+    "soccer-home-sw": {
+        "lag250": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "25",
+                            "478",
+                            "88",
+                            "240",
+                            "73",
+                            "168",
+                            "476",
+                            "503",
+                            "556",
+                            "500",
+                            "3000",
+                            "508",
+                            "66",
+                            "56",
+                            "413",
+                            "164",
+                            "32",
+                            "156",
+                            "60",
+                            "882",
+                            "3240",
+                            "3020",
+                            "72",
+                            "475",
+                            "477",
+                            "24",
+                            "3128",
+                            "29",
+                            "474",
+                            "611"
+                        ],
+                        [
+                            "29",
+                            "474",
+                            "3240",
+                            "168",
+                            "32",
+                            "500",
+                            "60",
+                            "3128",
+                            "72",
+                            "556",
+                            "156",
+                            "56",
+                            "3000",
+                            "3020",
+                            "73",
+                            "413",
+                            "503",
+                            "882",
+                            "164",
+                            "476",
+                            "475",
+                            "477",
+                            "508",
+                            "240",
+                            "478",
+                            "611",
+                            "66",
+                            "88",
+                            "25",
+                            "24"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "25",
+                            "478",
+                            "88",
+                            "240",
+                            "73",
+                            "168",
+                            "476",
+                            "503",
+                            "556",
+                            "500",
+                            "3000",
+                            "508",
+                            "66",
+                            "56",
+                            "413",
+                            "164",
+                            "32",
+                            "156",
+                            "60",
+                            "882",
+                            "3240",
+                            "3020",
+                            "72",
+                            "475",
+                            "477",
+                            "24",
+                            "3128",
+                            "29",
+                            "474",
+                            "611"
+                        ],
+                        [
+                            "29",
+                            "474",
+                            "3240",
+                            "168",
+                            "32",
+                            "500",
+                            "60",
+                            "3128",
+                            "72",
+                            "556",
+                            "156",
+                            "56",
+                            "3000",
+                            "3020",
+                            "73",
+                            "413",
+                            "503",
+                            "882",
+                            "164",
+                            "476",
+                            "475",
+                            "477",
+                            "508",
+                            "240",
+                            "478",
+                            "611",
+                            "66",
+                            "88",
+                            "25",
+                            "24"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "stp_config": [
+            [
+                "System",
+                "Addition",
+                {
+                    "mstp_config_revision": "0"
+                }
+            ],
+            [
+                "System",
+                "Addition",
+                {
+                    "stp_mode": "mstp"
+                }
+            ]
+        ]
+    }
+}

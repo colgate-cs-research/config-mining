@@ -1,0 +1,248 @@
+{
+    "110broad-sw": {
+        "lag250": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "interfaces": [
+                        [
+                            "1/1/51",
+                            "2/1/28"
+                        ],
+                        [
+                            "2/1/28",
+                            "1/1/51"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "611",
+                            "3240",
+                            "477",
+                            "24",
+                            "25",
+                            "240",
+                            "413",
+                            "474",
+                            "500",
+                            "60",
+                            "192",
+                            "478",
+                            "29",
+                            "56",
+                            "72",
+                            "164",
+                            "882",
+                            "3020",
+                            "66",
+                            "475",
+                            "3128",
+                            "32",
+                            "476",
+                            "156",
+                            "96",
+                            "508",
+                            "3000",
+                            "556",
+                            "73",
+                            "503",
+                            "168"
+                        ],
+                        [
+                            "478",
+                            "882",
+                            "32",
+                            "475",
+                            "72",
+                            "240",
+                            "156",
+                            "476",
+                            "474",
+                            "508",
+                            "96",
+                            "192",
+                            "3240",
+                            "611",
+                            "477",
+                            "56",
+                            "3128",
+                            "3000",
+                            "164",
+                            "60",
+                            "25",
+                            "66",
+                            "503",
+                            "556",
+                            "24",
+                            "168",
+                            "73",
+                            "3020",
+                            "500",
+                            "413",
+                            "29"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "611",
+                            "3240",
+                            "477",
+                            "24",
+                            "25",
+                            "240",
+                            "413",
+                            "474",
+                            "500",
+                            "60",
+                            "192",
+                            "478",
+                            "29",
+                            "56",
+                            "72",
+                            "164",
+                            "882",
+                            "3020",
+                            "66",
+                            "475",
+                            "3128",
+                            "32",
+                            "476",
+                            "156",
+                            "96",
+                            "508",
+                            "3000",
+                            "556",
+                            "73",
+                            "503",
+                            "168"
+                        ],
+                        [
+                            "478",
+                            "882",
+                            "32",
+                            "475",
+                            "72",
+                            "240",
+                            "156",
+                            "476",
+                            "474",
+                            "508",
+                            "96",
+                            "192",
+                            "3240",
+                            "611",
+                            "477",
+                            "56",
+                            "3128",
+                            "3000",
+                            "164",
+                            "60",
+                            "25",
+                            "66",
+                            "503",
+                            "556",
+                            "24",
+                            "168",
+                            "73",
+                            "3020",
+                            "500",
+                            "413",
+                            "29"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Radius_Server": [
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    }
+}

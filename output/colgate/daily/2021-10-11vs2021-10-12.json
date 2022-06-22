@@ -1,0 +1,30 @@
+{
+    "case6410": {
+        "vlan140": [
+            [
+                "Port",
+                "Addition",
+                {
+                    "l3_counters_enable": {
+                        "rx": "true",
+                        "tx": "true"
+                    }
+                }
+            ]
+        ]
+    },
+    "ocon6410": {
+        "vlan140": [
+            [
+                "Port",
+                "Addition",
+                {
+                    "l3_counters_enable": {
+                        "rx": "true",
+                        "tx": "true"
+                    }
+                }
+            ]
+        ]
+    }
+}
