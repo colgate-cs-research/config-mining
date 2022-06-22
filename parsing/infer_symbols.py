@@ -14,71 +14,37 @@ TOP_LEVEL_TYPES_JUNIPER = [
     "firewall", 
 ]
 TOP_LEVEL_TYPES_ARUBA = [
-    "Port", 
-    "Interface", 
+    #"AAA_Accounting_Attributes",
+    #"AAA_Server_Group",
+    #"AAA_Server_Group_Prio",
     "ACL", 
+    "Class",
+    "Interface", 
+    "Port", 
     "VLAN", 
+    "VRF"
 ]
-VALID_TYPES_JUNIPER = [
-    "interfaces",
-    "unit",
-    "description",
-    "mtu",
-    "vlan-id",
-    "apply-groups",
-    "encapsulation",
-    "address",
-    "802.3ad",
-    "minimum-links",
-    "link-speed",
-    "input",
-    "policy-statement",
-    "term",
-    "community",
-    "members",
-    "filter",
-    "protocol",
-    "protocol-except",
-    "icmp-type",
-    "ip-options",
-    "source-port",
-    "destination-port",
-    "source-address",
-    "destination-address",
-    "prefix-list",
-    "source-prefix-list",
-    "from",
-    "then",
-    "to",
-]
-VALID_TYPES_ARUBA = [
-    "interface",
-    "interfaces",
-    "port",
-    "name",
-    "description",
-    "vlan_tag",
-    "vlan_trunks",
-    "loop_protect_vlan",
-    "lacp-aggregation-key",
-    "mtu",
-    "port_access_clients_limit",
-    "admin",
-    "ip4_address",
-    "ip_mtu",
-    "vlan_mode",
-    "qos_trust",
-    "type",
-    "duplex",
-    "autoneg",
-    "lacp",
-    "vrf",
-    "speeds",
-]
+KEYKINDS_JUNIPER = {
+    (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
+    (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
+    (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term'), ('name', '*'), ('type', 'to')): "mixed",
+    (('name', '*'), ('type', 'groups')) : "name",
+}
+KEYKINDS_ARUBA = {
+    (('name', '*'), ('type', 'AAA_Server_Group')) : "name",
+    (('name', '*'), ('type', 'ACL')) : "name",
+    (('name', '*'), ('type', 'Class'), ('name', '*')) : "type",
+    (('name', '*'), ('type', 'Port'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'VRF')) : "name",
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'NTP_Association')): 'name',
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Radius_Server')): 'name',
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Static_Route')): 'name',
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Tacacs_Server')): 'name',
+}
 TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER
-VALID_TYPES = VALID_TYPES_JUNIPER
-#TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_ARUBA
-#VALID_TYPES = VALID_TYPES_ARUBA
+KEYKINDS = KEYKINDS_JUNIPER
+TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_ARUBA
+KEYKINDS = KEYKINDS_ARUBA
 
 def main():
     # Parse command-line arguments
@@ -143,12 +109,7 @@ class SymbolExtractor:
     def __init__(self, config, symbol_table={}):
         self.config = config
         self.symbol_table = symbol_table
-        self.keykinds = {
-            (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
-            (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
-            (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term'), ('name', '*'), ('type', 'to')): "mixed",
-            (('name', '*'), ('type', 'groups')) : "name",
-        }
+        self.keykinds = KEYKINDS
         self.mixedkinds = {}
 
         # Iterate over top-level types of interest (e.g., ACLs, interfaces, etc.)
@@ -172,7 +133,11 @@ class SymbolExtractor:
 
             logging.debug("Dictionaries:")
             for d in dictionaries:
-                logging.debug("\t{}".format(d.keys()))
+                try:
+                    logging.debug("\t{}".format(d.keys()))
+                except Exception as ex:
+                    logging.error("Mixed subinstances for {}".format(path))
+                    raise ex
 
             kind = self.infer_keykind(dictionaries)
             self.keykinds[path_signature] = kind
@@ -319,7 +284,7 @@ class SymbolExtractor:
         logging.debug("\tTotal sub keys {}".format(num_keys))
         if (num_keys == 0):
             return "unknown"
-        if (num_unique_keys / num_keys > 0.2) or num_unique_keys > 100:
+        if (num_unique_keys / num_keys > 0.2) or num_unique_keys > 25:
             num_unique_keys_with_spaces = 0
             for key in unique_keys:
                 if " " in key:
@@ -438,10 +403,6 @@ class SymbolExtractor:
             return
         
         logging.debug("Adding {} {} to symbol table".format(symbol_type, symbol_name))
-
-        # Sanity checking
-        if symbol_type not in VALID_TYPES:
-            logging.debug("!{} is not a valid symbol type".format(symbol_type))
 
         # Normalize IP addresses
         if symbol_type != None and "address" in symbol_type:

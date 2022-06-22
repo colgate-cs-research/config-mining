@@ -14,13 +14,18 @@ TOP_LEVEL_TYPES_JUNIPER = [
     #"firewall", 
 ]
 TOP_LEVEL_TYPES_ARUBA = [
-    "Port", 
-    "Interface", 
+    #"AAA_Accounting_Attributes",
+    #"AAA_Server_Group",
+    #"AAA_Server_Group_Prio",
     "ACL", 
+    "Class",
+    "Interface", 
+    "Port", 
     "VLAN", 
+    "VRF"
 ]
-TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER
-#TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_ARUBA
+#TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER
+TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_ARUBA
 
 def main():
     # Parse command-line arguments
