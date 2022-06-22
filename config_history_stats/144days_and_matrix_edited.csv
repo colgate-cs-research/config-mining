@@ -1,0 +1,11 @@
+Stanzas, ACL, Interface, PKI_TA_Profile, Port, SNMP_Trap, System, User, User_Group, VLAN, VRF
+ACL, 0, 1, 0, 3, 0, 2, 0, 0, 0, 2
+Interface, 1, 0, 0, 17, 0, 5, 0, 0, 4, 6
+PKI_TA_Profile, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+Port, 3, 17, 0, 0, 0, 13, 0, 0, 6, 18
+SNMP_Trap, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+System, 2, 5, 0, 13, 0, 0, 0, 0, 2, 9
+User, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+User_Group, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+VLAN, 0, 4, 0, 6, 0, 2, 0, 0, 0, 1
+VRF, 2, 6, 0, 18, 0, 9, 0, 0, 1, 0
