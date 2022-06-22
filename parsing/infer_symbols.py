@@ -148,6 +148,7 @@ class SymbolExtractor:
             (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
             (('name', '*'), ('type', 'groups')) : "name",
         }
+        self.mixedkinds = {}
 
         # Iterate over top-level types of interest (e.g., ACLs, interfaces, etc.)
         for node in config:
@@ -174,6 +175,9 @@ class SymbolExtractor:
 
             kind = self.infer_keykind(dictionaries)
             self.keykinds[path_signature] = kind
+
+            if kind == "unknown":
+                logging.error("!Cannot infer key kind for {}".format(path))
         logging.debug("Dict keys are {}s".format(kind))
         if (kind == "name"):
             self.extract_symbols_key_name(dct, path)
@@ -195,13 +199,20 @@ class SymbolExtractor:
 
             kind = self.infer_keykind(lists)
             self.keykinds[path_signature] = kind
+
+            if kind == "unknown":
+                logging.error("!Cannot infer key kind for {}".format(path))
+            #elif kind == "mixed":
+            #    kinds = self.infer_mixedkinds(lists)
+            #    self.mixedkinds[path_signature] = kinds
+            #    logging.debug("Inferred kinds for mixed {}:\n{}".format(path, pprint.pformat(kinds))) 
         logging.debug("List values are {}s".format(kind))
         if (kind == "name"):
             self.extract_symbols_list_name(lst, path)
         elif (kind == "type"):
             logging.debug("!Not recursing on list of types: {}".format(path))
         elif (kind == "mixed"):
-            logging.warning("!Not recursing on list of mixed: {}".format(path))
+            self.extract_symbols_list_mixed(lst, path)
 
     def get_path_signature(self, path):
         signature = []
@@ -290,7 +301,6 @@ class SymbolExtractor:
                 logging.debug("\tNeed to examine subdictionaries")   
                 return self.infer_dict_keykind(instances[0])
             elif isinstance(instances[0], list):
-                logging.error("!Cannot infer key kind for a single list") 
                 return "unknown"  
  
         unique_keys = set()
@@ -307,7 +317,6 @@ class SymbolExtractor:
         logging.debug("\tUnique sub keys {}".format(num_unique_keys))
         logging.debug("\tTotal sub keys {}".format(num_keys))
         if (num_keys == 0):
-            logging.error("Cannot infer key kind!")
             return "unknown"
         if (num_unique_keys / num_keys > 0.2) or num_unique_keys > 100:
             num_unique_keys_with_spaces = 0
@@ -321,6 +330,38 @@ class SymbolExtractor:
                 return "name"
         else:
             return "type"
+
+    def infer_mixedkinds(self, instances):
+        counts = {}
+        for inst in instances:
+            if isinstance(inst, dict):
+                symbols = inst.keys()
+            elif isinstance(inst, list):
+                symbols = inst
+            else:
+                logging.error("!Cannot infer mixed kinds for {}".format(type(inst)))
+                continue
+            
+            for symbol in symbols:
+                parts = symbol.split(" ")
+                for part in parts:
+                    if part not in counts:
+                        counts[part] = 0
+                    counts[part] += 1
+
+        denominator = max(counts.values())
+        counts = { k : v / denominator for k, v in counts.items() }        
+        return counts
+
+        '''kinds = {}
+        denominator = max(counts.values())
+        for symbol, count in counts.items():
+            if count/denominator > 0.15:
+                kinds[symbol] = "type"
+            else:
+                kinds[symbol] = "name"
+
+        return kinds'''
     
     def extract_symbols_key_name(self, dct, path):
         # Treat keys as symbol names
@@ -355,6 +396,35 @@ class SymbolExtractor:
             symbol_type = path[-1][1]
         for symbol_name in lst:
             self.add_to_symbol_table(symbol_name, symbol_type)
+
+    def extract_symbols_list_mixed(self, lst, path):
+        # Treat values as combination of symbol type and symbol name
+        for symbol in lst:
+            # Not a symbol type/name combination
+            if ' ' not in symbol:
+                pass
+            # Pair of symbol type and name
+            elif symbol.count(' ') == 1:
+                symbol_type, symbol_name = symbol.split(' ')
+                self.add_to_symbol_table(symbol_name, symbol_type)
+            # Symbol type and list of names
+            elif ' [' in symbol and symbol[-1] == ']':
+                symbol_type, symbol_names = symbol[:-1].split('[')
+                symbol_type = symbol_type[:-1] # Strip space
+                symbol_names = symbol_names.split(',')
+                for symbol_name in symbol_names:
+                    symbol_name = symbol_name.strip("', ")
+                    self.add_to_symbol_table(symbol_name, symbol_type)
+            # Symbol type and list of names
+            elif ' (' in symbol and symbol[-1] == ')':
+                symbol_type, symbol_names = symbol[:-1].split('(')
+                symbol_type = symbol_type[:-1] # Strip space
+                symbol_names = symbol_names.split("&&")
+                for symbol_name in symbol_names:
+                    symbol_name = symbol_name.strip("', ")
+                    self.add_to_symbol_table(symbol_name, symbol_type)
+            else:
+                logging.warning("!Cannot infer symbol name/type for mixed value: {}".format(symbol))
 
     def add_to_symbol_table(self, symbol_name, symbol_type):
         # Put type in canonical form

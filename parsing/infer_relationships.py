@@ -107,6 +107,8 @@ class RelationshipExtractor:
             self.extract_relationships_list_name(lst, path, symbols)
         elif (kind == "type"):
             logging.warning("!Not extracting relationships from list of types: {}".format(path))
+        elif (kind == "mixed"):
+            self.extract_relationships_list_mixed(lst, path, symbols)
 
     def get_path_signature(self, path):
         signature = []
@@ -123,7 +125,7 @@ class RelationshipExtractor:
             if symbol_name not in self.symbol_table:
                 logging.warning("!Cannot infer type for symbol {}: symbol not in table".format(symbol_name))
                 return None 
-            if len(self.symbol_table[symbol_name]) > 1:
+            if len(self.symbol_table[symbol_name]) != 1:
                 logging.warning("!Cannot infer type for symbol {}: {} possible types".format(symbol_name, len(self.symbol_table[symbol_name])))
                 return None 
             
@@ -175,8 +177,9 @@ class RelationshipExtractor:
                 else:
                     logging.debug("No matching symbol for {} : {}".format(symbol_type, value))
             elif isinstance(value, list):
-                for subvalue in value:
-                    logging.debug("Check for matching symbol for {} : {}".format(symbol_type, subvalue))
+                self.parse_list(value, path + [('type', symbol_type)], symbols)
+                #for subvalue in value:
+                #    logging.debug("Check for matching symbol for {} : {}".format(symbol_type, subvalue))
 
     def extract_relationships_list_name(self, lst, path, symbols):
         # Treat values as symbol names
@@ -190,6 +193,48 @@ class RelationshipExtractor:
                     logging.info("{} --- {}".format(symbols[-1], symbol))
             else:
                 logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))
+
+    def extract_relationships_list_mixed(self, lst, path, symbols):
+        # Treat values as combination of symbol type and symbol name
+        for entry in lst:
+            # Not a symbol type/name combination
+            if ' ' not in entry:
+                pass
+
+            parts = entry.split(' ')
+            symbol_type = parts[0]
+            for symbol_name in parts[1:]:
+                symbol_name = symbol_name.strip("""'"[), """)
+                symbol = self.get_symbol(symbol_name, symbol_type)
+                if symbol != None:
+                    if len(symbols) >= 1:
+                        logging.info("{} --- {}".format(symbols[-1], symbol))
+                else:
+                    logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))
+
+            '''# Pair of symbol type and name
+            elif symbol.count(' ') == 1:
+                symbol_type, symbol_name = symbol.split(' ')
+                self.add_to_symbol_table(symbol_type, symbol_name)
+            # Symbol type and list of names
+            elif ' [' in symbol and symbol[-1] == ']':
+                symbol_type, symbol_names = symbol[:-1].split('[')
+                symbol_type = symbol_type[:-1] # Strip space
+                symbol_names = symbol_names.split(',')
+                for symbol_name in symbol_names:
+                    symbol_name = symbol_name.strip("', ")
+                    self.add_to_symbol_table(symbol_type, symbol_name)
+            # Symbol type and list of names
+            elif ' (' in symbol and symbol[-1] == ')':
+                symbol_type, symbol_names = symbol[:-1].split('(')
+                symbol_type = symbol_type[:-1] # Strip space
+                symbol_names = symbol_names.split("&&")
+                for symbol_name in symbol_names:
+                    symbol_name = symbol_name.strip("', ")
+                    self.add_to_symbol_table(symbol_type, symbol_name)
+            else:
+                logging.debug("!Cannot infer symbol name/type for mixed value: {}".format(symbol))'''
+
 
 if __name__ == "__main__":
     main()
