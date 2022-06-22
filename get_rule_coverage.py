@@ -5,6 +5,10 @@ import itertools as itools
 from sklearn.preprocessing import LabelEncoder as le
 from read_rules import extract_dataframe,order_dataframe
 from sklearn.metrics import f1_score
+import logging
+
+logging.basicConfig(level=logging.DEBUG)# ,filemode='w',filename="./TO_REMOVE/temp/spanning_rules.log")
+logging.getLogger(__name__)
 
 def column_hash(pd_series):
     # converting pandas series to numoy series
@@ -106,20 +110,22 @@ def get_rules(path,group,raw=0):
     '''
     for future more complex implementationg of importing rules
     '''
+    logging.debug("\t\t\tget_rules:")
     # reading rule csv file
     rules_df = pd.read_csv(path,header=0)
     if raw==1: return rules_df
     # extracting the rules from strings
     # print(rules_df.head)
+
     rules_df = extract_dataframe(rules_df)
     rules_df = order_dataframe(rules_df,group)
     
     return rules_df
 
-def main(org_df_path,rules_path,feature):
-
+def main(org_df_path,rules_path,feature,group):
+    logging.debug("\t\tget_rule_coverage \t\tMAIN:-")
     keyword = feature
-    group = '-1'  # 0 for not present | 1 for present | -1 for both
+    group = group  # 0 for not present | 1 for present | -1 for both
 
 
     # networkwide dataframe
@@ -127,24 +133,26 @@ def main(org_df_path,rules_path,feature):
     aggregate_df = pd.read_csv(org_df_path)
     table_hash_dict = table_hash(aggregate_df)
 
-    print("Columns:")
-    #print(table_hash_dict.keys())
+    logging.debug("Columns:\n\t\t{}".format(table_hash_dict.keys()))
+    
     column_hash_dict = table_hash_dict[keyword]
-    #print(column_hash_dict)
+    logging.debug("ColumnHashDict:\n\t\t{}".format(column_hash_dict))
 
     
     
     # loading rule dataframe
-    print("Rules:")
     rules_df = get_rules(rules_path,group)
-    print(rules_df)
+    logging.debug("Rules:\n\t\t{}".format(rules_df))
+        
+
     
 
     # adding rule coverage to rules_df
-    print("Testing Coverage")
+    
     rules_df = all_rules_coverage(rules_df,table_hash_dict,column_hash_dict)
+    #logging.debug("Testing Coverage:{}".format(rules_df.loc[0,'coverage']))
 
-    #print(rules_df.loc[0,'coverage'])
+    
     return rules_df
 
 

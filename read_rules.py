@@ -1,8 +1,13 @@
+import os
+import sys
 import pandas as pd
 import numpy as np
 import re
-
+import logging
 from sklearn.metrics import f1_score
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger(__name__)
 
 def extract_dataframe(dataframe):
 
@@ -78,8 +83,26 @@ def clean_rule(string):
 
 def order_dataframe(df,group):
     # selecting rules where GROUP = 1
-    if(int(group)>=0): df = df.loc[ df['group']== group]
+    #df.to_csv("./ordered_df_INITIAL.csv",index=False)
+    logging.info("\t\t\torder_dataframe->START")
+    logging.info("group:{}| & type:{}|".format(group,type(group)))
+    logging.info("INPUTS:\n group:{} \n df:{}".format(df.head,group))
+    if(int(group)>=0): 
+        logging.debug("Specific group selected")
+        unique_elements= list(np.unique(df['group']))
+        #print( str(i)+" type:"+str(type(i)) for i in unique_elements)
+        unique_elements= list(map(int, unique_elements))
+        #print(unique_elements[0],type(unique_elements[0]))
+        #df = df.loc[ df['group']== int(group)]
 
+        df['group'] = df['group'].astype("int")
+        logging.debug("Group is:{}| type:{}\n current df:{}".format(group,type(group),df.head))
+        df = df.query('group == '+str(int(group)))
+        
+        logging.debug("Group is:{}| type:{}\n current df:{}".format(group,type(group),df.head))
+    
+    #df.to_csv("./ordered_df_FINAL.csv",index=False)
+    #sys.exit()
     # ordering metric
     df =df.sort_values(by=['precision','frequency'], ascending=False)
 
