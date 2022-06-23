@@ -1,0 +1,48 @@
+{
+    "campussafety-sw": {
+        "1/1/1": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "stp_config": {
+                        "loop_guard_enable": "true"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vlan_mode": "native-tagged"
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "3000"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vlan_trunks": [
+                        "500"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ]
+    }
+}

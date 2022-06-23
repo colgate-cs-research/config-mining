@@ -1,0 +1,834 @@
+{
+    "110broad-sw": {
+        "lag250": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "loop_protect_vlan": [
+                        [
+                            "56",
+                            "3128",
+                            "500",
+                            "168",
+                            "66",
+                            "3000",
+                            "474",
+                            "556",
+                            "3020",
+                            "503",
+                            "24",
+                            "475",
+                            "3240",
+                            "192",
+                            "25",
+                            "96",
+                            "240",
+                            "477",
+                            "60",
+                            "29",
+                            "73",
+                            "72",
+                            "508",
+                            "156",
+                            "413",
+                            "882",
+                            "476",
+                            "32",
+                            "164",
+                            "478",
+                            "611"
+                        ],
+                        [
+                            "3240",
+                            "611",
+                            "60",
+                            "478",
+                            "32",
+                            "168",
+                            "56",
+                            "156",
+                            "240",
+                            "882",
+                            "96",
+                            "476",
+                            "500",
+                            "474",
+                            "475",
+                            "3128",
+                            "508",
+                            "25",
+                            "72",
+                            "3000",
+                            "164",
+                            "413",
+                            "3020",
+                            "66",
+                            "24",
+                            "29",
+                            "477",
+                            "556",
+                            "503",
+                            "73",
+                            "192"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "56",
+                            "3128",
+                            "500",
+                            "168",
+                            "66",
+                            "3000",
+                            "474",
+                            "556",
+                            "3020",
+                            "503",
+                            "24",
+                            "475",
+                            "3240",
+                            "192",
+                            "25",
+                            "96",
+                            "240",
+                            "477",
+                            "60",
+                            "29",
+                            "73",
+                            "72",
+                            "508",
+                            "156",
+                            "413",
+                            "882",
+                            "476",
+                            "32",
+                            "164",
+                            "478",
+                            "611"
+                        ],
+                        [
+                            "3240",
+                            "611",
+                            "60",
+                            "478",
+                            "32",
+                            "168",
+                            "56",
+                            "156",
+                            "240",
+                            "882",
+                            "96",
+                            "476",
+                            "500",
+                            "474",
+                            "475",
+                            "3128",
+                            "508",
+                            "25",
+                            "72",
+                            "3000",
+                            "164",
+                            "413",
+                            "3020",
+                            "66",
+                            "24",
+                            "29",
+                            "477",
+                            "556",
+                            "503",
+                            "73",
+                            "192"
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "default": [
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Radius_Server": [
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "radius",
+                                    "clearpass-radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/cppm-pub.colgate.edu/1812/udp": {
+                                "address": "cppm-pub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 1
+                            },
+                            "default/cppm-sub.colgate.edu/1812/udp": {
+                                "address": "cppm-sub.colgate.edu",
+                                "clearpass": {
+                                    "password": "somesillypassword5",
+                                    "user_id": "user2"
+                                },
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-radius",
+                                    "radius"
+                                ],
+                                "passkey": "somesillypassword6",
+                                "port": 1812,
+                                "port_type": "udp",
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ],
+            [
+                "VRF",
+                "Modification",
+                {
+                    "Tacacs_Server": [
+                        {
+                            "default/5.5.132.201/49": {
+                                "address": "5.5.132.201",
+                                "default_group_priority": 1,
+                                "group": [
+                                    "tacacs",
+                                    "clearpass-tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 1
+                            },
+                            "default/5.5.132.202/49": {
+                                "address": "5.5.132.202",
+                                "default_group_priority": 2,
+                                "group": [
+                                    "tacacs",
+                                    "clearpass-tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 2
+                            }
+                        },
+                        {
+                            "default/5.5.132.201/49": {
+                                "address": "5.5.132.201",
+                                "default_group_priority": 1,
+                                "group": [
+                                    "clearpass-tacacs",
+                                    "tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 1
+                            },
+                            "default/5.5.132.202/49": {
+                                "address": "5.5.132.202",
+                                "default_group_priority": 2,
+                                "group": [
+                                    "clearpass-tacacs",
+                                    "tacacs"
+                                ],
+                                "passkey": "somesillypassword7",
+                                "tcp_port": 49,
+                                "user_group_priority": 2
+                            }
+                        }
+                    ]
+                }
+            ]
+        ]
+    },
+    "case-299-sw": {
+        "1/1/12": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "stp_config": {
+                        "loop_guard_enable": "true"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_mode": [
+                        "native-tagged",
+                        "native-untagged"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "3000"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "477",
+                            "20",
+                            "611",
+                            "556",
+                            "3000",
+                            "156",
+                            "476",
+                            "3020",
+                            "60",
+                            "240",
+                            "164",
+                            "168",
+                            "3128",
+                            "3244",
+                            "56",
+                            "24",
+                            "29",
+                            "413",
+                            "8",
+                            "3248",
+                            "882",
+                            "65",
+                            "500",
+                            "474",
+                            "320",
+                            "475",
+                            "3240",
+                            "478",
+                            "4",
+                            "506",
+                            "32",
+                            "25",
+                            "88"
+                        ],
+                        [
+                            "611",
+                            "556",
+                            "3000",
+                            "156",
+                            "60",
+                            "164",
+                            "168",
+                            "56",
+                            "882",
+                            "65",
+                            "72",
+                            "73",
+                            "88"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "loop_protect_vlan": [
+                        "611",
+                        "556",
+                        "3000",
+                        "156",
+                        "60",
+                        "164",
+                        "168",
+                        "56",
+                        "882",
+                        "65",
+                        "72",
+                        "73",
+                        "88"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "qos_config": {
+                        "qos_trust": "dscp"
+                    }
+                }
+            ]
+        ]
+    },
+    "case-351-sw": {
+        "1/1/28": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "stp_config": {
+                        "loop_guard_enable": "true"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_mode": [
+                        "native-tagged",
+                        "native-untagged"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "3000"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "60",
+                            "168",
+                            "556",
+                            "32",
+                            "882",
+                            "25",
+                            "477",
+                            "474",
+                            "88",
+                            "8",
+                            "413",
+                            "56",
+                            "1",
+                            "476",
+                            "500",
+                            "506",
+                            "3000",
+                            "3248",
+                            "475",
+                            "20",
+                            "478",
+                            "3128",
+                            "156",
+                            "3244",
+                            "4",
+                            "240",
+                            "29",
+                            "164",
+                            "3020",
+                            "24",
+                            "320",
+                            "611",
+                            "3240",
+                            "65"
+                        ],
+                        [
+                            "60",
+                            "168",
+                            "556",
+                            "882",
+                            "88",
+                            "56",
+                            "3000",
+                            "73",
+                            "156",
+                            "164",
+                            "72",
+                            "611",
+                            "65"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "loop_protect_vlan": [
+                        "60",
+                        "168",
+                        "556",
+                        "882",
+                        "88",
+                        "56",
+                        "3000",
+                        "73",
+                        "156",
+                        "164",
+                        "72",
+                        "611",
+                        "65"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "qos_config": {
+                        "qos_trust": "dscp"
+                    }
+                }
+            ]
+        ]
+    },
+    "case-451-test-sw": {
+        "1/1/11": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "1/1/11": {
+                        "interfaces": [
+                            "1/1/11"
+                        ],
+                        "loop_protect_enable": true,
+                        "name": "1/1/11",
+                        "stp_config": {
+                            "admin_edge_port_enable": "true",
+                            "bpdu_guard_enable": "true",
+                            "restricted_port_tcn_disable": "true"
+                        },
+                        "vlan_tag": "777"
+                    }
+                }
+            ]
+        ],
+        "1/1/22": [
+            [
+                "Port",
+                "Addition",
+                {
+                    "1/1/22": {
+                        "interfaces": [
+                            "1/1/22"
+                        ],
+                        "name": "1/1/22"
+                    }
+                }
+            ]
+        ],
+        "1/1/23": [
+            [
+                "Port",
+                "Addition",
+                {
+                    "1/1/23": {
+                        "interfaces": [
+                            "1/1/23"
+                        ],
+                        "name": "1/1/23"
+                    }
+                }
+            ]
+        ],
+        "1/1/12": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "1/1/12": {
+                        "interfaces": [
+                            "1/1/12"
+                        ],
+                        "name": "1/1/12",
+                        "vlan_tag": "508"
+                    }
+                }
+            ]
+        ],
+        "lag22": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "lag22": {
+                        "admin": "up",
+                        "description": "josh-office-trunk",
+                        "interfaces": [
+                            "1/1/22"
+                        ],
+                        "lacp": "active",
+                        "name": "lag22",
+                        "other_config": {
+                            "mclag_enabled": "false"
+                        },
+                        "qos_config": {
+                            "qos_trust": "dscp"
+                        },
+                        "stp_config": {
+                            "root_guard_enable": "true"
+                        },
+                        "vlan_mode": "native-untagged",
+                        "vlan_tag": "3000"
+                    }
+                }
+            ]
+        ],
+        "lag23": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "lag23": {
+                        "admin": "up",
+                        "description": "josh-office-trunk",
+                        "interfaces": [
+                            "1/1/23"
+                        ],
+                        "lacp": "active",
+                        "name": "lag23",
+                        "other_config": {
+                            "mclag_enabled": "false"
+                        },
+                        "qos_config": {
+                            "qos_trust": "dscp"
+                        },
+                        "stp_config": {
+                            "root_guard_enable": "true"
+                        },
+                        "vlan_mode": "native-untagged",
+                        "vlan_tag": "3000"
+                    }
+                }
+            ]
+        ],
+        "lag11": [
+            [
+                "Port",
+                "Addition",
+                {
+                    "lag11": {
+                        "admin": "up",
+                        "description": "josh-office-trunk",
+                        "interfaces": [
+                            "1/1/11",
+                            "1/1/12"
+                        ],
+                        "lacp": "active",
+                        "loop_protect_vlan": [
+                            "65",
+                            "168",
+                            "882",
+                            "60",
+                            "73",
+                            "156",
+                            "88",
+                            "164",
+                            "506",
+                            "56",
+                            "3000",
+                            "777",
+                            "556",
+                            "611",
+                            "72"
+                        ],
+                        "name": "lag11",
+                        "other_config": {
+                            "mclag_enabled": "false"
+                        },
+                        "qos_config": {
+                            "qos_trust": "dscp"
+                        },
+                        "vlan_mode": "native-untagged",
+                        "vlan_tag": "3000",
+                        "vlan_trunks": [
+                            "65",
+                            "168",
+                            "882",
+                            "60",
+                            "73",
+                            "156",
+                            "88",
+                            "164",
+                            "506",
+                            "56",
+                            "3000",
+                            "777",
+                            "556",
+                            "611",
+                            "72"
+                        ]
+                    }
+                }
+            ]
+        ]
+    },
+    "case-row01-8325-01-sw": {
+        "1/1/29": [
+            [
+                "Port",
+                "Addition",
+                {
+                    "admin": "up"
+                }
+            ]
+        ]
+    },
+    "case-row01-8325-02-sw": {
+        "1/1/29": [
+            [
+                "Interface",
+                "Modification",
+                {
+                    "description": [
+                        "ESX_CASE01_1",
+                        "ESX_CASE01_VMN4"
+                    ]
+                }
+            ]
+        ]
+    },
+    "little-base-sw": {
+        "2/1/46": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "stp_config": [
+                        {
+                            "loop_guard_enable": "true"
+                        },
+                        {
+                            "admin_edge_port_enable": "true",
+                            "bpdu_guard_enable": "true",
+                            "restricted_port_tcn_disable": "true"
+                        }
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vlan_mode": "native-tagged"
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Deletion",
+                {
+                    "vlan_trunks": [
+                        "56",
+                        "164",
+                        "168",
+                        "556",
+                        "500",
+                        "88",
+                        "156",
+                        "60"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {
+                            "auth_enable": true
+                        }
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_clients_limit": 5
+                }
+            ]
+        ]
+    },
+    "ocon6410": {
+        "1/6/47": [
+            [
+                "Port",
+                "Addition",
+                {
+                    "admin": "down"
+                }
+            ]
+        ]
+    },
+    "oconnor-row01-8325-01-sw": {
+        "1/1/29": [
+            [
+                "Interface",
+                "Modification",
+                {
+                    "description": [
+                        "ESX_CASE01_2",
+                        "ESX_CASE01_VMN6"
+                    ]
+                }
+            ]
+        ]
+    }
+}

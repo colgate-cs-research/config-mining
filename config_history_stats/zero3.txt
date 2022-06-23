@@ -1,0 +1,24 @@
+	(1)	(2)	(3)	(4)	(5)	(6)	(7)	(8)	(9)
+VARIABLES	port	port	port	snmp_trap	snmp_trap	snmp_trap	snmp_trap	snmp_trap	system
+									
+acl	0.660**								
+	(0.275)								
+o.pki_ta_profile		-						-	
+									
+o.snmp_trap			-						
+									
+o.user				-					-
+									
+o.user_group					-				
+									
+vlan						0			
+						(0)			
+interface							0		
+							(0)		
+Constant	0.340***	0.354***	0.354***	0	0	0	0	0	0.0972***
+	(0.0398)	(0.0400)	(0.0400)	(0)	(0)	(0)	(0)	(0)	(0.0248)
+									
+Observations	144	144	144	144	144	144	144	144	144
+R-squared	0.039	0.000	0.000						0.000
+Standard errors in parentheses									
+*** p<0.01, ** p<0.05, * p<0.1									

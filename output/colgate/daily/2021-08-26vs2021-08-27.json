@@ -1,0 +1,274 @@
+{
+    "curtis-010-sw": {
+        "1/1/10": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "502",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {
+                            "auth_enable": true
+                        }
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_clients_limit": 5
+                }
+            ]
+        ],
+        "1/1/11": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "502",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {
+                            "auth_enable": true
+                        }
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_clients_limit": 5
+                }
+            ]
+        ],
+        "1/1/12": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "502",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {
+                            "auth_enable": true
+                        }
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_clients_limit": 5
+                }
+            ]
+        ],
+        "1/1/13": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "502",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {
+                            "auth_enable": true
+                        }
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_clients_limit": 5
+                }
+            ]
+        ],
+        "1/1/14": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "502",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {
+                            "auth_enable": true
+                        }
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_clients_limit": 5
+                }
+            ]
+        ],
+        "1/1/6": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {
+                            "auth_enable": true
+                        }
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_clients_limit": 5
+                }
+            ]
+        ],
+        "1/1/7": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {
+                            "auth_enable": true
+                        }
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_clients_limit": 5
+                }
+            ]
+        ],
+        "1/1/8": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "502",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {
+                            "auth_enable": true
+                        }
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_clients_limit": 5
+                }
+            ]
+        ],
+        "1/1/9": [
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "502",
+                        "611"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_auth_configurations": {
+                        "mac-auth": {
+                            "auth_enable": true
+                        }
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "port_access_clients_limit": 5
+                }
+            ]
+        ]
+    }
+}

@@ -1,0 +1,128 @@
+{
+    "bryan-core-sw": {
+        "1/1/5": [
+            [
+                "Interface",
+                "Modification",
+                {
+                    "user_config": [
+                        {
+                            "autoneg": "off",
+                            "duplex": "full",
+                            "speeds": "100"
+                        },
+                        {
+                            "autoneg": "off",
+                            "duplex": "half",
+                            "speeds": "100"
+                        }
+                    ]
+                }
+            ]
+        ]
+    },
+    "dana-sw": {
+        "1/1/4": [
+            [
+                "Port",
+                "Deletion",
+                {
+                    "stp_config": {
+                        "loop_guard_enable": "true"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_mode": [
+                        "native-tagged",
+                        "native-untagged"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_tag": [
+                        "500",
+                        "3000"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Modification",
+                {
+                    "vlan_trunks": [
+                        [
+                            "56",
+                            "500",
+                            "168",
+                            "556",
+                            "164",
+                            "88",
+                            "882",
+                            "60",
+                            "156"
+                        ],
+                        [
+                            "72",
+                            "56",
+                            "502",
+                            "168",
+                            "73",
+                            "556",
+                            "164",
+                            "88",
+                            "611",
+                            "3000",
+                            "882",
+                            "60",
+                            "156"
+                        ]
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "loop_protect_vlan": [
+                        "72",
+                        "56",
+                        "502",
+                        "168",
+                        "73",
+                        "556",
+                        "164",
+                        "88",
+                        "611",
+                        "3000",
+                        "882",
+                        "60",
+                        "156"
+                    ]
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "qos_config": {
+                        "qos_trust": "dscp"
+                    }
+                }
+            ],
+            [
+                "Port",
+                "Addition",
+                {
+                    "vrf": "default"
+                }
+            ]
+        ]
+    }
+}
