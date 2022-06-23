@@ -24,7 +24,7 @@ def run_stucco_initiator(db_path,rules_path,group_feature,depth):
         print("error: {0}".format(err.output))
         pass
 
-    
+
 
 def main():
     group_features = [56, 60, 164, 474, 2008]
