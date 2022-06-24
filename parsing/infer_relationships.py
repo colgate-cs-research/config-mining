@@ -69,6 +69,9 @@ def main():
 
     extractor = RelationshipExtractor(all_configs, symbol_table, inverted_table, keykinds)
 
+    # Create output directory
+    os.makedirs(arguments.output_dir, exist_ok=True)
+
     with open(os.path.join(arguments.output_dir, "edges.json"), 'w') as edges_file:
         json.dump(extractor.edges, edges_file, indent=4, sort_keys=True)
 

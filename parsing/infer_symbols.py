@@ -83,6 +83,9 @@ def main():
 
     inverted_table = summarize_types(symbol_table)
 
+    # Create output directory
+    os.makedirs(arguments.output_dir, exist_ok=True)
+    
     with open(os.path.join(arguments.output_dir, "symbols.json"), 'w') as symbols_file:
         json.dump(symbol_table, symbols_file, indent=4, sort_keys=True)
     with open(os.path.join(arguments.output_dir, "inverted.json"), 'w') as inverted_file:
