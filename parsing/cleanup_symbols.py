@@ -44,8 +44,9 @@ def invert_table(symbol_table):
     for symbol_name, symbol_types in symbol_table.items():
         for symbol_type in symbol_types:
             if symbol_type not in inverted_table:
-                inverted_table[symbol_type] = set()
-            inverted_table[symbol_type].add(symbol_name)
+                inverted_table[symbol_type] = []
+            if symbol_name not in inverted_table[symbol_type]: #changed
+                inverted_table[symbol_type].append(symbol_name)
     return inverted_table
 
 def main():
@@ -55,7 +56,7 @@ def main():
     parser = argparse.ArgumentParser(description="Cleanup inferred symbols")
     #parser.add_argument('configs_path', help='Path to directory of configurations')
     parser.add_argument('symbols_dir', help='Path to directory containing symbol files')
-    parser.add_argument('output_dir', help='Path to directory in which to store output')
+    #parser.add_argument('output_dir', help='Path to directory in which to store output')
     parser.add_argument('-v', '--verbose', action='count', help="Display verbose output", default=0)
     arguments = parser.parse_args()
 
@@ -71,12 +72,34 @@ def main():
     # Load symbols results
     with open(os.path.join(arguments.symbols_dir, "symbols.json"), 'r') as symbols_file:
         symbol_table = json.load(symbols_file)
-
+    
     inverted_table = invert_table(symbol_table)
+    new_symbol_table = invert_table(inverted_table)
+    for key in symbol_table:
+        symbol_table[key].sort()
+    for key in new_symbol_table:
+        new_symbol_table[key].sort()
+    print(symbol_table==new_symbol_table)
+    k1 = list(symbol_table.keys())
+    k1.sort()
+    k2 = list(new_symbol_table.keys())
+    k2.sort()
+    print(k2==k1)
+    print(len(k1))
+    print(len(k2)) # THEY DON'T HAVE THE SAME SET OF KEYS, DON'T USE THE INVERT FUNCTION TO REVERSE IT
+    #print(symbol_table)
+    #print(new_symbol_table)
+
+    # call functions here
+
 
     # Save results
-    with open(os.path.join(arguments.output_dir, "inverted.json"), 'w') as inverted_file:
+    with open(os.path.join(arguments.symbols_dir, "inverted.json"), 'w') as inverted_file:
         json.dump(inverted_table, inverted_file, indent=4, sort_keys=True)
+
+    # Save results
+    with open(os.path.join(arguments.symbols_dir, "new_symbols.json"), 'w') as inverted_file:
+        json.dump(new_symbol_table, inverted_file, indent=4, sort_keys=True)
 
     end = time.time()
     print("Time taken: " + str(end - start))
