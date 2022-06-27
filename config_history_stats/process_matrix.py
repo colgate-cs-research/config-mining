@@ -1,16 +1,42 @@
 import argparse
 import time
 
-stanza_type = ["ACL",
-                "Interface",
-                "PKI_TA_Profile",
-                "Port",
-                "SNMP_Trap",
-                "System",
-                "User",
-                "User_Group",
-                "VLAN",
-                "VRF"]
+# stanza_type = ["ACL",
+#                 "Interface",
+#                 "PKI_TA_Profile",
+#                 "Port",
+#                 "SNMP_Trap",
+#                 "System",
+#                 "User",
+#                 "User_Group",
+#                 "VLAN",
+#                 "VRF"]
+
+
+stanza_type = {('System', 'stp_mode'): 0,
+                    ('Port', 'lag200'): 1,
+                    ('Port', 'port_access_clients_limit'): 2,
+                    ('Port', 'vlan_trunks'): 3,
+                    ('Port', 'lag31'): 4,
+                    ('Port', 'port_access_auth_configurations'): 5,
+                    ('VLAN', '2008'): 6, 
+                    ('Port', 'loop_protect_vlan'): 7,
+                    ('Interface', 'user_config'): 8,
+                    ('Port', 'admin'): 9,
+                    ('System', 'mstp_config_revision'): 10,
+                    ('Interface', 'description'): 11,
+                    ('Port', 'vrf'): 12,
+                    ('Port', '1/6/41'): 13,
+                    ('Port', 'qos_config'): 14,
+                    ('Interface', '1/1/31'): 15,
+                    ('VRF', 'Tacacs_Server'): 16,
+                    ('Port', 'vlan_mode'): 17,
+                    ('Port', 'loop_protect_enable'): 18,
+                    ('Port', 'stp_config'): 19,
+                    ('Port', 'interfaces'): 20,
+                    ('Port', '1/1/31'): 21,
+                    ('VRF', 'Radius_Server'): 22,
+                    ('Port', 'vlan_tag'): 23}
 
 '''def add_names():
     f = open("time_period_matrix.csv", 'r')
@@ -65,7 +91,7 @@ def add_stanza_names(inf_name,outf_name):
     f = open("outf_name", 'w')
     header = "Time-periods, "
     for el in stanza_type:
-        header += el + ", "
+        header += str(el) + ", "
     header = header[:-2] + "\n"
     f.write(header)
     s2_lst = s2.split('\n')

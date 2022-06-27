@@ -20,6 +20,7 @@ def make_matrix (all_diffs, stanza_type_dict):
           for (attribute, details) in small_value[i][2].items():
             temp_tuple = (stanza_type, attribute)
             if (temp_tuple in stanza_type_dict):
+              logging.debug(temp_tuple)
               temp_list[stanza_type_dict[temp_tuple]] = 1
 
     output_matrix.append(temp_list)
@@ -47,19 +48,17 @@ def main (stanza_type_dict):
 
   dates = sorted(os.listdir(arguments.diffs_dir))
 
-  # dates = ["2021-08-09vs2021-09-09.json",
-  #          "2021-09-09vs2021-10-09.json",
-  #          "2021-10-09vs2021-11-09.json",
-  #          "2021-11-09vs2021-12-09.json"]
-
   all_diffs = {}
   for date in dates:
-    with open(date) as infile:
+    with open(os.path.join(arguments.diffs_dir, date), 'r') as infile:
       date_diffs = json.load(infile)
     all_diffs[date.split('.')[0]] = date_diffs
   
   # Record differences in matrix
   matrix = make_matrix(all_diffs, stanza_type_dict)
+
+  with open(arguments.matrix_file, 'w') as outfile:
+    json.dump(matrix, outfile, indent=4)
 
 stanza_type_dict = {('System', 'stp_mode'): 0,
                     ('Port', 'lag200'): 1,
