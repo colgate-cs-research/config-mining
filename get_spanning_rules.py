@@ -8,6 +8,7 @@ import get_rule_coverage
 from sklearn.metrics import f1_score
 import logging
 from datetime import datetime, date
+import concurrent.futures
 
 
 
@@ -25,31 +26,42 @@ def gen_rule_column(rules_df,total_rows,rule_no):
 
     return rule_series
     
-
+def gen_rule_matrix_helper(tt):
+    rules_df,total_rows,rule_matrix,i = tt
+    curr_rule = gen_rule_column(rules_df,total_rows,i)
+    rule_matrix[:,i] = curr_rule
 
 def gen_rule_matrix(rules_df,total_rows,resuse=0):
 
 
-    logging.debug("Starting Matrix generation:")
+    logging.debug("\t\tStarting Matrix generation:")
     rule_matrix = np.empty([total_rows, len(rules_df)], dtype=int)
-    for i in range(len(rules_df)):
-        #if i%100 ==0: print(i,end=" ")
-        curr_rule = gen_rule_column(rules_df,total_rows,i)
-        rule_matrix[:,i] = curr_rule
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=100) as pool:
+        #rule_negated_count =  pool.map(self.rule_negated_counts_helper, [(self,rule) for rule in self.counts])
+        non_useful_output =  pool.map(gen_rule_matrix_helper, [(rules_df,total_rows,rule_matrix,i) for i in range(len(rules_df))])
+    
+
+    #for i in range(len(rules_df)):
+     #   #if i%100 ==0: print(i,end=" ")
+      #  curr_rule = gen_rule_column(rules_df,total_rows,i)
+       # rule_matrix[:,i] = curr_rule
         #print(rule_matrix[:,i])
 
 
     #print(type(a))
-    print(rule_matrix[:,1])
     #print(np.where(rule_matrix[:,1]==1))
-    logging.debug("MATRIX SHAPE:"+str(rule_matrix.shape))
+    logging.debug("\t\tMATRIX SHAPE:"+str(rule_matrix.shape))
     #print(rule_matrix)
 
 
     return rule_matrix
 
-def stopping_condition(for_sum,option = 0):
+def stopping_condition(for_sum,start_time,option = 0):
     # for_sum <ndarray>
+
+    time_out = True if time.time() - start_time<600 else False
+
     untouched_rows = len(np.where(for_sum == 1.0)[0])
     total_rows = len(for_sum)
     val = False
@@ -78,7 +90,7 @@ def get_rule_set(rule_matrix,total_rows,initial_weight,weight_reduction):
     old_sum=np.Inf
     start_time = time.time()
     #datetime.combine(date.today(), time.process_time()) - datetime.combine(date.today(), start_time)
-    while (not stopping_condition(for_sum)) and time.time() - start_time<600:#,option=0):
+    while (not stopping_condition(for_sum,start_time)):#,option=0):
 
     
         
@@ -141,54 +153,73 @@ def get_rule_set(rule_matrix,total_rows,initial_weight,weight_reduction):
     #print("REPETitions detected")
     return rule_set
 
+def group_selection(df,group,grp_feature):
+    if int(group)>=0:
+        df = df.query(str(grp_feature)+' == '+str(int(group)))
+    
+    return df
 
 def main():
 
     parser = argparse.ArgumentParser(description='Run rule_spanning on a dataset')
     parser.add_argument('org_df_path',type=str, help='Path for a CSV file containing the pruned dataframe')
     parser.add_argument('rules_path',type=str, help='Path for a CSV file which stores the rules')
+    parser.add_argument('out_path',type=str, help='Path for a CSV file which stores MIN spanning rules')
     parser.add_argument('feature',type=str, help='Select the group-feature name.')
     parser.add_argument('-g','--group',type=str,default=-1, help='Select the group-feature value.')
     parser.add_argument('-d', '--depth', type=int, default=1, help="Maximum rule depth")
     parser.add_argument('-p', '--precision', type=float, default=0.950, help="Only select rules with precison above the given value")
     arguments = parser.parse_args()
 
-    outfile = "./vlan474_spanning_rules.csv"
+    #outfile = "./vlan474_spanning_rules.csv"
     grp_feature = arguments.feature
     depth = arguments.depth
     group = arguments.group  # 0 for not present | 1 for present | -1 for both
+    outfile = arguments.out_path
 
-    logging.debug("\tget_rule_coverage-> START")
+    
     rules_df = get_rule_coverage.main(arguments.org_df_path,arguments.rules_path,grp_feature,group)
-    logging.debug("\tget_rule_coverage->END")
+    
 
     logging.debug("Selecting rules with precision:{}".format(arguments.precision))
     # selecting rules with precision:1
     rules_df = rules_df.loc[rules_df['precision'] > arguments.precision]
 
-    aggregate_df = pd.read_csv(arguments.org_df_path)
+
+    
     rules_df.reset_index(drop=True, inplace=True)
     # testing import
-    
-    logging.debug("Testing rule import:\n{}".format(rules_df.head))
+    logging.debug("\t\t\tTesting rule_df import:\n{}".format(rules_df.head))
     #print(len(aggregate_df))
+    aggregate_df = pd.read_csv(arguments.org_df_path)
+    # This version of the column selection works
+    #
+    aggregate_df = group_selection(aggregate_df,group=group,grp_feature=grp_feature)
+    
+
+    logging.debug("\t\t\tTesting  org_df import:\n{}".format(aggregate_df.head))
+
+    
+    
 
     total_rows = len(aggregate_df)
 
     rule_matrix=gen_rule_matrix(rules_df,total_rows)
 
-    print(len(np.where(np.sum(rule_matrix,axis=1) == 0.0)[0]))
+    #print(len(np.where(np.sum(rule_matrix,axis=1) == 0.0)[0]))
     
     logging.debug("\tget_rule_set->START")
     rule_list= get_rule_set(rule_matrix,total_rows,initial_weight=1.0,weight_reduction=0.5)
     logging.debug("\tget_rule_set->END")
 
     # Dropping coverage column
-    rules_df.drop(["coverage"], axis=1, inplace=True)
+    #rules_df.drop(["coverage"], axis=1, inplace=True)
     selected_rules = rules_df.loc[rule_list]
     #selected_rules.to_csv("./csl_output/rules/spanning_rules/span_aggregate_df_depth_"+str(depth)+"keyword: "+keyword+"_pr",index=False)
     logging.debug("Saving to outfile:{}|".format(outfile))
-    selected_rules.to_csv(outfile,index=False)
+    selected_rules.to_csv(outfile+".csv",index=False)
+    #pickled version
+    selected_rules.to_pickle(outfile+".pkl")
     return rules_df
 
 

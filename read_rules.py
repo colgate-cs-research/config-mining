@@ -33,6 +33,7 @@ def extract_dataframe(dataframe):
     return dataframe
 
 
+
 def filter_rule_column(df):
     record_list = df.to_dict('records')
     new_record_list = []
@@ -82,9 +83,9 @@ def clean_rule(string):
 
 
 def order_dataframe(df,group):
-    # selecting rules where GROUP = 1
+    # selecting rules where GROUP = group |  i.e either 0,1,any other group_feature val
     #df.to_csv("./ordered_df_INITIAL.csv",index=False)
-    logging.info("\t\t\torder_dataframe->START")
+    logging.info("\t\t\t<<START>>\torder_dataframe")
     logging.info("group:{}| & type:{}|".format(group,type(group)))
     logging.info("INPUTS:\n group:{} \n df:{}".format(df.head,group))
     if(int(group)>=0): 
@@ -107,6 +108,7 @@ def order_dataframe(df,group):
     df =df.sort_values(by=['precision','frequency'], ascending=False)
 
     #df=df[df['group'] == 1]
+    logging.debug("\t\t\t<<END>>\torder_dataframe")
     return df
 
 def additional_mertics(df):
