@@ -1,22 +1,56 @@
 rule,group,precision,recall,frequency
-"(' VRF=>0',)", Port=>1,0.2619047619047619,1.0,33.0
-"(' Interface=>0',)", Port=>1,0.2809917355371901,1.0,34.0
-"(' System=>0',)", Port=>1,0.2923076923076923,1.0,38.0
-"(' VLAN=>0',)", Port=>1,0.32608695652173914,1.0,45.0
-"(' ACL=>0',)", Port=>1,0.3404255319148936,1.0,48.0
-"(' PKI_TA_Profile=>0',)", Port=>1,0.3541666666666667,1.0,51.0
-"(' SNMP_Trap=>0',)", Port=>1,0.3541666666666667,1.0,51.0
-"(' User=>0',)", Port=>1,0.3541666666666667,1.0,51.0
-"(' User_Group=>0',)", Port=>1,0.3541666666666667,1.0,51.0
-"(' PKI_TA_Profile=>0',)", Port=>0,0.6458333333333334,1.0,93.0
-"(' SNMP_Trap=>0',)", Port=>0,0.6458333333333334,1.0,93.0
-"(' User=>0',)", Port=>0,0.6458333333333334,1.0,93.0
-"(' User_Group=>0',)", Port=>0,0.6458333333333334,1.0,93.0
-"(' ACL=>0',)", Port=>0,0.6595744680851063,1.0,93.0
-"(' VLAN=>0',)", Port=>0,0.6739130434782609,1.0,93.0
-"(' System=>0',)", Port=>0,0.7076923076923077,1.0,92.0
-"(' Interface=>0',)", Port=>0,0.71900826446281,1.0,87.0
-"(' VRF=>0',)", Port=>0,0.7380952380952381,1.0,93.0
-"(' Interface=>1',)", Port=>1,0.7391304347826086,1.0,17.0
-"(' System=>1',)", Port=>1,0.9285714285714286,1.0,13.0
-"(' VRF=>1',)", Port=>1,1.0,1.0,18.0
+"('Port:port_access_auth_configurations=>0',)",Port:vlan_tag=>1,0.112,1.0,14.0
+"('Port:loop_protect_vlan=>0',)",Port:vlan_tag=>1,0.1206896551724138,1.0,14.0
+"('Port:admin=>0',)",Port:vlan_tag=>1,0.12096774193548387,1.0,15.0
+"('Port:vlan_mode=>0',)",Port:vlan_tag=>1,0.12403100775193798,1.0,16.0
+"('Port:vrf=>0',)",Port:vlan_tag=>1,0.12598425196850394,1.0,16.0
+"('Port:loop_protect_enable=>0',)",Port:vlan_tag=>1,0.13076923076923078,1.0,17.0
+"('Port:port_access_clients_limit=>0',)",Port:vlan_tag=>1,0.13178294573643412,1.0,17.0
+"('Port:qos_config=>0',)",Port:vlan_tag=>1,0.15671641791044777,1.0,21.0
+"('Interface:user_config=>0',)",Port:vlan_tag=>1,0.18181818181818182,1.0,24.0
+"('Interface:description=>0',)",Port:vlan_tag=>1,0.18796992481203006,1.0,25.0
+"('VRF:Radius_Server=>0',)",Port:vlan_tag=>1,0.19696969696969696,1.0,26.0
+"('System:stp_mode=>0',)",Port:vlan_tag=>1,0.20149253731343283,1.0,27.0
+"('System:mstp_config_revision=>0',)",Port:vlan_tag=>1,0.20149253731343283,1.0,27.0
+"('VRF:Tacacs_Server=>0',)",Port:vlan_tag=>1,0.20454545454545456,1.0,27.0
+"('Port:interfaces=>0',)",Port:vlan_tag=>1,0.20454545454545456,1.0,27.0
+"('Port:lag31=>0',)",Port:vlan_tag=>1,0.2097902097902098,1.0,30.0
+"('VLAN:2008=>0',)",Port:vlan_tag=>1,0.2097902097902098,1.0,30.0
+"('Interface:1/1/31=>0',)",Port:vlan_tag=>1,0.2097902097902098,1.0,30.0
+"('Port:1/1/31=>0',)",Port:vlan_tag=>1,0.2097902097902098,1.0,30.0
+"('Port:lag200=>0',)",Port:vlan_tag=>1,0.21678321678321677,1.0,31.0
+"('Port:1/6/41=>0',)",Port:vlan_tag=>1,0.21678321678321677,1.0,31.0
+"('Port:vlan_trunks=>1',)",Port:vlan_tag=>0,0.36363636363636365,1.0,12.0
+"('Port:loop_protect_vlan=>1',)",Port:vlan_tag=>0,0.39285714285714285,1.0,11.0
+"('Port:loop_protect_vlan=>1',)",Port:vlan_tag=>1,0.6071428571428571,1.0,17.0
+"('Port:vlan_trunks=>1',)",Port:vlan_tag=>1,0.6363636363636364,1.0,21.0
+"('Port:lag200=>0',)",Port:vlan_tag=>0,0.7832167832167832,1.0,112.0
+"('Port:1/6/41=>0',)",Port:vlan_tag=>0,0.7832167832167832,1.0,112.0
+"('Port:lag31=>0',)",Port:vlan_tag=>0,0.7902097902097902,1.0,113.0
+"('VLAN:2008=>0',)",Port:vlan_tag=>0,0.7902097902097902,1.0,113.0
+"('Interface:1/1/31=>0',)",Port:vlan_tag=>0,0.7902097902097902,1.0,113.0
+"('Port:1/1/31=>0',)",Port:vlan_tag=>0,0.7902097902097902,1.0,113.0
+"('VRF:Tacacs_Server=>0',)",Port:vlan_tag=>0,0.7954545454545454,1.0,105.0
+"('Port:interfaces=>0',)",Port:vlan_tag=>0,0.7954545454545454,1.0,105.0
+"('System:stp_mode=>0',)",Port:vlan_tag=>0,0.7985074626865671,1.0,107.0
+"('System:mstp_config_revision=>0',)",Port:vlan_tag=>0,0.7985074626865671,1.0,107.0
+"('Port:admin=>1',)",Port:vlan_tag=>1,0.8,1.0,16.0
+"('VRF:Radius_Server=>0',)",Port:vlan_tag=>0,0.803030303030303,1.0,106.0
+"('Interface:description=>0',)",Port:vlan_tag=>0,0.8120300751879699,1.0,108.0
+"('Interface:user_config=>0',)",Port:vlan_tag=>0,0.8181818181818182,1.0,108.0
+"('Port:qos_config=>0',)",Port:vlan_tag=>0,0.8432835820895522,1.0,113.0
+"('Port:port_access_clients_limit=>0',)",Port:vlan_tag=>0,0.8682170542635659,1.0,112.0
+"('Port:loop_protect_enable=>0',)",Port:vlan_tag=>0,0.8692307692307693,1.0,113.0
+"('Port:vrf=>0',)",Port:vlan_tag=>0,0.8740157480314961,1.0,111.0
+"('Port:vlan_mode=>0',)",Port:vlan_tag=>0,0.875968992248062,1.0,113.0
+"('Port:admin=>0',)",Port:vlan_tag=>0,0.8790322580645161,1.0,109.0
+"('Port:loop_protect_vlan=>0',)",Port:vlan_tag=>0,0.8793103448275862,1.0,102.0
+"('Port:vrf=>1',)",Port:vlan_tag=>1,0.8823529411764706,1.0,15.0
+"('Port:port_access_auth_configurations=>0',)",Port:vlan_tag=>0,0.888,1.0,111.0
+"('Port:port_access_auth_configurations=>1',)",Port:vlan_tag=>1,0.8947368421052632,1.0,17.0
+"('Port:vlan_trunks=>0',)",Port:vlan_tag=>0,0.9099099099099099,1.0,101.0
+"('Port:stp_config=>0',)",Port:vlan_tag=>0,0.9112903225806451,1.0,113.0
+"('Port:port_access_clients_limit=>1',)",Port:vlan_tag=>1,0.9333333333333333,1.0,14.0
+"('Port:loop_protect_enable=>1',)",Port:vlan_tag=>1,1.0,1.0,14.0
+"('Port:vlan_mode=>1',)",Port:vlan_tag=>1,1.0,1.0,15.0
+"('Port:stp_config=>1',)",Port:vlan_tag=>1,1.0,1.0,20.0
