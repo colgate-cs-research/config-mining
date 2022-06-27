@@ -9,21 +9,39 @@ from queue import Queue
 import logging
 
 
+# function to find stuff like the common_starts elements
+def longest_shared_sequence(keyword1,keyword2):
+    longest_shared_seq = ""
+    for i in range(len(keyword1)-1):
+        for j in range(i+1,len(keyword1)):
+            if keyword1[i:j] in keyword2 and len(keyword1[i:j])>len(longest_shared_seq):
+                longest_shared_seq = keyword1[i:j]
+
+    #logging.debug("\t\t words:{} {}| seq:{}| ".format(keyword1,keyword2,longest_shared_seq)) #commented out 6/24 11:30am
+    return longest_shared_seq
+            
+def reduce_similarity(word,similar_words,min_len=3):
+    to_return = []
+    #print(type(similar_words))
+    for i in similar_words:
+        if len(longest_shared_sequence(word,i))>=min_len:
+            to_return.append(i)
+    return to_return
+
+ 
 # Function for aliasing
-def is_alias(s1, s2):
-    smalller = s1
+def is_alias(s1, s2, inverted_table, symbol_table):
+    smaller = s1
     bigger = s2
     if len(s1) > len(s2):
         smaller = s2
         bigger = s1
-    if smaller in bigger:
-        return True
-    # first pass to see if they have similar letters
-    if similar_letters(s1,s2):
-        pass
-    # FIXME
-    # check if they are similar
-    # or if they contain a similar sequence of characters
+    if (smaller in bigger) or len(longest_shared_sequence(smaller,bigger))>=5:
+        names1 = set(inverted_table[smaller])
+        names2 = set(inverted_table[bigger])
+        names3 = list(names1.intersection(names2))
+        if len(names3) > 1:
+            return True
     return False 
 
 # returns true is two strings have similar letters
@@ -48,6 +66,46 @@ def invert_table(symbol_table):
             if symbol_name not in inverted_table[symbol_type]: #changed
                 inverted_table[symbol_type].append(symbol_name)
     return inverted_table
+
+def remove_redundant_types(inverted_table, symbol_table):
+    nodes_removed = 0
+    types_to_remove = []
+    for key in inverted_table:
+        lst = inverted_table[key]
+        if len(lst) < 10:
+            #print(key + ": " + str(lst))
+            types_to_remove.append(key)
+
+    for typ in types_to_remove:
+        lst = inverted_table[typ]
+        inverted_table.pop(typ) #remove from inverted table
+        #remove from symbol table
+        for name in lst:
+            symbol_table[name].remove(typ)
+            nodes_removed += 1
+
+    print("Nodes removed: " + str(nodes_removed))
+
+def remove_type_aliases(inverted_table, symbol_table):
+    alias_dict = {}
+    alias_typs = []
+    typ_lst = list(inverted_table.keys())
+    for i in range(len(typ_lst)):
+        if typ_lst[i] not in alias_typs:
+            for j in range(i+1,len(typ_lst)):
+                if is_alias(typ_lst[i], typ_lst[j],inverted_table, symbol_table):
+                    typ_to_keep = typ_lst[i]
+                    alias_typ = typ_lst[j]
+                    if (len(alias_typ) < len(typ_to_keep)):
+                        typ_to_keep = typ_lst[j]
+                        alias_typ = typ_lst[i]
+                    alias_typs.append(alias_typ)
+                    if typ_to_keep not in alias_dict:
+                        alias_dict[typ_to_keep] = []
+                    alias_dict[typ_to_keep].append(alias_typ)
+    print(alias_dict)
+
+
 
 def main():
     start = time.time()
@@ -75,23 +133,32 @@ def main():
     
     inverted_table = invert_table(symbol_table)
     new_symbol_table = invert_table(inverted_table)
-    for key in symbol_table:
-        symbol_table[key].sort()
-    for key in new_symbol_table:
-        new_symbol_table[key].sort()
-    print(symbol_table==new_symbol_table)
-    k1 = list(symbol_table.keys())
-    k1.sort()
-    k2 = list(new_symbol_table.keys())
-    k2.sort()
-    print(k2==k1)
-    print(len(k1))
-    print(len(k2)) # THEY DON'T HAVE THE SAME SET OF KEYS, DON'T USE THE INVERT FUNCTION TO REVERSE IT
+    # for key in symbol_table:
+    #     symbol_table[key].sort()
+    # for key in new_symbol_table:
+    #     new_symbol_table[key].sort()
+    # print(symbol_table==new_symbol_table)
+    # k1 = list(symbol_table.keys())
+    # k1.sort()
+    # k2 = list(new_symbol_table.keys())
+    # k2.sort()
+    # print(k2==k1)
+    # print(len(k1))
+    # print(len(k2)) # THEY DON'T HAVE THE SAME SET OF KEYS, DON'T USE THE INVERT FUNCTION TO REVERSE IT
     #print(symbol_table)
     #print(new_symbol_table)
 
     # call functions here
+    #print(len(list(symbol_table.keys())))
+    print("Keys in inverted_table BEFORE removing types with less than 10 instances: ",  end = "")
+    print(len(list(inverted_table.keys())))
+    #remove_redundant_types(inverted_table, symbol_table)
+    #print(len(list(symbol_table.keys())))
+    print("Keys in inverted_table after removing types with less than 10 instances: ",  end = "")
+    print(len(list(inverted_table.keys())))
 
+    remove_type_aliases(inverted_table,symbol_table)
+    
 
     # Save results
     with open(os.path.join(arguments.symbols_dir, "inverted.json"), 'w') as inverted_file:
