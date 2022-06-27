@@ -58,11 +58,12 @@ def main():
   # Generate matrix
   logging.debug("Generate matrix")
   matrix_file = os.path.join(arguments.output_dir, arguments.frequency + ".json")
-  subprocess.run(["python3", "history/make_matrix.py", diffs_dir, matrix_file])
+  # subprocess.run(["python3", "history/make_matrix.py", diffs_dir, matrix_file])
+  subprocess.run(["python3", "history/make_matrix (stanza_type & attribute).py", diffs_dir, matrix_file])
 
   # Run correlation
-  logging.debug("Run correlation")
-  subprocess.run(["python3", "history/spearman_xor_and_correlation.py", matrix_file])
+  # logging.debug("Run correlation")
+  # subprocess.run(["python3", "history/spearman_xor_and_correlation.py", matrix_file])
 
 
 
