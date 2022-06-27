@@ -8,6 +8,7 @@ import time
 from queue import Queue
 import logging
 
+aliases = {'user_group_priority': ['default_group_priority'], 'vlan_tag': ['vlan_tag', 'loop_protect_vlan', 'vlan_trunks'], 'interface': ['interfaces', 'active_interfaces', 'ospf_interfaces'], 'dst_l4_port_max': ['dst_l4_port_min'], 'src_l4_port_min': ['src_l4_port_max'], 'acl': ['aclv4_control_plane_cfg', 'aclv4_routed_out_cfg']}
 
 # function to find stuff like the common_starts elements
 def longest_shared_sequence(keyword1,keyword2):
@@ -103,6 +104,20 @@ def remove_type_aliases(inverted_table, symbol_table):
                     if typ_to_keep not in alias_dict:
                         alias_dict[typ_to_keep] = []
                     alias_dict[typ_to_keep].append(alias_typ)
+    typs_kept = list(alias_dict.keys())
+
+    for i in range(len(typs_kept)):
+        typ1 = typs_kept[i]
+        for j in range(len(typs_kept)):
+            if (typ1 in alias_dict):
+                typ2 = typs_kept[j]
+                if (typ2 in alias_dict):
+                    if typ1 in alias_dict[typ2]:
+                        set1 = set(alias_dict[typ1])
+                        set2 = set(alias_dict[typ2])
+                        lst = list(set1.union(set2))
+                        alias_dict[typ1] = lst
+                        alias_dict.pop(typ2)
     print(alias_dict)
 
 
