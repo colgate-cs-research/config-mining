@@ -90,6 +90,30 @@ def make_graph(config, keywords, graph, device_name):
                     graph.add_edge(device_acl, str(src_address.network), type=[action, "src"])
                 except ipaddress.AddressValueError as ex:
                     print(ex)'''
+
+    for group_name, group_details in config["groups"].items():
+        if group_details is None:
+            continue
+        group_node_name = "group_" + group_name
+        graph.add_node(group_node_name, type="group")
+
+        # Handle interface details
+        if "interfaces" in group_details:
+            for iface_regex, iface_details in group_details["interfaces"].items():
+                if "unit <*>" in iface_details:
+                    for family_name, family_details in iface_details["unit <*>"].items():
+                        if "filter" in family_details:
+                            acl_names = []
+                            if "input-list" in family_details["filter"]:
+                                acl_names.extend(family_details["filter"]["input-list"])
+                            if "intput" in family_details["filter"]:
+                                acl_names.append(family_details["filter"]["input"])
+                            if "output" in family_details["filter"]:
+                                acl_names.append(family_details["filter"]["output"])
+                            for acl_name in acl_names:
+                                acl_node_name = "acl_" + acl_name
+                                graph.add_node(acl_node_name, type="acl") 
+                                graph.add_edge(group_node_name, acl_node_name)
     
     for interface in config["interfaces"]:
         node_name = device_name + "_" + interface
@@ -101,15 +125,12 @@ def make_graph(config, keywords, graph, device_name):
             units = config["interfaces"][interface]["unit"]
             for unit_name in units:
                 unit_details = units[unit_name]
-                # Add VLAN node
-                unit_node_name = "VLAN_" + unit_name
-                graph.add_node(unit_node_name, type="VLAN")
-
-                # Add edge from interface to VLAN
+                # Add unit node and edge
+                unit_node_name = "unit_" + node_name + "_" + unit_name
+                graph.add_node(unit_node_name, type="unit")
                 graph.add_edge(node_name, unit_node_name) # got rid of type
 
-                # Add subnet node
-                # Add edge from VLAN to subnet
+                # Add subnet, vlan, and group nodes and edges
                 for key in unit_details:
                     if ("inet6" in key) and ("address" in unit_details[key]):
                         address = list(unit_details[key]["address"].keys())[0]
@@ -127,6 +148,19 @@ def make_graph(config, keywords, graph, device_name):
                             graph.add_edge(unit_node_name, str(network_obj.network))
                         else:
                             print("Weird IPv4 address: " + str(address))
+                    elif key == "vlan-id":
+                        vlan_num = unit_details[key]
+                        # Add vlan node and edge
+                        vlan_node_name = "vlan_" + vlan_num
+                        graph.add_node(vlan_node_name, type="vlan")
+                        graph.add_edge(unit_node_name, vlan_node_name)
+                    elif key == "apply-groups":
+                        group_name = unit_details[key]
+                        # Add group node and edge
+                        group_node_name = "group_" + group_name
+                        graph.add_node(group_node_name, type="group")
+                        graph.add_edge(unit_node_name, group_node_name)
+
 
     
 
