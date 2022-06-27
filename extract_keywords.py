@@ -10,7 +10,7 @@ import analyze
 import numpy
 import time
 import logging
-logging.basicConfig(filename="./TO_REMOVE/temp/graph_to_db.log",level=logging.DEBUG,filemode = 'w')
+#logging.basicConfig(filename="./TO_REMOVE/temp/graph_to_db.log",level=logging.DEBUG,filemode = 'w')
 
 abbreviations = {
     "bldg" : "building",
@@ -21,6 +21,8 @@ abbreviations = {
 # list of common keyword beginnings
 common_starts = ["student", "ems", "bg", "voip"]
 
+
+# function to find stuff like the common_starts elements
 def longest_shared_sequence(keyword1,keyword2):
     longest_shared_seq = ""
     for i in range(len(keyword1)-1):
@@ -28,32 +30,16 @@ def longest_shared_sequence(keyword1,keyword2):
             if keyword1[i:j] in keyword2 and len(keyword1[i:j])>len(longest_shared_seq):
                 longest_shared_seq = keyword1[i:j]
 
-    logging.debug("\t\t words:{} {}| seq:{}| ".format(keyword1,keyword2,longest_shared_seq))
+    #logging.debug("\t\t words:{} {}| seq:{}| ".format(keyword1,keyword2,longest_shared_seq)) #commented out 6/24 11:30am
     return longest_shared_seq
             
 def reduce_similarity(word,similar_words,min_len=3):
     to_return = []
+    print(type(similar_words))
     for i in similar_words:
         if len(longest_shared_sequence(word,i))>=min_len:
             to_return.append(i)
     return to_return
-
-
-
-def main():
-    start = time.time()
-    #parsing command-line arguments
-    parser = argparse.ArgumentParser(description='Extract keywords for interfaces and ACLs')
-    parser.add_argument('config_path', help='Path for a file (or directory) containing a JSON representation of configuration(s)')
-    parser.add_argument('out_path', help='Name of file (or directory) to write JSON file(s) containing keywords')
-
-    arguments = parser.parse_args()
-    analyze.process_configs(analyze_configuration, arguments.config_path, arguments.out_path)
-
-    end = time.time()
-    print()
-    print("Time taken: " + str(end-start))
-    print()
 
 """Get keywords from a phrase"""
 def get_keywords(phrase, delims=[" "]):
@@ -81,6 +67,8 @@ def add_keywords(dictionary, key, words):
         if word not in dictionary[key]:
             dictionary[key].append(word)
 
+
+# construct "trie" for each keyword
 def make_dict(word):
     d = {}
     inner_d = d
@@ -92,7 +80,7 @@ def make_dict(word):
 
 
 def analyze_configuration(file, outf, extra=None):
-    # print("Current working FILE: " + file)
+    print("Current working FILE: " + file)
     # Load config
     with open(file, "r") as infile:
         config = json.load(infile)
@@ -124,11 +112,12 @@ def analyze_configuration(file, outf, extra=None):
             #add_keywords(iface_dict, iName, keywords)
 
     similarity_dict = {}
-    logging.debug("All he keywords:{}".format(keyword_dict.keys()))
+    #logging.debug("All he keywords:{}".format(keyword_dict.keys())) #commented out 6/24 9:50am
     
     for word in keyword_dict:
         #logging.debug("\t\tkeywords:{}|\n\t\t\toccurences:{}".format(word,keyword_dict[word]))
-        similarity_dict[word] = list(keyword_dict.keys()).remove(word)
+        similarity_dict[word] = list(keyword_dict.keys())
+        similarity_dict[word].remove(word)
     for i in range(len(keyword_dict)):
         word1 = list(keyword_dict.keys())[i]
         list1 = list(set(word1))
@@ -140,8 +129,15 @@ def analyze_configuration(file, outf, extra=None):
                 if el in list2:
                     similarity += 1
                 if similarity > 1:
-                    similarity_dict[word1].append(word2)
-                    similarity_dict[word2].append(word1)
+                    if word1 not in similarity_dict:
+                        similarity_dict[word1] = []
+                    if word2 not in similarity_dict:
+                        similarity_dict[word2] = []
+                    print(type(similarity_dict))
+                    print(type(similarity_dict[word1]))
+                    print(type(similarity_dict[word2]))
+                    #similarity_dict[word1].append(word2)
+                    #similarity_dict[word2].append(word1)
     # Checking similarity dict
     new_dict={}
     for key in similarity_dict:
@@ -151,7 +147,7 @@ def analyze_configuration(file, outf, extra=None):
 
         new_dict[key] = reduce_similarity(key,similarity_dict[key])
         #logging.debug("\told_list similar words: " + str(similarity_dict[key]))
-        logging.debug("\tUpdated_list similar words: " + str(new_dict[key]))
+        #logging.debug("\tUpdated_list similar words: " + str(new_dict[key])) #commented out 6/24 9:50am
 
 
 
@@ -198,6 +194,21 @@ def analyze_configuration(file, outf, extra=None):
         json.dump(aggregate, outfile, indent = 4)
 
     return iface_dict, acl_dict
+
+def main():
+    start = time.time()
+    #parsing command-line arguments
+    parser = argparse.ArgumentParser(description='Extract keywords for interfaces and ACLs')
+    parser.add_argument('config_path', help='Path for a file (or directory) containing a JSON representation of configuration(s)')
+    parser.add_argument('out_path', help='Name of file (or directory) to write JSON file(s) containing keywords')
+
+    arguments = parser.parse_args()
+    analyze.process_configs(analyze_configuration, arguments.config_path, arguments.out_path)
+
+    end = time.time()
+    print()
+    print("Time taken: " + str(end-start))
+    print()
 
 
 if __name__ == "__main__":

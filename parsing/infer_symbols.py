@@ -48,7 +48,7 @@ KEYKINDS = KEYKINDS_ARUBA
 
 def main():
     # Parse command-line arguments
-    parser = argparse.ArgumentParser(description='Commandline arguments')
+    parser = argparse.ArgumentParser(description="Infer symbols from network configurations")
     parser.add_argument('configs_path', help='Path to directory of configurations')
     parser.add_argument('output_dir', help='Path to directory in which to store symbol files')
     parser.add_argument('-v', '--verbose', action='count', help="Display verbose output", default=0)
@@ -76,34 +76,18 @@ def main():
         except:
             logging.debug("Failed to parse {}".format(filepath))
             continue
-#        logging.info("Processing {}...".format(node))
-#        extractor = SymbolExtractor(config, symbol_table)
 
     extractor = SymbolExtractor(all_configs, symbol_table)
 
-    inverted_table = summarize_types(symbol_table)
-
+    # Create output directory
+    os.makedirs(arguments.output_dir, exist_ok=True)
+    
+    # Save output
     with open(os.path.join(arguments.output_dir, "symbols.json"), 'w') as symbols_file:
         json.dump(symbol_table, symbols_file, indent=4, sort_keys=True)
-    with open(os.path.join(arguments.output_dir, "inverted.json"), 'w') as inverted_file:
-        json.dump(inverted_table, inverted_file, indent=4, sort_keys=True)
     pickle_keykinds = {str(k) : v for k,v in extractor.keykinds.items()}
     with open(os.path.join(arguments.output_dir, "keykinds.json"), 'w') as keykinds_file:
         json.dump(pickle_keykinds, keykinds_file, indent=4, sort_keys=True)
-
-def summarize_types(symbol_table):
-    inverted_symbol_table = {}
-    for symbol_name, symbol_types in symbol_table.items():
-        for symbol_type in symbol_types:
-            if symbol_type not in inverted_symbol_table:
-                inverted_symbol_table[symbol_type] = set()
-            inverted_symbol_table[symbol_type].add(symbol_name)
-
-    logging.info("Symbol table summary")
-    for symbol_type, symbol_names in inverted_symbol_table.items():
-        inverted_symbol_table[symbol_type] = list(symbol_names)
-        logging.info("{} unique symbols of type {}".format(len(symbol_names), symbol_type))
-    return inverted_symbol_table
 
 class SymbolExtractor:
     def __init__(self, config, symbol_table={}):
@@ -118,9 +102,6 @@ class SymbolExtractor:
                 if symbol_type not in config[node]:
                     continue
                 self.parse_dict(config[node][symbol_type], [("name", node), ("type", symbol_type)])
-
-        logging.info("Key kind summary")
-        logging.info("\t{}".format(pprint.pformat(self.keykinds)))
 
     def parse_dict(self, dct, path):
         logging.debug("Processing dict {}...".format(path))
@@ -197,11 +178,9 @@ class SymbolExtractor:
         if len(signature) == 1:
             if kind == "type":
                 if id in dct and (isinstance(dct[id], dict) or isinstance(dct[id], list)):
-                    #result.append({id : dct[id]})
                     result.append(dct[id])
             elif kind == "name":
-                for key, value in dct.items():
-                    #result.append({key: value})
+                for value in dct.values():
                     if isinstance(value, dict):
                         result.append(value)
                     elif isinstance(value, list):

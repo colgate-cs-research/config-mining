@@ -74,7 +74,7 @@ def make_dict(word):
 def analyze_configuration(file, outf, extra=None):
     # print("Current working FILE: " + file)
     # Load config
-    name = file[:-5]
+    name = os.path.basename(file).split(".")[0]
     with open(file, "r") as infile:
         config = json.load(infile)
     iface_dict = {}

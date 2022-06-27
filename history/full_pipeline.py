@@ -58,7 +58,9 @@ def main():
   # Generate matrix
   logging.debug("Generate matrix")
   matrix_file = os.path.join(arguments.output_dir, arguments.frequency + ".json")
-  subprocess.run(["python3", "history/make_matrix.py", diffs_dir, matrix_file])
+  # subprocess.run(["python3", "history/make_matrix.py", diffs_dir, matrix_file])
+  subprocess.run(["python3", "history/make_matrix_stanza_type_attribute.py", diffs_dir, matrix_file])
+  
 
   # Run correlation
   logging.debug("Run correlation")
