@@ -7,8 +7,8 @@ import os
 import time
 from queue import Queue
 import logging
+import pprint
 
-aliases = {'user_group_priority': ['default_group_priority'], 'vlan_tag': ['vlan_tag', 'loop_protect_vlan', 'vlan_trunks'], 'interface': ['interfaces', 'active_interfaces', 'ospf_interfaces'], 'dst_l4_port_max': ['dst_l4_port_min'], 'src_l4_port_min': ['src_l4_port_max'], 'acl': ['aclv4_control_plane_cfg', 'aclv4_routed_out_cfg']}
 
 # function to find stuff like the common_starts elements
 def longest_shared_sequence(keyword1,keyword2):
@@ -32,6 +32,7 @@ def reduce_similarity(word,similar_words,min_len=3):
  
 # Function for aliasing
 def is_alias(s1, s2, inverted_table, symbol_table):
+    assert(s1!=s2)
     smaller = s1
     bigger = s2
     if len(s1) > len(s2):
@@ -73,7 +74,7 @@ def remove_redundant_types(inverted_table, symbol_table):
     types_to_remove = []
     for key in inverted_table:
         lst = inverted_table[key]
-        if len(lst) < 10:
+        if len(lst) < 4:
             #print(key + ": " + str(lst))
             types_to_remove.append(key)
 
@@ -85,41 +86,105 @@ def remove_redundant_types(inverted_table, symbol_table):
             symbol_table[name].remove(typ)
             nodes_removed += 1
 
-    print("Nodes removed: " + str(nodes_removed))
+    #print("Nodes removed: " + str(nodes_removed))
 
-def remove_type_aliases(inverted_table, symbol_table):
+
+def infer_type_aliases(inverted_table, symbol_table):
     alias_dict = {}
     alias_typs = []
     typ_lst = list(inverted_table.keys())
+    #print("Type list: " + str(typ_lst))
+
     for i in range(len(typ_lst)):
         if typ_lst[i] not in alias_typs:
             for j in range(i+1,len(typ_lst)):
                 if is_alias(typ_lst[i], typ_lst[j],inverted_table, symbol_table):
+                    old_key_lst = []
                     typ_to_keep = typ_lst[i]
                     alias_typ = typ_lst[j]
-                    if (len(alias_typ) < len(typ_to_keep)):
+                    # which is the alias
+                    if (len(typ_to_keep) > len(alias_typ)):
                         typ_to_keep = typ_lst[j]
                         alias_typ = typ_lst[i]
+                    if (alias_typ in alias_dict):
+                        old_key_lst = alias_dict[alias_typ]
+                        alias_dict.pop(alias_typ)
+
                     alias_typs.append(alias_typ)
+
                     if typ_to_keep not in alias_dict:
-                        alias_dict[typ_to_keep] = []
+                        alias_dict[typ_to_keep] = old_key_lst
                     alias_dict[typ_to_keep].append(alias_typ)
     typs_kept = list(alias_dict.keys())
 
-    for i in range(len(typs_kept)):
-        typ1 = typs_kept[i]
-        for j in range(len(typs_kept)):
-            if (typ1 in alias_dict):
-                typ2 = typs_kept[j]
-                if (typ2 in alias_dict):
-                    if typ1 in alias_dict[typ2]:
-                        set1 = set(alias_dict[typ1])
-                        set2 = set(alias_dict[typ2])
-                        lst = list(set1.union(set2))
-                        alias_dict[typ1] = lst
-                        alias_dict.pop(typ2)
-    print(alias_dict)
+    #print(pprint.pformat(alias_dict))
+    return alias_dict
 
+
+def remove_type_aliases(inverted_table, symbol_table):
+    aliases = infer_type_aliases(inverted_table, symbol_table)
+    inverted_aliases = invert_table(aliases)
+    #print(inverted_aliases)
+
+    for key in aliases:
+        for alias in aliases[key]:
+            # fix the inverted table
+            names_to_transfer = []
+            set1 = set()
+            if alias in inverted_table:
+                names_to_transfer = inverted_table[alias]
+                inverted_table.pop(alias)
+            else:
+                print("Weird type1:" + alias)
+            if key in inverted_table:
+                set1 = set(inverted_table[key])
+            else:
+                print("Weird type2: " + key)
+            set2 = set(names_to_transfer)
+            lst = list(set1.union(set2))
+            aliases[key] = lst
+            #inverted_table[key] += names_to_tranfer
+
+            #fix the symbol table
+
+def fix_address(inverted_table, symbol_table):
+    inverted_table["_address"] = []
+    toRemove = []
+    for key in inverted_table:
+        names = inverted_table[key]
+        names2 = is_all_addr(names)
+        if (len(names2) > 0):
+            inverted_table["_address"] += names2
+            toRemove.append(key)  # alias is being removed by the old key is not being stored anywhere
+            for name in names:
+                if key in symbol_table[name]:
+                    symbol_table[name].remove(key)
+
+    for key in toRemove:
+        inverted_table.pop(key)
+
+# helper function for fix_address
+def is_all_addr(lst):
+    to_return = []
+    count_not_ip = 0
+    for el in lst:
+        if (el != ""):
+            l = el.strip().split('.')
+            if len(l) >= 4:
+                if (l[2]==''):
+                    l[2] += '0'
+                elif (len(l) > 4) and (l[3] ==  ""):
+                    l.remove("")
+                s = (".").join(lst)
+                try:
+                    ip = ipaddress.ip_interface(s)
+                    to_return.append(ip)
+                except:
+                    count_not_ip += 1
+    if count_not_ip == 0:
+        print(to_return)
+        return to_return
+    return []
 
 
 def main():
@@ -165,14 +230,27 @@ def main():
 
     # call functions here
     #print(len(list(symbol_table.keys())))
-    print("Keys in inverted_table BEFORE removing types with less than 10 instances: ",  end = "")
-    print(len(list(inverted_table.keys())))
-    #remove_redundant_types(inverted_table, symbol_table)
-    #print(len(list(symbol_table.keys())))
-    print("Keys in inverted_table after removing types with less than 10 instances: ",  end = "")
-    print(len(list(inverted_table.keys())))
 
+    #print("Number of keys in inverted_table BEFORE removing alias types: ",  end = "")
+    #print(len(list(inverted_table.keys())))
     remove_type_aliases(inverted_table,symbol_table)
+    #print("Number of keys in inverted_table AFTER removing alias types: ",  end = "")
+    #print(len(list(inverted_table.keys())))
+
+
+    #print("Keys in inverted_table BEFORE removing types with less than 10 instances: ",  end = "")
+    #print(len(list(inverted_table.keys())))
+    remove_redundant_types(inverted_table, symbol_table)
+    #print(len(list(symbol_table.keys())))
+    #print("Keys in inverted_table AFTER removing types with less than 10 instances: ",  end = "")
+    #print(len(list(inverted_table.keys())))
+
+    # function for special case of 
+    #print("Keys in inverted_table BEFORE aggregating addresses: ",  end = "")
+    #print(len(list(inverted_table.keys())))
+    fix_address(inverted_table, symbol_table)
+    #print("Keys in inverted_table AFTER aggregating addresses: ",  end = "")
+    #print(len(list(inverted_table.keys())))
     
 
     # Save results
@@ -181,7 +259,7 @@ def main():
 
     # Save results
     with open(os.path.join(arguments.symbols_dir, "new_symbols.json"), 'w') as inverted_file:
-        json.dump(new_symbol_table, inverted_file, indent=4, sort_keys=True)
+        json.dump(symbol_table, inverted_file, indent=4, sort_keys=True)
 
     end = time.time()
     print("Time taken: " + str(end - start))

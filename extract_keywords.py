@@ -35,7 +35,7 @@ def longest_shared_sequence(keyword1,keyword2):
             
 def reduce_similarity(word,similar_words,min_len=3):
     to_return = []
-    print(type(similar_words))
+    #print(type(similar_words))
     for i in similar_words:
         if len(longest_shared_sequence(word,i))>=min_len:
             to_return.append(i)
@@ -113,11 +113,12 @@ def analyze_configuration(file, outf, extra=None):
 
     similarity_dict = {}
     #logging.debug("All he keywords:{}".format(keyword_dict.keys())) #commented out 6/24 9:50am
-    
+    print(keyword_dict)
     for word in keyword_dict:
         #logging.debug("\t\tkeywords:{}|\n\t\t\toccurences:{}".format(word,keyword_dict[word]))
         similarity_dict[word] = list(keyword_dict.keys())
         similarity_dict[word].remove(word)
+    #print(similarity_dict)
     for i in range(len(keyword_dict)):
         word1 = list(keyword_dict.keys())[i]
         list1 = list(set(word1))
@@ -133,9 +134,6 @@ def analyze_configuration(file, outf, extra=None):
                         similarity_dict[word1] = []
                     if word2 not in similarity_dict:
                         similarity_dict[word2] = []
-                    print(type(similarity_dict))
-                    print(type(similarity_dict[word1]))
-                    print(type(similarity_dict[word2]))
                     #similarity_dict[word1].append(word2)
                     #similarity_dict[word2].append(word1)
     # Checking similarity dict
@@ -143,8 +141,6 @@ def analyze_configuration(file, outf, extra=None):
     for key in similarity_dict:
         #logging.debug("Key: " + key)
         #logging.debug("\tList of similar words: " + str(similarity_dict[key]))
-        
-
         new_dict[key] = reduce_similarity(key,similarity_dict[key])
         #logging.debug("\told_list similar words: " + str(similarity_dict[key]))
         #logging.debug("\tUpdated_list similar words: " + str(new_dict[key])) #commented out 6/24 9:50am
