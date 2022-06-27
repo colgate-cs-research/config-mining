@@ -1,18 +1,6 @@
-<<<<<<< HEAD
 import argparse
 import time
 
-stanza_type = ["ACL",
-                "Interface",
-                "PKI_TA_Profile",
-                "Port",
-                "SNMP_Trap",
-                "System",
-                "User",
-                "User_Group",
-                "VLAN",
-                "VRF"]
-=======
 # stanza_type = ["ACL",
 #                 "Interface",
 #                 "PKI_TA_Profile",
@@ -49,7 +37,6 @@ stanza_type = {('System', 'stp_mode'): 0,
                     ('Port', '1/1/31'): 21,
                     ('VRF', 'Radius_Server'): 22,
                     ('Port', 'vlan_tag'): 23}
->>>>>>> changes
 
 '''def add_names():
     f = open("time_period_matrix.csv", 'r')
@@ -104,7 +91,7 @@ def add_stanza_names(inf_name,outf_name):
     f = open("outf_name", 'w')
     header = "Time-periods, "
     for el in stanza_type:
-        header += el + ", "
+        header += str(el) + ", "
     header = header[:-2] + "\n"
     f.write(header)
     s2_lst = s2.split('\n')
