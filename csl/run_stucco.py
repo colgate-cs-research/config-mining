@@ -34,6 +34,8 @@ def main():
     arguments = parser.parse_args()
 
     data = pandas.read_csv(arguments.db_path, header=0)
+    
+
     if arguments.feature not in data.columns:
         print("{} is not a valid feature choice".format(arguments.feature))
         print("You must choose one of the following features: {}".format(", ".join(list(data.columns))))

@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import numpy as np
 import re
@@ -86,23 +87,60 @@ def rule_coverage(rule_df_record,table_hash_dict,column_hash_dict):
     singular_rule = rule_df_record['rule']
     group_val = str(rule_df_record['group'])
 
+    rule_rows = get_rule_rows(singular_rule,table_hash_dict)
     rule_cover = get_common_rows(get_rule_rows(singular_rule,table_hash_dict),get_group_rows(group_val,column_hash_dict))
+    rows_not_covered = [i for i in rule_rows if i not in rule_cover]
+    return rule_cover,rule_rows,rows_not_covered
 
-    return rule_cover
 
 
 def all_rules_coverage(df,table_hash_dict,column_hash_dict):
     
     all_rules_coverage_list =[]
+    rule_rows_list = []
+    rows_not_covered_list =[]
     for index, record in df.iterrows():
-        coverage = rule_coverage(record,table_hash_dict,column_hash_dict)
+        coverage,rule_rows,rows_not_covered = rule_coverage(record,table_hash_dict,column_hash_dict)
         all_rules_coverage_list.append(coverage)
+        rule_rows_list.append(rule_rows)
+        rows_not_covered_list.append(rows_not_covered)
 
     df['coverage']=all_rules_coverage_list
+    df['rule_coverage']=rule_rows_list
+    df['rows_not_covered']=rows_not_covered_list
 
     
     return df
+def find_subset_df(df,group_feature,group_val,rows_to_keep):
+    '''
+    find the subset of the INPUT df according to group and rows_to_keep
 
+    '''
+    if str(group_val)=="-1":
+        pass
+    else:
+        try:
+            df = df.query(group_feature+' == '+str(int(group_val)))
+            
+        except:
+            print("ERROR: cannot make group selection")
+            print("Group:{}| and Type:{}|".format(group_val,type(group_val)))
+            sys.exit()
+    df.reset_index()
+    print(np.array(rows_to_keep))
+    return df.loc[rows_to_keep]
+    
+    
+    
+
+
+def find_rule_violations(rule_df,aggreagate_df):
+    '''
+    find the rows which are violated by a particula rule
+    Ensure that df contains 'coverage' and 'rule_coverage'
+    '''
+    pass
+    
 
     
 
@@ -110,7 +148,7 @@ def get_rules(path,group,raw=0):
     '''
     for future more complex implementationg of importing rules
     '''
-    logging.debug("\t\t\tget_rules:")
+    logging.debug("\t\t\t<<START>> get_rules")
     # reading rule csv file
     rules_df = pd.read_csv(path,header=0)
     if raw==1: return rules_df
@@ -119,29 +157,40 @@ def get_rules(path,group,raw=0):
 
     rules_df = extract_dataframe(rules_df)
     rules_df = order_dataframe(rules_df,group)
-    
+    logging.debug("\t\t\t<<END>> get rules")
     return rules_df
 
-def main(org_df_path,rules_path,feature,group):
+def main(org_df_path,rules_path,grp_feature,feature_val):
     logging.debug("\t\tget_rule_coverage \t\tMAIN:-")
-    keyword = feature
-    group = group  # 0 for not present | 1 for present | -1 for both
+    logging.debug("\t\tGroup Feature:{}\t feature_val:{}".format(grp_feature,int(feature_val)))
+    feature_val = feature_val  # 0 for not present | 1 for present | -1 for both
 
 
     # networkwide dataframe
     #aggregate_df = pd.read_csv("./csl_output/workingDB/aggregate_df_workDB.csv")
     aggregate_df = pd.read_csv(org_df_path)
-    table_hash_dict = table_hash(aggregate_df)
-
-    logging.debug("Columns:\n\t\t{}".format(table_hash_dict.keys()))
+    aggregate_df[grp_feature] = aggregate_df[grp_feature].astype("int")
+    logging.debug("grp_col_unique_items:{} \ntype:{}\n\n".format(aggregate_df[grp_feature],type(aggregate_df[grp_feature])))
     
-    column_hash_dict = table_hash_dict[keyword]
-    logging.debug("ColumnHashDict:\n\t\t{}".format(column_hash_dict))
+    
+    # This version of the column selection works
+    aggregate_df = aggregate_df.query(str(grp_feature)+' == '+str(int(feature_val)))
+
+
+
+    
+    logging.debug("Unique grp feature:{} vals:{}".format(grp_feature,np.unique(aggregate_df[grp_feature])))
+    table_hash_dict = table_hash(aggregate_df)
+    
+    logging.debug("Columns:\n\t\t{}".format(table_hash_dict.values()))
+    
+    grp_feature_hash = table_hash_dict[grp_feature]
+    logging.debug("ColumnHashDict:\n\t\t{}".format(grp_feature_hash))
 
     
     
     # loading rule dataframe
-    rules_df = get_rules(rules_path,group)
+    rules_df = get_rules(rules_path,feature_val)
     logging.debug("Rules:\n\t\t{}".format(rules_df))
         
 
@@ -149,10 +198,10 @@ def main(org_df_path,rules_path,feature,group):
 
     # adding rule coverage to rules_df
     
-    rules_df = all_rules_coverage(rules_df,table_hash_dict,column_hash_dict)
+    rules_df = all_rules_coverage(rules_df,table_hash_dict,grp_feature_hash)
     #logging.debug("Testing Coverage:{}".format(rules_df.loc[0,'coverage']))
 
-    
+    logging.debug("\tget_rule_coverage->END")
     return rules_df
 
 

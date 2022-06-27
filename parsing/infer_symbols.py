@@ -10,7 +10,11 @@ import pprint
 TOP_LEVEL_TYPES_JUNIPER = [
     #"groups", 
     "interfaces", 
+    #"security",
+    #"routing-options",
+    "protocols",
     "policy-options", 
+    #"class-of-service",
     "firewall", 
 ]
 TOP_LEVEL_TYPES_ARUBA = [
@@ -29,6 +33,9 @@ KEYKINDS_JUNIPER = {
     (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
     (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term'), ('name', '*'), ('type', 'to')): "mixed",
     (('name', '*'), ('type', 'groups')) : "name",
+    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('type', 'unit'), ('name', '*'), ('mixed', ('family', '*')), ('type', 'filter'), ('type', 'input-list')): "name",
+    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('type', 'unit'), ('name', '*'), ('mixed', ('family', '*')), ('type', 'filter'), ('type', 'output-list')): "name",
+#    (('name', '*'), ('type', 'security'), ('type', 'pki')): "mixed",
 }
 KEYKINDS_ARUBA = {
     (('name', '*'), ('type', 'AAA_Server_Group')) : "name",
@@ -41,10 +48,9 @@ KEYKINDS_ARUBA = {
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Static_Route')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Tacacs_Server')): 'name',
 }
-TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER
+TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER + TOP_LEVEL_TYPES_ARUBA
 KEYKINDS = KEYKINDS_JUNIPER
-TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_ARUBA
-KEYKINDS = KEYKINDS_ARUBA
+#KEYKINDS = KEYKINDS_ARUBA
 
 def main():
     # Parse command-line arguments
@@ -130,6 +136,12 @@ class SymbolExtractor:
             self.extract_symbols_key_name(dct, path)
         elif (kind == "type"):
             self.extract_symbols_key_type(dct, path)
+        elif (kind == "pair"):
+            self.extract_symbols_key_pair(dct, path)
+        elif (kind == "mixed"):
+            self.extract_symbols_key_mixed(dct, path)
+        else:
+            logging.debug("!Not recursing on dict of {}s: {}".format(kind, path))
 
     def parse_list(self, lst, path):
         logging.debug("Processing list {}...".format(path))
@@ -160,12 +172,21 @@ class SymbolExtractor:
             logging.debug("!Not recursing on list of types: {}".format(path))
         elif (kind == "mixed"):
             self.extract_symbols_list_mixed(lst, path)
+        else:
+            logging.debug("!Not recursing on list of {}s: {}".format(kind, path))
 
     def get_path_signature(self, path):
         signature = []
         for component in path:
             if component[0] == "name":
                 signature.append(("name", "*"))
+            elif component[0] == "pair":
+                signature.append(("pair", (component[1][0], "*")))
+            elif component[0] == "mixed":
+                if len(component[1]) == 2:
+                    signature.append(("mixed", (component[1][0], "*")))
+                else:
+                    signature.append(("mixed", (component[1][0],)))
             else:
                 signature.append(component)
         return tuple(signature)
@@ -179,24 +200,49 @@ class SymbolExtractor:
             if kind == "type":
                 if id in dct and (isinstance(dct[id], dict) or isinstance(dct[id], list)):
                     result.append(dct[id])
+            elif kind == "pair":
+                for key, value in dct.items():
+                    id_type, id_name = key.replace("inactive: ", "").split(' ')
+                    if id_type == id[0] and (isinstance(value, dict) or isinstance(value, list)):
+                        result.append(dct[key])
             elif kind == "name":
                 for value in dct.values():
-                    if isinstance(value, dict):
+                    if isinstance(value, dict) or isinstance(value, list):
                         result.append(value)
-                    elif isinstance(value, list):
-                        result.append(value)
+            elif kind == "mixed":
+                for key, value in dct.items():
+                    if key.replace("inactive: ", "").count(' ') == 1:
+                        id_type, id_name = key.replace("inactive: ", "").split(' ')
+                        if id_type == id[0] and (isinstance(value, dict) or isinstance(value, list)):
+                            result.append(dct[key])
+                    else:
+                        id_type = key.replace("inactive: ", "")
+                        if id_type == id[0] and (isinstance(value, dict) or isinstance(value, list)):
+                            result.append(dct[key]) 
             else:
                 raise Exception("Unknown kind {} in signature {}".format(kind, signature))
         # Recursive case
         else:
-            kind, value = signature[0]
             if kind == "type":
-                if value in dct and isinstance(dct[value], dict):
-                    result = self.get_instances(dct[value],signature[1:])
+                if id in dct and isinstance(dct[id], dict):
+                    result = self.get_instances(dct[id],signature[1:])
+            elif kind == "pair":
+                for key, value in dct.items():
+                    id_type, id_name = key.replace("inactive: ", "").split(' ')
+                    if id_type == id[0] and isinstance(value, dict):
+                        result.extend(self.get_instances(value, signature[1:]))
             elif kind == "name":
                 for value in dct.values():
                     if isinstance(value, dict):
                         result.extend(self.get_instances(value, signature[1:]))
+            elif kind == "mixed":
+                for key, value in dct.items():
+                    if key.replace("inactive: ", "").count(' ') == 1:
+                        id_type, id_name = key.replace("inactive: ", "").split(' ')
+                        if id_type == id[0] and isinstance(value, dict):
+                            result.extend(self.get_instances(value, signature[1:]))
+                    elif key.replace("inactive: ", "") == id[0] and isinstance(dct[key], dict):
+                        result = self.get_instances(dct[key],signature[1:])
             else:
                 raise Exception("Unknown kind {} in signature {}".format(kind, signature))
 
@@ -214,7 +260,7 @@ class SymbolExtractor:
             if isinstance(value, dict):
                 subdict_num += 1
                 subdict_num_keys += len(value.keys())
-                subdict_unique_keys.update(value.keys())
+                subdict_unique_keys.update([(k.replace("inactive: ") if k.startswith("inactive: ") else k) for k in value.keys()])
             elif isinstance(value, list):
                 sublist_num += 1
                 sublist_num_values += len(value)
@@ -253,26 +299,32 @@ class SymbolExtractor:
         for inst in instances:
             if isinstance(inst, dict):
                 num_keys += len(inst.keys())
-                unique_keys.update(inst.keys())
+                unique_keys.update([(k[len("inactive: "):] if k.startswith("inactive: ") else k) for k in inst.keys()])
             elif isinstance(inst, list):
                 num_keys += len(inst)
                 unique_keys.update(inst)
         num_unique_keys = len(unique_keys)
+        num_unique_keys_with_spaces = 0
+        num_unique_keys_with_single_space = 0
+        for key in unique_keys:
+            if " " in key:
+                num_unique_keys_with_spaces += 1 
+                logging.debug(key)
+                if key.count(" ") == 1:
+                    num_unique_keys_with_single_space += 1
         logging.debug("\tTotal dict: {}".format(num_inst))
         logging.debug("\tUnique sub keys {}".format(num_unique_keys))
+        logging.debug("\tUnique sub keys with single space {}".format(num_unique_keys_with_single_space)) 
+        logging.debug("\tUnique sub keys with spaces {}".format(num_unique_keys_with_spaces)) 
         logging.debug("\tTotal sub keys {}".format(num_keys))
         if (num_keys == 0):
             return "unknown"
-        if (num_unique_keys / num_keys > 0.2) or num_unique_keys > 25:
-            num_unique_keys_with_spaces = 0
-            for key in unique_keys:
-                if " " in key:
-                   num_unique_keys_with_spaces += 1 
-            logging.debug("\tUnique sub keys with spaces {}".format(num_unique_keys_with_spaces)) 
-            if (num_unique_keys_with_spaces / num_unique_keys > 0.9):
-                return "mixed"
-            else:
-                return "name"
+        elif (num_unique_keys_with_single_space == num_unique_keys):
+            return "pair"
+        elif (num_unique_keys_with_spaces > 0):
+            return "mixed"
+        elif (num_unique_keys / num_keys > 0.2) or num_unique_keys > 25:
+            return "name"
         else:
             return "type"
 
@@ -326,13 +378,44 @@ class SymbolExtractor:
             '''if isinstance(symbol_value, bool) or symbol_value == "true" or symbol_value == "false":
                 continue'''
             if isinstance(value, dict):
-                self.parse_dict(value, path + [('type', symbol_type)])
+                self.parse_dict(value, path + [('type', symbol_type.replace("inactive: ", ""))])
             elif isinstance(value, str) or isinstance(value, int):
                 self.add_to_symbol_table(str(value), symbol_type)
             elif isinstance(value, list):
-                self.parse_list(value, path + [('type', symbol_type)])
+                self.parse_list(value, path + [('type', symbol_type.replace("inactive: ", ""))])
                 #for subvalue in value:
                 #    self.add_to_symbol_table(str(subvalue), symbol_type)
+    
+    def extract_symbols_key_pair(self, dct, path):
+        # Treat keys as pairs of symbol type and name
+        for symbol_pair, value in dct.items():
+            symbol_type, symbol_name = symbol_pair.replace("inactive: ", "").split(" ")
+            self.add_to_symbol_table(symbol_name, symbol_type)
+            if isinstance(value, dict):
+                self.parse_dict(value, path + [('pair', (symbol_type, symbol_name))])
+            elif isinstance(value, list):
+                self.parse_list(value, path + [('pair', (symbol_type, symbol_name))])
+
+    def extract_symbols_key_mixed(self, dct, path):
+        # Treat keys as symbol types or pairs of symbol type and name
+        for key, value in dct.items():
+            if key.replace("inactive: ", "").count(' ') == 1:
+                symbol_type, symbol_name = key.replace("inactive: ", "").split(" ")
+                self.add_to_symbol_table(symbol_name, symbol_type)
+                if isinstance(value, dict):
+                    self.parse_dict(value, path + [('mixed', (symbol_type, symbol_name))])
+                elif isinstance(value, list):
+                    self.parse_list(value, path + [('mixed', (symbol_type, symbol_name))])
+            else:
+                symbol_type = key.replace("inactive: ", "")
+                if isinstance(value, dict):
+                    self.parse_dict(value, path + [('mixed', (symbol_type,))])
+                elif isinstance(value, list):
+                    self.parse_list(value, path + [('mixed', (symbol_type,))])
+                elif isinstance(value, str) or isinstance(value, int):
+                    self.add_to_symbol_table(str(value), symbol_type)
+                    #for subvalue in value:
+                    #    self.add_to_symbol_table(str(subvalue), symbol_type)
 
     def extract_symbols_list_name(self, lst, path):
         # Treat values as symbol names
