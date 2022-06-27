@@ -1,3 +1,6 @@
+import argparse
+import time
+
 stanza_type = ["ACL",
                 "Interface",
                 "PKI_TA_Profile",
@@ -41,8 +44,8 @@ stanza_type = ["ACL",
     f2.close()'''
 
 
-def add_stanza_names():
-    f = open('144days.csv', 'r')
+def add_stanza_names(inf_name,outf_name):
+    f = open(inf_name, 'r')
     s = f.read()
     s2 = ''
     i = 1
@@ -59,7 +62,7 @@ def add_stanza_names():
     #print(s2)
     f.close()
 
-    f = open("144days_cleaned.csv", 'w')
+    f = open("outf_name", 'w')
     header = "Time-periods, "
     for el in stanza_type:
         header += el + ", "
@@ -199,7 +202,23 @@ def get_point_freq():
 
 
 def main():
-    #add_stanza_names()
+
+    start = time.time()
+    #parsing command-line arguments
+    parser = argparse.ArgumentParser(description='Turn a matrix into a csv file, input must be one row per line and must start and end with square braces.')
+    parser.add_argument('matrix_path', help='Path for a txt file containing matrix, one entry per line, start with [ and end with ]')
+    parser.add_argument('out_path', help='Name of csv file (or directory) to write the output to')
+
+    arguments = parser.parse_args()
+    add_stanza_names(arguments.matrix_path, arguments.out_path)
+
+    end = time.time()
+    print()
+    print("Time taken: " + str(end-start))
+    print()
+
+
+    
     #add_names_to_summary()
 
     #get_possibly_related_pairs()
