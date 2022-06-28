@@ -63,12 +63,14 @@ class GraphGenerator:
         source_type, source_name, source_parent = source
         if source_type == "_address":
             source_name = self.generalize_address(source_name)
+            source_type = "subnet"
         if source_parent is not None:
             source_name = source_parent + "_" + source_name
 
         target_type, target_name, target_parent = target
         if target_type == "_address":
             target_name = self.generalize_address(target_name)
+            target_type = "subnet"
         if target_parent is not None:
             target_name = target_parent + "_" + target_name
 
@@ -91,9 +93,12 @@ class GraphGenerator:
         elif (re.match("\d+\.\d+\.\.\d+(/d+)?", symbol_name)):
             uncompressed_name = symbol_name.replace("..",".0.")
 
-        ip = ipaddress.ip_interface(uncompressed_name)
-        logging.debug("Generalized {} to {}".format(symbol_name, ip.network))
-        return str(ip.network)
+        try:
+            ip = ipaddress.ip_interface(uncompressed_name)
+            logging.debug("Generalized {} to {}".format(symbol_name, ip.network))
+            return str(ip.network)
+        except:
+            return uncompressed_name
 
     #remove & print nodes of type node_type that only appear once across the network
     #if node_type is None, then prune all nodes of degree one

@@ -46,13 +46,15 @@ def main():
     logging.getLogger(__name__)
 
     # Load symbols results
-    with open(os.path.join(arguments.symbols_dir, "new_symbols.json"), 'r') as symbols_file:
-        symbol_table = json.load(symbols_file)
-    with open(os.path.join(arguments.symbols_dir, "inverted.json"), 'r') as inverted_file:
-        inverted_table = json.load(inverted_file)
-    with open(os.path.join(arguments.symbols_dir, "keykinds.json"), 'r') as keykinds_file:
-        pickle_keykinds = json.load(keykinds_file) 
+    with open(os.path.join(arguments.symbols_dir, "new_symbols.json"), 'r') as in_file:
+        symbol_table = json.load(in_file)
+    with open(os.path.join(arguments.symbols_dir, "inverted.json"), 'r') as in_file:
+        inverted_table = json.load(in_file)
+    with open(os.path.join(arguments.symbols_dir, "keykinds.json"), 'r') as in_file:
+        pickle_keykinds = json.load(in_file) 
     keykinds = {ast.literal_eval(k) : v for k, v in pickle_keykinds.items()}
+    with open(os.path.join(arguments.symbols_dir, "typescopes.json"), 'r') as in_file:
+        typescopes = json.load(in_file) 
     
     # Load configurations
     all_configs = {} # keys are device names and values are config jsons
@@ -67,7 +69,7 @@ def main():
             logging.debug("Failed to parse {}".format(filepath))
             continue
 
-    extractor = RelationshipExtractor(all_configs, symbol_table, inverted_table, keykinds)
+    extractor = RelationshipExtractor(all_configs, symbol_table, inverted_table, keykinds, typescopes)
 
     # Create output directory
     os.makedirs(arguments.symbols_dir, exist_ok=True)
@@ -75,25 +77,29 @@ def main():
     # Save results
     with open(os.path.join(arguments.symbols_dir, "relationships.json"), 'w') as out_file:
         json.dump(extractor.relationships, out_file, indent=4, sort_keys=True)
-    pickle_typekinds = {str(k) : v for k,v in extractor.typekinds.items()}
-    with open(os.path.join(arguments.symbols_dir, "typekinds.json"), 'w') as out_file:
-        json.dump(pickle_typekinds, out_file, indent=4, sort_keys=True)
+    pickle_parents = {}
+    for device, value in extractor.parents.items():
+        pickle_parents[device] = {str(k) : v for k,v in value.items()}
+    with open(os.path.join(arguments.symbols_dir, "parents.json"), 'w') as out_file:
+        json.dump(pickle_parents, out_file, indent=4, sort_keys=True)
 
 class RelationshipExtractor:
-    def __init__(self, config, symbol_table, inverted_table, keykinds):
+    def __init__(self, config, symbol_table, inverted_table, keykinds, typescopes):
         self.config = config
         self.symbol_table = symbol_table
         self.inverted_table = inverted_table
         self.keykinds = keykinds
-        self.typekinds = {}
+        self.typescopes = typescopes
         self.relationships = []
+        self.parents = {}
 
         # Iterate over top-level types of interest (e.g., ACLs, interfaces, etc.)
         for node in config:
+            self.parents[node] = {}
             for symbol_type in TOP_LEVEL_TYPES:
                 if symbol_type not in config[node]:
                     continue
-                self.parse_dict(config[node][symbol_type], [("name", node), ("type", symbol_type)], [])
+                self.parse_dict(config[node][symbol_type], [("name", node), ("type", symbol_type)], [("_device", node)])
 
     def parse_dict(self, dct, path, symbols):
         logging.debug("Processing {}...".format(path))
@@ -103,12 +109,6 @@ class RelationshipExtractor:
             return
 
         kind = self.keykinds[path_signature]
-
-        if kind == "name" and path_signature not in self.typekinds:
-            logging.debug("Need to infer typekind for {}".format(path_signature))
-            typekind = self.infer_typekind(path_signature)
-            logging.debug("Type names are {}".format(typekind))
-            self.typekinds[path_signature] = typekind
 
         logging.debug("Dict keys are {}s".format(kind))
         if (kind == "name"):
@@ -142,7 +142,7 @@ class RelationshipExtractor:
                 signature.append(component)
         return tuple(signature)
 
-    def get_symbol(self, symbol_name, symbol_type):
+    def get_symbol(self, symbol_type, symbol_name):
         # Check if symbol_type needs to be inferred
         if symbol_type is None:
             if symbol_name not in self.symbol_table:
@@ -164,7 +164,7 @@ class RelationshipExtractor:
 
         # Check if symbol_type is a typedef
         if isinstance(self.inverted_table[symbol_type], str):
-            return self.get_symbol(symbol_name, self.inverted_table[symbol_type])
+            return self.get_symbol(self.inverted_table[symbol_type], symbol_name)
 
         # Check if symbol_name exists
         if symbol_name in self.inverted_table[symbol_type]:
@@ -243,134 +243,30 @@ class RelationshipExtractor:
             symbol_type = path[-1][1]
 
         logging.debug("Lookup symbol {} {}".format(symbol_type, symbol_name))
-        symbol = self.get_symbol(symbol_name, symbol_type)
+        symbol = self.get_symbol(symbol_type, symbol_name)
         if symbol != None:
+            symbol_type, symbol_name = symbol
+
+            device = symbols[0][1]
+
+            if symbol_type in self.typescopes and self.typescopes[symbol_type] == "unique" and symbol not in self.parents[device]:
+                self.parents[device][symbol] = symbols[-1][:2]
+
             # Determine parent name to include (if any)
-            path_signature = self.get_path_signature(path)
             parent_name = None
-            if path_signature in self.typekinds:
-                typekind = self.typekinds[path_signature]
-                if typekind == "unique":
-                    for hop in reversed(path):
-                        if hop[0] == "name":
-                            parent_name = hop[1]
-                            break
+            if symbol in self.parents[device]:
+                parent_name = self.parents[device][symbol][1]
 
             symbol = symbol + (parent_name,)
 
             # Add an edge if a symbol has already been found
-            if len(symbols) >= 1:
+            if len(symbols) >= 2:
                 self.relationships.append((symbols[-1], symbol))
                 logging.info("{} --- {}".format(symbols[-1], symbol))
             return [symbol]
         else:
             logging.debug("No matching symbol for {} : {}".format(symbol_type, symbol_name))
             return []
-
-    def get_nested_instances(self, dct, signature, instances, prefix):
-        kind, id = signature[0]
-
-        # Base case
-        if len(signature) == 1:
-            if kind == "type":
-                raise Exception("Cannot get nested instances for signature {} which ends with a type".format(signature)) 
-            elif kind == "name":
-                instances[prefix] = dct
-            else:
-                raise Exception("Unknown kind {} in signature {}".format(kind, signature))
-        # Recursive case
-        else:
-            kind, value = signature[0]
-            if kind == "type":
-                if value in dct and isinstance(dct[value], dict):
-                    return self.get_nested_instances(dct[value], signature[1:], instances, prefix)
-            elif kind == "name":
-                for key, value in dct.items():
-                    if isinstance(value, dict):
-                        self.get_nested_instances(value, signature[1:], instances, key)
-            else:
-                raise Exception("Unknown kind {} in signature {}".format(kind, signature))
-
-        return instances
-
-    def infer_typekind(self, path_signature):
-        nested_instances = {}
-        self.get_nested_instances(self.config, path_signature + (("name", "*"),), nested_instances, "")
-        #logging.debug(pprint.pformat(nested_instances))
-
-        # Get number of outer_names with common inner_name
-        inner_to_outer = {}
-        for outer_name in nested_instances:
-            for inner_name in nested_instances[outer_name]:
-                if inner_name not in inner_to_outer:
-                    inner_to_outer[inner_name] = []
-                inner_to_outer[inner_name].append(outer_name)
-        #logging.debug(pprint.pformat(inner_to_outer))
-
-        # Determine how many instances are replicated
-        num_singletons = 0
-        num_few = 0
-        num_replicated = 0
-        num_unique = 0
-        few_threshold = max(0.05 * len(nested_instances),3)
-        for inner_name, outer_names in inner_to_outer.items():
-            # Only one instance
-            if len(outer_names) == 1:
-                num_singletons += 1
-                logging.debug("\t{} : singleton".format(inner_name))
-            else:
-                # Get the instances
-                inner_instances = [nested_instances[outer_name][inner_name] for outer_name in outer_names]
-                num_inner_instances = len(inner_instances)
-
-                # Count the number of unique instances
-                unique_instances = []
-                for inner_instance in inner_instances:
-                    if isinstance(inner_instance, dict) and "cfg_version" in inner_instance:
-                        del inner_instance["cfg_version"]
-                    if inner_instance not in unique_instances:
-                        unique_instances.append(inner_instance)
-                num_unique_inner_instances = len(unique_instances)
-
-                #logging.debug("\t{}".format(pprint.pformat(unique_instances)))
-
-                # All instances are unique
-                if num_unique_inner_instances == num_inner_instances:
-                    num_unique += 1
-                    logging.debug("\t{} : all unique num_inner={}, num_unique={}".format(inner_name, num_inner_instances, num_unique_inner_instances))
-                # All instances are replicated
-                elif num_unique_inner_instances == 1:
-                    num_replicated += 1
-                    logging.debug("\t{} : all replicated num_inner={}, num_unique={}".format(inner_name, num_inner_instances, num_unique_inner_instances))
-                # Exists on less than 5% of outer instances
-                elif len(outer_names) < few_threshold:
-                    num_few += 1
-                    logging.debug("\t{} : only {} (num_unique={})".format(inner_name, len(outer_names), num_unique_inner_instances))
-                elif num_unique_inner_instances <= few_threshold:
-                    num_replicated += 1
-                    logging.debug("\t{} : replicated num_inner={}, num_unique={}".format(inner_name, num_inner_instances, num_unique_inner_instances))
-                else:
-                    num_unique += 1
-                    logging.debug("\t{} : unique num_inner={}, num_unique={}".format(inner_name, num_inner_instances, num_unique_inner_instances))
-        logging.debug("\tnum_singletons={}, num_few={}, num_replicated={}, num_unique={}".format(num_singletons, num_few, num_replicated, num_unique))
-
-        # All singletons
-        if num_few == 0 and num_replicated == 0 and num_unique == 0:
-            return "unique"
-        # All singletons/few
-        elif num_replicated == 0 and num_unique == 0:
-            return "unknown"
-        # No unique
-        elif num_unique == 0:
-            return "replicated"
-        # More unique than not
-        elif num_unique >= num_replicated:
-            return "unique"
-        # Mostly replicated
-        elif num_unique/num_replicated < 0.15:
-            return "replicated"
-        else:
-            return "unique"
 
 if __name__ == "__main__":
     main()

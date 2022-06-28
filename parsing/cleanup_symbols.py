@@ -10,6 +10,11 @@ import logging
 import pprint
 import re
 
+TYPES_PRESERVE_ARUBA = [
+    "class",
+]
+TYPES_PRESERVE = TYPES_PRESERVE_ARUBA
+
 
 # function to find stuff like the common_starts elements
 def longest_shared_sequence(keyword1, keyword2):
@@ -81,7 +86,7 @@ def remove_small_types(inverted_table, symbol_table, threshold=4):
     symbol_types = list(inverted_table.keys())
     for symbol_type in symbol_types:
         symbol_names = inverted_table[symbol_type]
-        if isinstance(symbol_names, list) and len(symbol_names) < threshold:
+        if isinstance(symbol_names, list) and len(symbol_names) < threshold and symbol_type not in TYPES_PRESERVE:
             logging.debug("Remove {}".format(symbol_type))
             inverted_table.pop(symbol_type)
             for symbol_name in symbol_names:
@@ -169,7 +174,7 @@ def is_all_addr(list_of_names):
             try:
                 ipaddress.ip_interface(uncompressed_name)
             except:
-                return False
+                logging.debug("{} could not be parsed as an IPv4 interface address".format(uncompressed_name))
         else:
             return False
     return True
@@ -249,7 +254,6 @@ def main():
     fix_description(inverted_table, symbol_table)
 
     prune_symbols(symbol_table)
-    
 
     # Save results
     with open(os.path.join(arguments.symbols_dir, "inverted.json"), 'w') as inverted_file:
