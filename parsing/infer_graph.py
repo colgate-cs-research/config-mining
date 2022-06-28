@@ -7,12 +7,14 @@ import logging
 import networkx
 import re
 import ipaddress
+import queue
 
 def main():
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Generate a graph based on inferred symbols and relationships')
     parser.add_argument('infer_dir', help='Path to directory containing symbol and relationship files')
     parser.add_argument('output_dir', help='Path to directory in which to store output')
+    parser.add_argument('-p', '--prune', action='store_true')
     parser.add_argument('-v', '--verbose', action='count', help="Display verbose output", default=0)
     arguments = parser.parse_args()
 
@@ -32,6 +34,12 @@ def main():
         relationships = json.load(relationships_file)
 
     generator = GraphGenerator(symbol_table, relationships)
+
+    logging.info(generator.graph)
+
+    if (arguments.prune):
+        generator.prune_degree_one()
+        logging.info("After pruning: {}".format(generator.graph))
 
     # Create output directory
     os.makedirs(arguments.output_dir, exist_ok=True)
@@ -64,6 +72,10 @@ class GraphGenerator:
         if target_parent is not None:
             target_name = target_parent + "_" + target_name
 
+        if source_type == "_description" or target_type == "_description":
+            # FIXME: infer keywords
+            return
+
         source_node_name = "{}_{}".format(source_type, source_name)
         target_node_name = "{}_{}".format(target_type, target_name)
 
@@ -82,6 +94,32 @@ class GraphGenerator:
         ip = ipaddress.ip_interface(uncompressed_name)
         logging.debug("Generalized {} to {}".format(symbol_name, ip.network))
         return str(ip.network)
+
+    #remove & print nodes of type node_type that only appear once across the network
+    #if node_type is None, then prune all nodes of degree one
+    def prune_degree_one(self, node_type = None):
+        q = queue.Queue(maxsize = 0)
+        s = set()
+        if node_type is not None:
+            nodes = [node for node,attributes in self.graph.nodes(data=True) if attributes["type"] == node_type]
+        else:
+            nodes = list(self.graph.nodes)
+            
+        for node in nodes:
+            q.put(node)
+            s.add(node)
+
+        while not q.empty():
+            current_node = q.get() 
+            if self.graph.degree(current_node) <= 1:
+                neighbors = list(self.graph.neighbors(current_node))
+                if len(neighbors) == 1 and neighbors[0] not in s:
+                    if (node_type is None) or (self.graph.nodes[neighbors[0]]["type"] == node_type):
+                        q.put(neighbors[0])
+                        s.add(neighbors[0])
+                self.graph.remove_node(current_node)
+            s.discard(current_node)
+        return
 
 if __name__ == "__main__":
     main()
