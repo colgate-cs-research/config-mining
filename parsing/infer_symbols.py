@@ -99,6 +99,8 @@ def main():
     pickle_keykinds = {str(k) : v for k,v in extractor.keykinds.items()}
     with open(os.path.join(arguments.output_dir, "keykinds.json"), 'w') as keykinds_file:
         json.dump(pickle_keykinds, keykinds_file, indent=4, sort_keys=True)
+    with open(os.path.join(arguments.output_dir, "typescopes.json"), 'w') as typescopes_file:
+        json.dump(extractor.typescopes, typescopes_file, indent=4, sort_keys=True)
 
 class SymbolExtractor:
     def __init__(self, config, symbol_table={}):
@@ -106,6 +108,7 @@ class SymbolExtractor:
         self.symbol_table = symbol_table
         self.keykinds = KEYKINDS
         self.mixedkinds = {}
+        self.typescopes = {}
 
         # Iterate over top-level types of interest (e.g., ACLs, interfaces, etc.)
         for node in config:
@@ -370,7 +373,7 @@ class SymbolExtractor:
         if path[-1][0] == "type":
             symbol_type = path[-1][1]
         for symbol_name, symbol_value in dct.items():
-            self.add_to_symbol_table(symbol_name, symbol_type)
+            self.add_to_symbol_table(symbol_type, symbol_name, path)
             if isinstance(symbol_value, dict):
                 self.parse_dict(symbol_value, path + [('name', symbol_name)])
             elif isinstance(symbol_value, list):
@@ -379,22 +382,18 @@ class SymbolExtractor:
     def extract_symbols_key_type(self, dct, path):
         # Treat keys as symbol types 
         for symbol_type, value in dct.items():
-            '''if isinstance(symbol_value, bool) or symbol_value == "true" or symbol_value == "false":
-                continue'''
             if isinstance(value, dict):
                 self.parse_dict(value, path + [('type', symbol_type.replace("inactive: ", ""))])
-            elif isinstance(value, str) or isinstance(value, int):
-                self.add_to_symbol_table(str(value), symbol_type)
             elif isinstance(value, list):
                 self.parse_list(value, path + [('type', symbol_type.replace("inactive: ", ""))])
-                #for subvalue in value:
-                #    self.add_to_symbol_table(str(subvalue), symbol_type)
+            elif isinstance(value, str) or isinstance(value, int):
+                self.add_to_symbol_table(symbol_type, str(value), path)
     
     def extract_symbols_key_pair(self, dct, path):
         # Treat keys as pairs of symbol type and name
         for symbol_pair, value in dct.items():
             symbol_type, symbol_name = symbol_pair.replace("inactive: ", "").split(" ")
-            self.add_to_symbol_table(symbol_name, symbol_type)
+            self.add_to_symbol_table(symbol_type, symbol_name, path)
             if isinstance(value, dict):
                 self.parse_dict(value, path + [('pair', (symbol_type, symbol_name))])
             elif isinstance(value, list):
@@ -405,7 +404,7 @@ class SymbolExtractor:
         for key, value in dct.items():
             if key.replace("inactive: ", "").count(' ') == 1:
                 symbol_type, symbol_name = key.replace("inactive: ", "").split(" ")
-                self.add_to_symbol_table(symbol_name, symbol_type)
+                self.add_to_symbol_table(symbol_type, symbol_name, path)
                 if isinstance(value, dict):
                     self.parse_dict(value, path + [('mixed', (symbol_type, symbol_name))])
                 elif isinstance(value, list):
@@ -417,9 +416,7 @@ class SymbolExtractor:
                 elif isinstance(value, list):
                     self.parse_list(value, path + [('mixed', (symbol_type,))])
                 elif isinstance(value, str) or isinstance(value, int):
-                    self.add_to_symbol_table(str(value), symbol_type)
-                    #for subvalue in value:
-                    #    self.add_to_symbol_table(str(subvalue), symbol_type)
+                    self.add_to_symbol_table(symbol_type, str(value), path)
 
     def extract_symbols_list_name(self, lst, path):
         # Treat values as symbol names
@@ -427,7 +424,7 @@ class SymbolExtractor:
         if path[-1][0] == "type":
             symbol_type = path[-1][1]
         for symbol_name in lst:
-            self.add_to_symbol_table(symbol_name, symbol_type)
+            self.add_to_symbol_table(symbol_type, symbol_name, path)
 
     def extract_symbols_list_mixed(self, lst, path):
         # Treat values as combination of symbol type and symbol name
@@ -439,7 +436,7 @@ class SymbolExtractor:
             # Pair of symbol type and name
             elif symbol.count(' ') == 1:
                 symbol_type, symbol_name = symbol.split(' ')
-                self.add_to_symbol_table(symbol_name, symbol_type)
+                self.add_to_symbol_table(symbol_type, symbol_name, path)
             # Symbol type and list of names
             elif ' [' in symbol and symbol[-1] == ']':
                 symbol_type, symbol_names = symbol[:-1].split('[')
@@ -447,7 +444,7 @@ class SymbolExtractor:
                 symbol_names = symbol_names.split(',')
                 for symbol_name in symbol_names:
                     symbol_name = symbol_name.strip("', ")
-                    self.add_to_symbol_table(symbol_name, symbol_type)
+                    self.add_to_symbol_table(symbol_type, symbol_name, path)
             # Symbol type and list of names
             elif ' (' in symbol and symbol[-1] == ')':
                 symbol_type, symbol_names = symbol[:-1].split('(')
@@ -455,11 +452,11 @@ class SymbolExtractor:
                 symbol_names = symbol_names.split("&&")
                 for symbol_name in symbol_names:
                     symbol_name = symbol_name.strip("', ")
-                    self.add_to_symbol_table(symbol_name, symbol_type)
+                    self.add_to_symbol_table(symbol_type, symbol_name, path)
             else:
                 logging.warning("!Cannot infer symbol name/type for mixed value: {}".format(symbol))
 
-    def add_to_symbol_table(self, symbol_name, symbol_type):
+    def add_to_symbol_table(self, symbol_type, symbol_name, path):
         # Put type in canonical form
         if symbol_type != None:
             symbol_type = symbol_type.lower()
@@ -470,23 +467,128 @@ class SymbolExtractor:
         
         logging.debug("Adding {} {} to symbol table".format(symbol_type, symbol_name))
 
-        # Normalize IP addresses
-        if symbol_type != None and "address" in symbol_type:
-            try:
-                symbol_name = str(ipaddress.ip_interface(symbol_name))
-            except:
-                pass
-
         # Normalize descriptions and names
         if symbol_type == "description" or symbol_type == "name":
             symbol_name = symbol_name.strip(" *").lower()
-            #.replace('-', " ").replace("_", " ")
 
         # Add to symbol table
         if symbol_name not in self.symbol_table:
             self.symbol_table[symbol_name] = []
         if symbol_type != None and symbol_type not in self.symbol_table[symbol_name]:
             self.symbol_table[symbol_name].append(symbol_type)
+
+        if (symbol_type != None and symbol_type not in self.typescopes):
+            path_signature = self.get_path_signature(path)
+            typescope = self.infer_typescope(path_signature)
+            if typescope == "replicated":
+                self.typescopes[symbol_type] = "replicated"
+            else:
+                self.typescopes[symbol_type] = path_signature
+
+    def get_nested_instances(self, dct, signature, instances, prefix):
+        kind, id = signature[0]
+
+        # Base case
+        if len(signature) == 1:
+            if kind == "type":
+                raise Exception("Cannot get nested instances for signature {} which ends with a type".format(signature)) 
+            elif kind == "name":
+                instances[prefix] = dct
+            else:
+                raise Exception("Unknown kind {} in signature {}".format(kind, signature))
+        # Recursive case
+        else:
+            kind, value = signature[0]
+            if kind == "type":
+                if value in dct and isinstance(dct[value], dict):
+                    return self.get_nested_instances(dct[value], signature[1:], instances, prefix)
+            elif kind == "name":
+                for key, value in dct.items():
+                    if isinstance(value, dict):
+                        self.get_nested_instances(value, signature[1:], instances, key)
+            else:
+                raise Exception("Unknown kind {} in signature {}".format(kind, signature))
+
+        return instances
+
+    def infer_typescope(self, path_signature):
+        nested_instances = {}
+        self.get_nested_instances(self.config, path_signature + (("name", "*"),), nested_instances, "")
+        #logging.debug(pprint.pformat(nested_instances))
+
+        # Get number of outer_names with common inner_name
+        inner_to_outer = {}
+        for outer_name in nested_instances:
+            for inner_name in nested_instances[outer_name]:
+                if inner_name not in inner_to_outer:
+                    inner_to_outer[inner_name] = []
+                inner_to_outer[inner_name].append(outer_name)
+        #logging.debug(pprint.pformat(inner_to_outer))
+
+        # Determine how many instances are replicated
+        num_singletons = 0
+        num_few = 0
+        num_replicated = 0
+        num_unique = 0
+        few_threshold = max(0.05 * len(nested_instances),3)
+        for inner_name, outer_names in inner_to_outer.items():
+            # Only one instance
+            if len(outer_names) == 1:
+                num_singletons += 1
+                logging.debug("\t{} : singleton".format(inner_name))
+            else:
+                # Get the instances
+                inner_instances = [nested_instances[outer_name][inner_name] for outer_name in outer_names]
+                num_inner_instances = len(inner_instances)
+
+                # Count the number of unique instances
+                unique_instances = []
+                for inner_instance in inner_instances:
+                    if isinstance(inner_instance, dict) and "cfg_version" in inner_instance:
+                        del inner_instance["cfg_version"]
+                    if inner_instance not in unique_instances:
+                        unique_instances.append(inner_instance)
+                num_unique_inner_instances = len(unique_instances)
+
+                #logging.debug("\t{}".format(pprint.pformat(unique_instances)))
+
+                # All instances are unique
+                if num_unique_inner_instances == num_inner_instances:
+                    num_unique += 1
+                    logging.debug("\t{} : all unique num_inner={}, num_unique={}".format(inner_name, num_inner_instances, num_unique_inner_instances))
+                # All instances are replicated
+                elif num_unique_inner_instances == 1:
+                    num_replicated += 1
+                    logging.debug("\t{} : all replicated num_inner={}, num_unique={}".format(inner_name, num_inner_instances, num_unique_inner_instances))
+                # Exists on less than 5% of outer instances
+                elif len(outer_names) < few_threshold:
+                    num_few += 1
+                    logging.debug("\t{} : only {} (num_unique={})".format(inner_name, len(outer_names), num_unique_inner_instances))
+                elif num_unique_inner_instances <= few_threshold:
+                    num_replicated += 1
+                    logging.debug("\t{} : replicated num_inner={}, num_unique={}".format(inner_name, num_inner_instances, num_unique_inner_instances))
+                else:
+                    num_unique += 1
+                    logging.debug("\t{} : unique num_inner={}, num_unique={}".format(inner_name, num_inner_instances, num_unique_inner_instances))
+        logging.debug("\tnum_singletons={}, num_few={}, num_replicated={}, num_unique={}".format(num_singletons, num_few, num_replicated, num_unique))
+
+        # All singletons
+        if num_few == 0 and num_replicated == 0 and num_unique == 0:
+            return "unique"
+        # All singletons/few
+        elif num_replicated == 0 and num_unique == 0:
+            return "unknown"
+        # No unique
+        elif num_unique == 0:
+            return "replicated"
+        # More unique than not
+        elif num_unique >= num_replicated:
+            return "unique"
+        # Mostly replicated
+        elif num_unique/num_replicated < 0.15:
+            return "replicated"
+        else:
+            return "unique"
 
 if __name__ == "__main__":
     main()
