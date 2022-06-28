@@ -63,12 +63,14 @@ class GraphGenerator:
         source_type, source_name, source_parent = source
         if source_type == "_address":
             source_name = self.generalize_address(source_name)
+            source_type = "subnet"
         if source_parent is not None:
             source_name = source_parent + "_" + source_name
 
         target_type, target_name, target_parent = target
         if target_type == "_address":
             target_name = self.generalize_address(target_name)
+            target_type = "subnet"
         if target_parent is not None:
             target_name = target_parent + "_" + target_name
 
