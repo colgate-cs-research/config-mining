@@ -33,7 +33,6 @@ def main():
     parser = argparse.ArgumentParser(description='Commandline arguments')
     parser.add_argument('configs_path', help='Path to directory of configurations')
     parser.add_argument('symbols_dir', help='Path to directory containing symbol files')
-    parser.add_argument('output_dir', help='Path to directory in which to store output')
     parser.add_argument('-v', '--verbose', action='count', help="Display verbose output", default=0)
     arguments = parser.parse_args()
 
@@ -47,7 +46,7 @@ def main():
     logging.getLogger(__name__)
 
     # Load symbols results
-    with open(os.path.join(arguments.symbols_dir, "symbols.json"), 'r') as symbols_file:
+    with open(os.path.join(arguments.symbols_dir, "new_symbols.json"), 'r') as symbols_file:
         symbol_table = json.load(symbols_file)
     with open(os.path.join(arguments.symbols_dir, "inverted.json"), 'r') as inverted_file:
         inverted_table = json.load(inverted_file)
@@ -71,13 +70,13 @@ def main():
     extractor = RelationshipExtractor(all_configs, symbol_table, inverted_table, keykinds)
 
     # Create output directory
-    os.makedirs(arguments.output_dir, exist_ok=True)
+    os.makedirs(arguments.symbols_dir, exist_ok=True)
 
     # Save results
-    with open(os.path.join(arguments.output_dir, "relationships.json"), 'w') as out_file:
+    with open(os.path.join(arguments.symbols_dir, "relationships.json"), 'w') as out_file:
         json.dump(extractor.relationships, out_file, indent=4, sort_keys=True)
     pickle_typekinds = {str(k) : v for k,v in extractor.typekinds.items()}
-    with open(os.path.join(arguments.output_dir, "typekinds.json"), 'w') as out_file:
+    with open(os.path.join(arguments.symbols_dir, "typekinds.json"), 'w') as out_file:
         json.dump(pickle_typekinds, out_file, indent=4, sort_keys=True)
 
 class RelationshipExtractor:

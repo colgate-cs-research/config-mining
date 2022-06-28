@@ -45,12 +45,17 @@ KEYKINDS_ARUBA = {
     (('name', '*'), ('type', 'VRF')) : "name",
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'NTP_Association')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Radius_Server')): 'name',
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Radius_Dynamic_Authorization_Client')): "name",
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Static_Route')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Tacacs_Server')): 'name',
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'dns_host_v4_address_mapping')): "name",
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'ospf_routers'), ('name', '*'), ('type', 'areas')): "name",
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'pim_routers')): "type",
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'pim_routers'), ('type', 'ipv4')) : "type"
 }
 TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER + TOP_LEVEL_TYPES_ARUBA
 KEYKINDS = KEYKINDS_JUNIPER
-#KEYKINDS = KEYKINDS_ARUBA
+KEYKINDS = KEYKINDS_ARUBA
 
 def main():
     # Parse command-line arguments
@@ -124,7 +129,6 @@ class SymbolExtractor:
                     logging.debug("\t{}".format(d.keys()))
                 except Exception as ex:
                     logging.error("Mixed subinstances for {}".format(path))
-                    raise ex
 
             kind = self.infer_keykind(dictionaries)
             self.keykinds[path_signature] = kind
