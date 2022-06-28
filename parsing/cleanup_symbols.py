@@ -8,10 +8,12 @@ import time
 from queue import Queue
 import logging
 import pprint
+import re
 
 
 # function to find stuff like the common_starts elements
-def longest_shared_sequence(keyword1,keyword2):
+def longest_shared_sequence(keyword1, keyword2):
+    """Returns the longest sequnece of characters that occurs in both strings"""
     longest_shared_seq = ""
     for i in range(len(keyword1)-1):
         for j in range(i+1,len(keyword1)):
@@ -30,20 +32,25 @@ def reduce_similarity(word,similar_words,min_len=3):
     return to_return
 
  
-# Function for aliasing
-def is_alias(s1, s2, inverted_table, symbol_table):
-    assert(s1!=s2)
-    smaller = s1
-    bigger = s2
-    if len(s1) > len(s2):
-        smaller = s2
-        bigger = s1
-    if (smaller in bigger) or len(longest_shared_sequence(smaller,bigger))>=5:
+def is_alias(type1, type2, inverted_table):
+    """Check if one symbol type (s1) is an alias of another symbol type (s2)"""
+    assert(type1!=type2)
+    smaller = type1
+    bigger = type2
+    if len(type1) > len(type2):
+        smaller = type2
+        bigger = type1
+
+    # Symbol types are an alias if (1) one wholly contains the other 
+    # or both contain the same sequence of 5 or more characters;
+    # and (2) both contain at least one symbol_name in common
+    if (smaller in bigger) or len(longest_shared_sequence(smaller, bigger))>=5:
         names1 = set(inverted_table[smaller])
         names2 = set(inverted_table[bigger])
-        names3 = list(names1.intersection(names2))
-        if len(names3) > 1:
+        names_both = list(names1.intersection(names2))
+        if names_both: 
             return True
+
     return False 
 
 # returns true is two strings have similar letters
@@ -69,36 +76,28 @@ def invert_table(symbol_table):
                 inverted_table[symbol_type].append(symbol_name)
     return inverted_table
 
-def remove_redundant_types(inverted_table, symbol_table):
-    nodes_removed = 0
-    types_to_remove = []
-    for key in inverted_table:
-        lst = inverted_table[key]
-        if len(lst) < 4:
-            #print(key + ": " + str(lst))
-            types_to_remove.append(key)
+def remove_small_types(inverted_table, symbol_table, threshold=4):
+    """Remove symbol types with a small number of symbol names"""
+    symbol_types = list(inverted_table.keys())
+    for symbol_type in symbol_types:
+        symbol_names = inverted_table[symbol_type]
+        if isinstance(symbol_names, list) and len(symbol_names) < threshold:
+            logging.debug("Remove {}".format(symbol_type))
+            inverted_table.pop(symbol_type)
+            for symbol_name in symbol_names:
+                symbol_table[symbol_name].remove(symbol_type)
 
-    for typ in types_to_remove:
-        lst = inverted_table[typ]
-        inverted_table.pop(typ) #remove from inverted table
-        #remove from symbol table
-        for name in lst:
-            symbol_table[name].remove(typ)
-            nodes_removed += 1
-
-    #print("Nodes removed: " + str(nodes_removed))
-
-
-def infer_type_aliases(inverted_table, symbol_table):
+def infer_type_aliases(inverted_table):
     alias_dict = {}
     alias_typs = []
     typ_lst = list(inverted_table.keys())
     #print("Type list: " + str(typ_lst))
 
+    # Iterate over pairs of symbol_types
     for i in range(len(typ_lst)):
         if typ_lst[i] not in alias_typs:
             for j in range(i+1,len(typ_lst)):
-                if is_alias(typ_lst[i], typ_lst[j],inverted_table, symbol_table):
+                if is_alias(typ_lst[i], typ_lst[j],inverted_table):
                     old_key_lst = []
                     typ_to_keep = typ_lst[i]
                     alias_typ = typ_lst[j]
@@ -115,86 +114,82 @@ def infer_type_aliases(inverted_table, symbol_table):
                     if typ_to_keep not in alias_dict:
                         alias_dict[typ_to_keep] = old_key_lst
                     alias_dict[typ_to_keep].append(alias_typ)
-    typs_kept = list(alias_dict.keys())
 
-    #print(pprint.pformat(alias_dict))
     return alias_dict
 
+def remove_type_aliases(aliases, inverted_table, symbol_table):
+    """Merge type aliases and create reference to primary type"""
+    for primary_type in aliases:
+        for alias in aliases[primary_type]:
+            names_to_transfer = set(inverted_table[alias])
 
-def remove_type_aliases(inverted_table, symbol_table):
-    aliases = infer_type_aliases(inverted_table, symbol_table)
-    inverted_aliases = invert_table(aliases)
-    #print(inverted_aliases)
+            # Merge symbol names from alias with symbol names from primary type
+            primary_names = set(inverted_table[primary_type])
+            aliases[primary_type] = list(primary_names.union(names_to_transfer))
 
-    for key in aliases:
-        for alias in aliases[key]:
-            # fix the inverted table
-            names_to_transfer = []
-            set1 = set()
-            if alias in inverted_table:
-                names_to_transfer = inverted_table[alias]
-                inverted_table.pop(alias)
-            else:
-                print("Weird type1:" + alias)
-            if key in inverted_table:
-                set1 = set(inverted_table[key])
-            else:
-                print("Weird type2: " + key)
-            set2 = set(names_to_transfer)
-            lst = list(set1.union(set2))
-            aliases[key] = lst
-            #inverted_table[key] += names_to_tranfer
-
-            #fix the symbol table
+            # Remove alias type from symbol names
+            for symbol_name in names_to_transfer:
+                symbol_table[symbol_name].remove(alias)
+            
+            # Create reference to primary type
+            inverted_table[alias] = primary_type
 
 def fix_address(inverted_table, symbol_table):
-    inverted_table["_address"] = []
-    toRemove = []
-    for key in inverted_table:
-        names = inverted_table[key]
-        names2 = is_all_addr(names)
-        if (len(names2) > 0):
-            inverted_table["_address"] += names2
-            toRemove.append(key)  # alias is being removed by the old key is not being stored anywhere
-            for name in names:
-                if key in symbol_table[name]:
-                    symbol_table[name].remove(key)
+    all_addresses = []
+    for symbol_type, symbol_names in inverted_table.items():
+        # Skip over aliases
+        if isinstance(symbol_names, str):
+            continue
 
-    for key in toRemove:
-        inverted_table.pop(key)
+        if (is_all_addr(symbol_names)):
+            logging.debug("{} is an address type".format(symbol_type))
+            all_addresses += symbol_names
+            inverted_table[symbol_type] = "_address"
+            for name in symbol_names:
+                if symbol_type in symbol_table[name]:
+                    symbol_table[name].remove(symbol_type)
+                if "_address" not in symbol_table[name]:
+                    symbol_table[name].append("_address")
+    
+    inverted_table["_address"] = all_addresses
 
-# helper function for fix_address
-def is_all_addr(lst):
-    to_return = []
-    count_not_ip = 0
-    for el in lst:
-        if (el != ""):
-            l = el.strip().split('.')
-            if len(l) >= 4:
-                if (l[2]==''):
-                    l[2] += '0'
-                elif (len(l) > 4) and (l[3] ==  ""):
-                    l.remove("")
-                s = (".").join(lst)
-                try:
-                    ip = ipaddress.ip_interface(s)
-                    to_return.append(ip)
-                except:
-                    count_not_ip += 1
-    if count_not_ip == 0:
-        print(to_return)
-        return to_return
-    return []
+def is_all_addr(list_of_names):
+    """Checks if a list of symbol names only contains IP addresses"""
+    for symbol_name in list_of_names:
+        # Handle IPv4 address compression
+        uncompressed_name = symbol_name
+        if (re.match("\d+\.\d+\.\.\d+\.\d+(/d+)?", symbol_name)):
+            uncompressed_name = symbol_name.replace("..",".")
+        elif (re.match("\d+\.\d+\.\.\d+(/d+)?", symbol_name)):
+            uncompressed_name = symbol_name.replace("..",".0.")
 
+        if (re.match("\d+\.\d+\.\d+\.\d+(/\d+)?", uncompressed_name)
+            or re.match("\d+\.\d+\.\d+\.d(/\d+\.\d+\.\d+\.\d+)?", uncompressed_name)):
+            try:
+                ipaddress.ip_interface(uncompressed_name)
+            except:
+                return False
+        else:
+            return False
+    return True
+
+'''is_all_addr(["1.2.3.4", "12.34.56.78", "101.102.103.104", 
+    "1.2.3.4/5", "1.2.3.4/24", "1.2.3.4/255.255.0.0",
+    "10.11..1", "10.11..13/14", "10.11..12.13/14"])'''
+
+def prune_symbols(symbol_table):
+    """Remove symbol names with no type"""
+    symbol_names = list(symbol_table.keys())
+    for symbol_name in symbol_names:
+        if not symbol_table[symbol_name]:
+            symbol_table.pop(symbol_name)
 
 def main():
     start = time.time()
     
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Cleanup inferred symbols")
-    #parser.add_argument('configs_path', help='Path to directory of configurations')
     parser.add_argument('symbols_dir', help='Path to directory containing symbol files')
-    #parser.add_argument('output_dir', help='Path to directory in which to store output')
     parser.add_argument('-v', '--verbose', action='count', help="Display verbose output", default=0)
     arguments = parser.parse_args()
 
@@ -212,38 +207,16 @@ def main():
         symbol_table = json.load(symbols_file)
     
     inverted_table = invert_table(symbol_table)
-    new_symbol_table = invert_table(inverted_table)
-    # for key in symbol_table:
-    #     symbol_table[key].sort()
-    # for key in new_symbol_table:
-    #     new_symbol_table[key].sort()
-    # print(symbol_table==new_symbol_table)
-    # k1 = list(symbol_table.keys())
-    # k1.sort()
-    # k2 = list(new_symbol_table.keys())
-    # k2.sort()
-    # print(k2==k1)
-    # print(len(k1))
-    # print(len(k2)) # THEY DON'T HAVE THE SAME SET OF KEYS, DON'T USE THE INVERT FUNCTION TO REVERSE IT
-    #print(symbol_table)
-    #print(new_symbol_table)
 
-    # call functions here
-    #print(len(list(symbol_table.keys())))
+    logging.debug("Number of types BEFORE removing alias types: {}".format(len(inverted_table)))
+    aliases = infer_type_aliases(inverted_table)
+    logging.debug("Type aliases:\n{}".format(pprint.pformat(aliases)))
+    remove_type_aliases(aliases, inverted_table, symbol_table)
+    logging.debug("Number of types AFTER removing alias types: {}".format(len(inverted_table)))
 
-    #print("Number of keys in inverted_table BEFORE removing alias types: ",  end = "")
-    #print(len(list(inverted_table.keys())))
-    remove_type_aliases(inverted_table,symbol_table)
-    #print("Number of keys in inverted_table AFTER removing alias types: ",  end = "")
-    #print(len(list(inverted_table.keys())))
-
-
-    #print("Keys in inverted_table BEFORE removing types with less than 10 instances: ",  end = "")
-    #print(len(list(inverted_table.keys())))
-    remove_redundant_types(inverted_table, symbol_table)
-    #print(len(list(symbol_table.keys())))
-    #print("Keys in inverted_table AFTER removing types with less than 10 instances: ",  end = "")
-    #print(len(list(inverted_table.keys())))
+    logging.debug("Number of types BEFORE removing types with few names: {}".format(len(inverted_table)))
+    remove_small_types(inverted_table, symbol_table)
+    logging.debug("Number types AFTER removing types with few names: {}".format(len(inverted_table)))
 
     # function for special case of 
     #print("Keys in inverted_table BEFORE aggregating addresses: ",  end = "")
@@ -251,6 +224,8 @@ def main():
     fix_address(inverted_table, symbol_table)
     #print("Keys in inverted_table AFTER aggregating addresses: ",  end = "")
     #print(len(list(inverted_table.keys())))
+
+    prune_symbols(symbol_table)
     
 
     # Save results
@@ -266,3 +241,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
