@@ -6,3 +6,6 @@ date:27/06/2022 14:16:46 | input:config_history_stats/144days_SandA_cleaned.csv 
 date:27/06/2022 14:17:35 | input:config_history_stats/144days_SandA_cleaned.csv | depth:1 | keyword:Port:lag200 | time_taken:0.038873716999999974
 date:27/06/2022 14:20:11 | input:config_history_stats/144days_SandA_cleaned.csv | depth:1 | keyword:Port:vlan_tag | time_taken:0.03077637700000002
 date:28/06/2022 11:39:17 | input:config_history_stats/144days_SandA_cleaned.csv | depth:1 | keyword:Port:vlan_tag | time_taken:0.028892877000000095
+date:28/06/2022 14:12:23 | input:config_history_stats/144_SandA_Updated.csv | depth:1 | keyword:System:stp_mode | time_taken:0.025485839999999982
+date:28/06/2022 14:17:41 | input:config_history_stats/144_SandA_Updated.csv | depth:1 | keyword:System:stp_mode | time_taken:0.06646974399999994
+date:28/06/2022 14:35:00 | input:config_history_stats/144_SandA_Updated.csv | depth:1 | keyword:System:dlog_destination | time_taken:0.0557936360000002
