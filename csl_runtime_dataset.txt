@@ -5,3 +5,4 @@ date:25/06/2022 12:04:04 | input:config_history_stats/144days_cleaned.csv | dept
 date:27/06/2022 14:16:46 | input:config_history_stats/144days_SandA_cleaned.csv | depth:1 | keyword: System-stp_mode | time_taken:0.025798812000000115
 date:27/06/2022 14:17:35 | input:config_history_stats/144days_SandA_cleaned.csv | depth:1 | keyword:Port:lag200 | time_taken:0.038873716999999974
 date:27/06/2022 14:20:11 | input:config_history_stats/144days_SandA_cleaned.csv | depth:1 | keyword:Port:vlan_tag | time_taken:0.03077637700000002
+date:28/06/2022 11:39:17 | input:config_history_stats/144days_SandA_cleaned.csv | depth:1 | keyword:Port:vlan_tag | time_taken:0.028892877000000095

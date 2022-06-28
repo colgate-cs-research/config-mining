@@ -14,6 +14,7 @@ def make_matrix (all_diffs, stanza_type_dict):
     for (device_name, device_diffs) in date_diffs.items():
       logging.debug("Processing diffs for {}...".format(device_name))
       for (element_name, small_value) in device_diffs.items():
+        # if (out name matches inside name, then go one level deeper)
         # Capture multiple changes at same location
         for i in range(len(small_value)):
           stanza_type = small_value[i][0]
