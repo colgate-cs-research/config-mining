@@ -94,6 +94,7 @@ def main ():
   # Clean up the "result"
   SandA = clean_up (result_list)
   SandA_dict = make_SandA_dict(SandA)
+  print(SandA_dict)
 
   parser = argparse.ArgumentParser(description='Generate matrix of change types')
 
