@@ -5,6 +5,8 @@ import json
 import os
 import logging
 import networkx
+import re
+import ipaddress
 
 def main():
     # Parse command-line arguments
@@ -51,10 +53,14 @@ class GraphGenerator:
         source, target = edge
 
         source_type, source_name, source_parent = source
+        if source_type == "_address":
+            source_name = self.generalize_address(source_name)
         if source_parent is not None:
             source_name = source_parent + "_" + source_name
 
         target_type, target_name, target_parent = target
+        if target_type == "_address":
+            target_name = self.generalize_address(target_name)
         if target_parent is not None:
             target_name = target_parent + "_" + target_name
 
@@ -64,6 +70,18 @@ class GraphGenerator:
         self.graph.add_node(source_node_name, type=source_type)
         self.graph.add_node(target_node_name, type=target_type)
         self.graph.add_edge(source_node_name, target_node_name)
+
+    def generalize_address(self, symbol_name):
+        # Handle IPv4 address compression
+        uncompressed_name = symbol_name
+        if (re.match("\d+\.\d+\.\.\d+\.\d+(/d+)?", symbol_name)):
+            uncompressed_name = symbol_name.replace("..",".")
+        elif (re.match("\d+\.\d+\.\.\d+(/d+)?", symbol_name)):
+            uncompressed_name = symbol_name.replace("..",".0.")
+
+        ip = ipaddress.ip_interface(uncompressed_name)
+        logging.debug("Generalized {} to {}".format(symbol_name, ip.network))
+        return str(ip.network)
 
 if __name__ == "__main__":
     main()
