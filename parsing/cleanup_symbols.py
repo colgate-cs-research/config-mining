@@ -135,6 +135,7 @@ def remove_type_aliases(aliases, inverted_table, symbol_table):
             inverted_table[alias] = primary_type
 
 def fix_address(inverted_table, symbol_table):
+    """Group all addresses under the special _address type"""
     all_addresses = []
     for symbol_type, symbol_names in inverted_table.items():
         # Skip over aliases
@@ -176,6 +177,26 @@ def is_all_addr(list_of_names):
 '''is_all_addr(["1.2.3.4", "12.34.56.78", "101.102.103.104", 
     "1.2.3.4/5", "1.2.3.4/24", "1.2.3.4/255.255.0.0",
     "10.11..1", "10.11..13/14", "10.11..12.13/14"])'''
+
+def fix_description(inverted_table, symbol_table):
+    """Group all descriptions under the special _description type"""
+    all_descriptions = []
+    for symbol_type, symbol_names in inverted_table.items():
+        # Skip over aliases
+        if isinstance(symbol_names, str):
+            continue
+
+        if symbol_type in ["description", "comment", "remark", "name"]:
+            logging.debug("{} is a description type".format(symbol_type))
+            all_descriptions += symbol_names
+            inverted_table[symbol_type] = "_description"
+            for name in symbol_names:
+                if symbol_type in symbol_table[name]:
+                    symbol_table[name].remove(symbol_type)
+                if "_description" not in symbol_table[name]:
+                    symbol_table[name].append("_description")
+    
+    inverted_table["_description"] = all_descriptions
 
 def prune_symbols(symbol_table):
     """Remove symbol names with no type"""
@@ -224,6 +245,8 @@ def main():
     fix_address(inverted_table, symbol_table)
     #print("Keys in inverted_table AFTER aggregating addresses: ",  end = "")
     #print(len(list(inverted_table.keys())))
+
+    fix_description(inverted_table, symbol_table)
 
     prune_symbols(symbol_table)
     
