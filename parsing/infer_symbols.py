@@ -479,11 +479,7 @@ class SymbolExtractor:
 
         if (symbol_type != None and symbol_type not in self.typescopes):
             path_signature = self.get_path_signature(path)
-            typescope = self.infer_typescope(path_signature)
-            if typescope == "replicated":
-                self.typescopes[symbol_type] = "replicated"
-            else:
-                self.typescopes[symbol_type] = path_signature
+            self.typescopes[symbol_type] = self.infer_typescope(path_signature)
 
     def get_nested_instances(self, dct, signature, instances, prefix):
         kind, id = signature[0]

@@ -91,9 +91,12 @@ class GraphGenerator:
         elif (re.match("\d+\.\d+\.\.\d+(/d+)?", symbol_name)):
             uncompressed_name = symbol_name.replace("..",".0.")
 
-        ip = ipaddress.ip_interface(uncompressed_name)
-        logging.debug("Generalized {} to {}".format(symbol_name, ip.network))
-        return str(ip.network)
+        try:
+            ip = ipaddress.ip_interface(uncompressed_name)
+            logging.debug("Generalized {} to {}".format(symbol_name, ip.network))
+            return str(ip.network)
+        except:
+            return uncompressed_name
 
     #remove & print nodes of type node_type that only appear once across the network
     #if node_type is None, then prune all nodes of degree one
