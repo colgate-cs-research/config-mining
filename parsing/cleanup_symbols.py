@@ -87,7 +87,7 @@ def remove_small_types(inverted_table, symbol_table, threshold=4):
     for symbol_type in symbol_types:
         symbol_names = inverted_table[symbol_type]
         if isinstance(symbol_names, list) and len(symbol_names) < threshold and symbol_type not in TYPES_PRESERVE:
-            logging.debug("Remove {}".format(symbol_type))
+            logging.info("Remove type {} because it only has {} name(s)".format(symbol_type, len(symbol_names)))
             inverted_table.pop(symbol_type)
             for symbol_name in symbol_names:
                 symbol_table[symbol_name].remove(symbol_type)
@@ -95,7 +95,7 @@ def remove_small_types(inverted_table, symbol_table, threshold=4):
 def infer_type_aliases(inverted_table):
     alias_dict = {}
     alias_typs = []
-    typ_lst = list(inverted_table.keys())
+    typ_lst = sorted(inverted_table.keys(), key=len)
     #print("Type list: " + str(typ_lst))
 
     # Iterate over pairs of symbol_types
@@ -103,6 +103,7 @@ def infer_type_aliases(inverted_table):
         if typ_lst[i] not in alias_typs:
             for j in range(i+1,len(typ_lst)):
                 if is_alias(typ_lst[i], typ_lst[j],inverted_table):
+                    logging.debug("{} and {} are aliases".format(typ_lst[i], typ_lst[j]))
                     old_key_lst = []
                     typ_to_keep = typ_lst[i]
                     alias_typ = typ_lst[j]
@@ -126,6 +127,10 @@ def remove_type_aliases(aliases, inverted_table, symbol_table):
     """Merge type aliases and create reference to primary type"""
     for primary_type in aliases:
         for alias in aliases[primary_type]:
+            if isinstance(inverted_table[alias], str):
+                logging.error("!{} is already aliased to {}".format(alias, inverted_table[alias]))
+                continue
+
             names_to_transfer = set(inverted_table[alias])
 
             # Merge symbol names from alias with symbol names from primary type
@@ -148,7 +153,7 @@ def fix_address(inverted_table, symbol_table):
             continue
 
         if (is_all_addr(symbol_names)):
-            logging.debug("{} is an address type".format(symbol_type))
+            logging.info("Type {} is an address type".format(symbol_type))
             all_addresses += symbol_names
             inverted_table[symbol_type] = "_address"
             for name in symbol_names:
@@ -191,7 +196,7 @@ def fix_description(inverted_table, symbol_table):
         if isinstance(symbol_names, str):
             continue
 
-        if symbol_type in ["description", "comment", "remark", "name"]:
+        if symbol_type in ["description", "comment", "remark"]:
             logging.debug("{} is a description type".format(symbol_type))
             all_descriptions += symbol_names
             inverted_table[symbol_type] = "_description"
@@ -236,7 +241,7 @@ def main():
 
     logging.debug("Number of types BEFORE removing alias types: {}".format(len(inverted_table)))
     aliases = infer_type_aliases(inverted_table)
-    logging.debug("Type aliases:\n{}".format(pprint.pformat(aliases)))
+    logging.info("Type aliases:\n{}".format(pprint.pformat(aliases)))
     remove_type_aliases(aliases, inverted_table, symbol_table)
     logging.debug("Number of types AFTER removing alias types: {}".format(len(inverted_table)))
 
