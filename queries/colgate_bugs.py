@@ -28,45 +28,57 @@ def simplivity_vlans_bug(graph):
     print("VLAN 520 only:",  interfaces["Vlan520"].difference(interfaces["Vlan540"]))
     print("VLAN 540 only:",  interfaces["Vlan540"].difference(interfaces["Vlan520"]))
 
-def vlans_bug(graph, keyword, vlan1, vlan2):
-    vlans = graph_utils.get_neighbors(keyword, graph, "vlan")
-    print(("VLANs with keyword " + keyword), vlans)
+def keyword_pair_bug(graph, keyword, middle_type, other_type):
+    vlans = list(graph_utils.get_neighbors(keyword, graph, middle_type))
+    print((middle_type + " with keyword " + keyword), vlans)
     interfaces = {}
     for vlan in vlans:
-        interfaces[vlan] = graph_utils.get_neighbors(vlan, graph, "interface")
+        interfaces[vlan] = graph_utils.get_neighbors(vlan, graph, other_type)
 
-    print((vlan1 + " only:"),  interfaces[vlan1].difference(interfaces[vlan2]))
-    print((vlan2 + " only:"),  interfaces[vlan2].difference(interfaces[vlan1]))
+    print((vlans[0] + " only:"),  interfaces[vlans[0]].difference(interfaces[vlans[1]]))
+    print((vlans[1] + " only:"),  interfaces[vlans[1]].difference(interfaces[vlans[0]]))
 
-def vlans_bug(graph, keyword, vlan1, vlan2):
+
+def vlan_pair_bug(graph, vlan1, vlan2):
+    # do the vlans share the anchor node? (anchor == type interface)
     interfaces1 = graph_utils.get_neighbors(vlan1, graph, "interface")
     interfaces2 = graph_utils.get_neighbors(vlan2, graph, "interface")
-    print(("Interfaces that allow " + vlan1), interfaces1)
-    print(("Interfaces that allow " + vlan2), interfaces2)
-    interfaces = {}
-    for vlan in vlans:
-        interfaces[vlan] = graph_utils.get_neighbors(vlan, graph, "interface") # returns a set
+    print((vlan1 + " only:"),  interfaces1.difference(interfaces2))
 
-    print((vlan1 + " only:"),  interfaces[vlan1].difference(interfaces[vlan2]))
-    print((vlan2 + " only:"),  interfaces[vlan2].difference(interfaces[vlan1]))
+def get_relevant_cycles(graph, path="/shared/configs/colgate/daily/2022-03-06/cycles_jun13/consider", threshold=5):
+    for file in os.listdir(path):
+        print(file)
+        get_relevant_cycles_file(graph, os.path.join(path, file), threshold)
 
-def get_relevant_cycles(graph):
+def get_relevant_cycles_file(graph, filepath, threshold):
     vlan_tuples = []
-    f = open('d-3_s-interface_t-90_n-vlan.csv', 'r')
+    f = open(filepath, 'r')
     for line in f:
         lst = line.strip().split(',')
-        vlan1 = lst[0].split()[1]
-        vlan2 = lst[0].split()[-1]
-        keyword = lst[0].split()[-2]
-        vlan_tuple = (vlan1, vlan2)
-        if (vlan2,vlan1) not in vlan_tuples:
-            vlan_tuples.append(vlan_tuple)
+        nodes = lst[0].split()
+        # vlan1 = lst[0].split()[1]
+        # vlan2 = lst[0].split()[-1]
+        # middle_node = lst[0].split()[-2]
+        # vlan_tuple = (vlan1, vlan2)
+        if True or (vlan2,vlan1) not in vlan_tuples:
+            #vlan_tuples.append(vlan_tuple)
             cycle_percent = float(lst[-1])
             diff = float(lst[-2]) - float(lst[-3])
             if ((cycle_percent < 100) and (cycle_percent > 90)):
-                if diff < 50:
+                if diff <= threshold:
                     print(line, end='')
-                    #vlans_bug(graph, keyword, vlan1, vlan2)
+                    # check which type of cycle it is
+                    if nodes[1].startswith('Vlan') and nodes[3].startswith('Vlan'):
+                        #(vlan1 != 'vlan') and (vlan2 != 'vlan'):
+                        pass
+                        vlan_pair_bug(graph, nodes[1], nodes[3])
+                    elif nodes[0].startswith('Vlan') and nodes[2].startswith('Vlan'):
+                        pass
+                        vlan_pair_bug(graph, nodes[2], nodes[0])
+                    elif (nodes.count('vlan') == 2):
+                        keyword_pair_bug(graph, nodes[1], 'vlan', 'interface')
+                    elif (nodes.count('interface') == 2):
+                        keyword_pair_bug(graph, nodes[2], 'interface', 'vlan')
     # check if the % is between 95 and 100
 
     # check if difference is < 100

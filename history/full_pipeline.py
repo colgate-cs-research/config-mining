@@ -15,7 +15,6 @@ def main():
   parser.add_argument('-v', '--verbose', action='count', help="Display verbose output", default=0)
   arguments=parser.parse_args()
 
-
   # Configure logging
   if (arguments.verbose == 0):
       logging.basicConfig(level=logging.WARNING)
@@ -59,12 +58,12 @@ def main():
   logging.debug("Generate matrix")
   matrix_file = os.path.join(arguments.output_dir, arguments.frequency + ".json")
   # subprocess.run(["python3", "history/make_matrix.py", diffs_dir, matrix_file])
-  subprocess.run(["python3", "history/make_matrix_stanza_type_attribute.py", diffs_dir, matrix_file])
-  
+  # subprocess.run(["python3", "history/make_matrix_stanza_type_attribute.py", diffs_dir, matrix_file])
+  subprocess.run(["python3", "history/extract_SandA_make_matrix.py", diffs_dir, matrix_file])
 
   # Run correlation
   logging.debug("Run correlation")
-  subprocess.run(["python3", "history/spearman_xor_and_correlation.py", matrix_file])
+  # subprocess.run(["python3", "history/spearman_xor_and_correlation.py", matrix_file])
 
 
 

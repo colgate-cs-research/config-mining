@@ -13,10 +13,10 @@ def interfaces_cleanup(interfaces):
             if attrib_name.startswith("description "):
                 iface["description"] = attrib_name[len("description "):].strip('"')
                 del iface[attrib_name]
-            elif attrib_name.startswith("unit "):
+            elif attrib_name.startswith("unit ") or attrib_name.startswith("inactive: unit "):
                 unit = iface[attrib_name]
                 unit_cleanup(unit)
-                unit_name = attrib_name[len("unit "):]
+                unit_name = attrib_name.replace("unit ", "")
                 if "unit" not in iface:
                     iface["unit"] = {}
                 iface["unit"][unit_name] = unit
@@ -32,14 +32,26 @@ def unit_cleanup(unit):
         if attrib_name.startswith("description "):
             unit["description"] = attrib_name[len("description "):].strip('"')
             del unit[attrib_name]
-        elif attrib_name == "family":
+        elif attrib_name == "family" and isinstance(unit[attrib_name], str):
             new_name = attrib_name + " " + unit[attrib_name]
+            family_name = unit[attrib_name]
+            unit["family"] = {family_name : {}}
             unit[new_name] = {}
             del unit[attrib_name]
         elif attrib_name.startswith("family "):
             if isinstance(unit[attrib_name], dict):
                 unit[attrib_name] = family_cleanup(unit[attrib_name])
-
+            #family_name = attrib_name.replace("family ", "") 
+            #if "family" not in unit:
+            #    unit["family"] = {}
+            #elif isinstance(unit["family"], str):
+            #    unit["family"] = {unit["family"] : {}} 
+            #unit["family"][family_name] = unit[attrib_name]
+            #del unit[attrib_name]
+        elif attrib_name.startswith("vlan-tags "):
+            parts = attrib_name.split(" ")
+            unit["vlan-tags"] = {"inner": parts[2], "outer": parts[4]}
+            del unit[attrib_name]
 
 def family_cleanup(family):
     keys = list(family.keys())
@@ -48,9 +60,12 @@ def family_cleanup(family):
         attrib_value = family[attrib_name]
         if attrib_name == "address":
             addresses[attrib_value] = {}
-        elif attrib_name.startswith("address "):
-            addr = attrib_name.split(" ")[1]
+        elif attrib_name.startswith("address ") or attrib_name.startswith("inactive: address "):
+            addr = attrib_name.replace("address ", "")
             addresses[addr] = attrib_value
+            del family[attrib_name]
+        elif attrib_name.startswith("rpf-check "):
+            family["rpf-check"] = attrib_name[len("rpf-check "):]
             del family[attrib_name]
     if len(addresses) > 0:
         family["address"] = addresses
@@ -58,12 +73,12 @@ def family_cleanup(family):
             
 
 def protocols_cleanup(protocols):
-    if "mpls" in protocols:
-        protocols["mpls"] = mpls_cleanup(protocols["mpls"])
-    if "bgp" in protocols:
-        protocols["bgp"] = bgp_cleanup(protocols["bgp"])
-    if "isis" in protocols:
-        protocols["isis"] = isis_cleanup(protocols["isis"])
+    #if "mpls" in protocols:
+    #    protocols["mpls"] = mpls_cleanup(protocols["mpls"])
+    #if "bgp" in protocols:
+    #    protocols["bgp"] = bgp_cleanup(protocols["bgp"])
+    #if "isis" in protocols:
+    #    protocols["isis"] = isis_cleanup(protocols["isis"])
     return protocols
 
 def mpls_cleanup(mpls):

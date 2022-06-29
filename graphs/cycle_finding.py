@@ -3,6 +3,7 @@ import json
 import networkx as nx
 import tqdm
 import concurrent.futures
+import os
 
 get_nodes_cache = {}
 get_neighbors_cache = {}
@@ -194,6 +195,9 @@ def main():
     parser.add_argument('-v', '--verbose', action='store_true', help="Display verbose output")
     arguments=parser.parse_args()
     print(arguments)
+
+    # Create output directory
+    os.makedirs(os.path.dirname(arguments.output_path), exist_ok=True)
 
     graph = load_graph(arguments.graph_path)
 
