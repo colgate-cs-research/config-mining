@@ -168,14 +168,25 @@ def is_all_addr(list_of_names):
     """Checks if a list of symbol names only contains IP addresses"""
     for symbol_name in list_of_names:
         # Handle IPv4 address compression
-        uncompressed_name = symbol_name
+        uncompressed_name = symbol_name.replace("inactive: ","")
         if (re.match("\d+\.\d+\.\.\d+\.\d+(/d+)?", symbol_name)):
             uncompressed_name = symbol_name.replace("..",".")
         elif (re.match("\d+\.\d+\.\.\d+(/d+)?", symbol_name)):
             uncompressed_name = symbol_name.replace("..",".0.")
 
         if (re.match("\d+\.\d+\.\d+\.\d+(/\d+)?", uncompressed_name)
-            or re.match("\d+\.\d+\.\d+\.d(/\d+\.\d+\.\d+\.\d+)?", uncompressed_name)):
+            or re.match("\d+\.\d+\.\d+\.d(/\d+\.\d+\.\d+\.\d+)?", uncompressed_name)
+            or re.match("("
+                + "([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}"
+                + "|([0-9a-fA-F]{1,4}:){1,7}:"
+                + "|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}"
+                + "|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}"
+                + "|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}"
+                + "|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}"
+                + "|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}"
+                + "|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})"
+                + "|:((:[0-9a-fA-F]{1,4}){1,7}|:)"
+                + ")(/\d+)?", uncompressed_name)):
             try:
                 ipaddress.ip_interface(uncompressed_name)
             except:
