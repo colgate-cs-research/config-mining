@@ -103,7 +103,7 @@ def add_keywords(dictionary, key, words):
 
 
 
-def infer_keywords(file, outf):
+def infer_keywords(file, outf, outf2):
     #print("Current working FILE: " + file)
     # Load inverted_table
     with open(file, "r") as infile:
@@ -112,7 +112,7 @@ def infer_keywords(file, outf):
     desc_lst = inverted_table['_description']
 
     # dictionary -  descriptions are keys and values are lists of keywords
-    keyword_dict = {}
+    desc_keyword_dict = {}
     unique_keywords  = []
 
     for desc in desc_lst:
@@ -120,10 +120,10 @@ def infer_keywords(file, outf):
         if desc!="":
             keywords = get_keywords(desc, common_delims)
             if len(keywords) > 0:
-                keyword_dict[desc] = keywords
+                desc_keyword_dict[desc] = keywords
             else:
                 #print("Could not get keywords for description: " + desc)
-                keyword_dict[desc]= [desc] # use nltk to break these
+                desc_keyword_dict[desc]= [desc] # use nltk to break these
             for keyword in keywords:
                 if keyword not in unique_keywords:
                     unique_keywords.append(keyword)
@@ -178,34 +178,13 @@ def infer_keywords(file, outf):
 
 
 
-    '''# extract keywords that are variations of a common term (hardcoded in list common_starts on line 17-18)
-    common_keyword_dict = {}
-    for word2 in common_starts:
-        common_keyword_dict[word2] = []
-
     
-    keys_to_remove = []
-    for word in keyword_dict:
-        for word2 in common_starts:
-            if word2 in word:
-                if word not in keys_to_remove:
-                    keys_to_remove.append(word)
-                for iface_or_vlan in keyword_dict[word]:
-                    (common_keyword_dict[word2]).append(iface_or_vlan)
-
-    for word in common_keyword_dict:
-        keyword_dict[word] = common_keyword_dict[word]
-
-    for word in keys_to_remove:
-        keyword_dict.pop(word)
-
-    # final list of keywords for Ifaces and Vlans
-    for word in keyword_dict:
-        for iName in keyword_dict[word]:
-            add_keywords(iface_dict, iName, [word])'''
 
     with open(outf, 'w') as outfile:
         json.dump(keyword_dict2, outfile, indent = 4)
+
+    with open(outf2, 'w') as outfile2:
+        json.dump(desc_keyword_dict, outfile2, indent = 4)
 
     return keyword_dict2
 
@@ -214,11 +193,12 @@ def main():
     #parsing command-line arguments
     parser = argparse.ArgumentParser(description='Extract keywords from _description in the inverted symbol table obtained from all the configurations.')
     parser.add_argument('inverted_table_path', help='Path for a file (or directory) containing a JSON representation the inverted symbol table')
-    parser.add_argument('out_path', help='Name of file (or directory) to write JSON file(s) containing keywords associated with each description.')
+    parser.add_argument('out_path1', help='Name of file (or directory) to write JSON file(s) containing words associated with each keyword.')
+    parser.add_argument('out_path2', help='Name of file (or directory) to write JSON file(s) containing keywords associated with each description.')
 
     arguments = parser.parse_args()
     # call function to process description
-    infer_keywords(arguments.inverted_table_path, arguments.out_path)
+    infer_keywords(arguments.inverted_table_path, arguments.out_path1, arguments.out_path2)
 
     end = time.time()
     print()
