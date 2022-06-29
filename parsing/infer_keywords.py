@@ -101,7 +101,24 @@ def add_keywords(dictionary, key, words):
             dictionary[key].append(word)
 
 
-
+def isSimilar(unique_keywords):
+    similarity_dict = {}
+    for word in unique_keywords:
+        similarity_dict[word] = []
+    for i in range(len(unique_keywords)):
+        word1 = unique_keywords[i]
+        list1 = list(set(word1))
+        for j in range(i+1,len(unique_keywords)):
+            similarity = 0
+            word2 = unique_keywords[j]
+            list2 = list(set(word2))
+            for el in list1:
+                if el in list2:
+                    similarity += 1
+                if similarity > 1:
+                    similarity_dict[word1].append(word2)
+                    similarity_dict[word2].append(word1)
+    return similarity_dict
 
 def infer_keywords(file, outf, outf2):
     #print("Current working FILE: " + file)
@@ -130,22 +147,7 @@ def infer_keywords(file, outf, outf2):
         #else:
             #print("Empty description.")
 
-    similarity_dict = {}
-    for word in unique_keywords:
-        similarity_dict[word] = []
-    for i in range(len(unique_keywords)):
-        word1 = unique_keywords[i]
-        list1 = list(set(word1))
-        for j in range(i+1,len(unique_keywords)):
-            similarity = 0
-            word2 = unique_keywords[j]
-            list2 = list(set(word2))
-            for el in list1:
-                if el in list2:
-                    similarity += 1
-                if similarity > 1:
-                    similarity_dict[word1].append(word2)
-                    similarity_dict[word2].append(word1)
+    similarity_dict = isSimilar(unique_keywords)
 
     # Check similarity dict
     new_dict={}
@@ -171,17 +173,27 @@ def infer_keywords(file, outf, outf2):
     keyword_dict2 = {}
     for key in all_shared_seq_dict:
         keyword_dict2[key] = list(all_shared_seq_dict[key].keys())
-        print("Keyword: " + key)
+        '''print("Keyword: " + key)
         print("Shared sequences and their counts: ")
         print(all_shared_seq_dict[key])
-        print("\n\n")
+        print("\n\n")'''
 
-
-
-    
 
     with open(outf, 'w') as outfile:
         json.dump(keyword_dict2, outfile, indent = 4)
+
+    for desc in desc_keyword_dict:
+        k_lst = desc_keyword_dict[desc].copy()
+        to_add = []
+        for kword in k_lst:
+            if kword in keyword_dict2:
+                word_lst = keyword_dict2[kword]
+                for word in word_lst:
+                    if word not in to_add:
+                        to_add.append(word)
+        for word in to_add:
+            if word not in k_lst:
+                desc_keyword_dict[desc].append(word)
 
     with open(outf2, 'w') as outfile2:
         json.dump(desc_keyword_dict, outfile2, indent = 4)
