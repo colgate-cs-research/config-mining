@@ -8,15 +8,17 @@ from read_rules import extract_dataframe,order_dataframe
 from sklearn.metrics import f1_score
 import logging
 
-logging.basicConfig(level=logging.DEBUG)# ,filemode='w',filename="./TO_REMOVE/temp/spanning_rules.log")
+logging.basicConfig(level=logging.INFO)# ,filemode='w',filename="./TO_REMOVE/temp/spanning_rules.log")
 logging.getLogger(__name__)
 
 def column_hash(pd_series):
     # converting pandas series to numoy series
-    numpy_series = pd_series.to_numpy()
+    #logging.debug("pd_series_index:{}".format(pd_series.index))
+    #sys.exit()
+    #numpy_series = pd_series.to_numpy()
     
     # compiling unique values in has_keys
-    hash_keys = np.unique(numpy_series)
+    hash_keys = pd.unique(pd_series)
 
 
     # key: str(hash_key-value) | value: np.array(occurence1,occurence2....)
@@ -26,8 +28,11 @@ def column_hash(pd_series):
         #print("     current_key:"+singular_key+"|")
         #print(type(singular_key))
         if singular_key != None:
-            hash_dict[singular_key] = np.where(numpy_series == singular_key)[0]
+            hash_dict[singular_key] = pd_series[pd_series == singular_key].index#pd_series.where(pd_series == singular_key)
+            #print(hash_dict[singular_key])
+            #sys.exit()
         #print(len(hash_dict[str(singular_key)]))
+
     
     return hash_dict
         
@@ -88,8 +93,11 @@ def rule_coverage(rule_df_record,table_hash_dict,column_hash_dict):
     group_val = str(rule_df_record['group'])
 
     rule_rows = get_rule_rows(singular_rule,table_hash_dict)
-    rule_cover = get_common_rows(get_rule_rows(singular_rule,table_hash_dict),get_group_rows(group_val,column_hash_dict))
-    rows_not_covered = [i for i in rule_rows if i not in rule_cover]
+    rule_cover = get_common_rows(rule_rows,get_group_rows(group_val,column_hash_dict))
+    
+    rows_not_covered = np.setdiff1d(rule_rows,rule_cover)#[i for i in rule_rows if i not in rule_cover]
+
+    
     return rule_cover,rule_rows,rows_not_covered
 
 
@@ -160,7 +168,7 @@ def get_rules(path,group,raw=0):
     logging.debug("\t\t\t<<END>> get rules")
     return rules_df
 
-def main(org_df_path,rules_path,grp_feature,feature_val):
+def main(org_df_path,rules_path,grp_feature,feature_val,precision=0):
     logging.debug("\t\tget_rule_coverage \t\tMAIN:-")
     logging.debug("\t\tGroup Feature:{}\t feature_val:{}".format(grp_feature,int(feature_val)))
     feature_val = feature_val  # 0 for not present | 1 for present | -1 for both
@@ -170,11 +178,14 @@ def main(org_df_path,rules_path,grp_feature,feature_val):
     #aggregate_df = pd.read_csv("./csl_output/workingDB/aggregate_df_workDB.csv")
     aggregate_df = pd.read_csv(org_df_path)
     aggregate_df[grp_feature] = aggregate_df[grp_feature].astype("int")
+    #aggregate_df['index1'] = aggregate_df.index
+
     logging.debug("grp_col_unique_items:{} \ntype:{}\n\n".format(aggregate_df[grp_feature],type(aggregate_df[grp_feature])))
     
     
     # This version of the column selection works
-    aggregate_df = aggregate_df.query(str(grp_feature)+' == '+str(int(feature_val)))
+    #aggregate_df = aggregate_df.query(str(grp_feature)+' == '+str(int(feature_val)))
+    aggregate_df.to_csv("Tmepp.csv")
 
 
 
@@ -182,15 +193,19 @@ def main(org_df_path,rules_path,grp_feature,feature_val):
     logging.debug("Unique grp feature:{} vals:{}".format(grp_feature,np.unique(aggregate_df[grp_feature])))
     table_hash_dict = table_hash(aggregate_df)
     
-    logging.debug("Columns:\n\t\t{}".format(table_hash_dict.values()))
-    
+    logging.debug("Columns:\n\t\t{}".format(table_hash_dict.keys()))
     grp_feature_hash = table_hash_dict[grp_feature]
     logging.debug("ColumnHashDict:\n\t\t{}".format(grp_feature_hash))
+    #sys.exit()
+
 
     
     
     # loading rule dataframe
     rules_df = get_rules(rules_path,feature_val)
+    #logging.debug("Selecting rules with precision:{}".format(arguments.precision))
+    # selecting rules with precision:1
+    rules_df = rules_df.loc[rules_df['precision'] > precision]
     logging.debug("Rules:\n\t\t{}".format(rules_df))
         
 
