@@ -186,7 +186,7 @@ def infer_keywords(file, outf, outf2):
         k_lst = desc_keyword_dict[desc].copy()
         to_add = []
         for kword in k_lst:
-            if kword in keyword_dict2:
+            if kword in keyword_dict2:  # MAJOR ISSUE, NOT ALL KEYWORDS END UP AS KEYS IN THE KEYWORD DICT :'(
                 word_lst = keyword_dict2[kword]
                 for word in word_lst:
                     if word not in to_add:
