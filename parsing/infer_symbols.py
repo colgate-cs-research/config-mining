@@ -31,6 +31,7 @@ TOP_LEVEL_TYPES_ARUBA = [
 KEYKINDS_JUNIPER = {
     (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
     (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
+    (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term')): "name",
     (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term'), ('name', '*'), ('type', 'to')): "mixed",
     (('name', '*'), ('type', 'groups')) : "name",
     (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('type', 'unit'), ('name', '*'), ('mixed', ('family', '*')), ('type', 'filter'), ('type', 'input-list')): "name",
@@ -55,7 +56,7 @@ KEYKINDS_ARUBA = {
 }
 TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER + TOP_LEVEL_TYPES_ARUBA
 KEYKINDS = KEYKINDS_JUNIPER
-KEYKINDS = KEYKINDS_ARUBA
+#KEYKINDS = KEYKINDS_ARUBA
 
 def main():
     # Parse command-line arguments
@@ -454,7 +455,7 @@ class SymbolExtractor:
                     symbol_name = symbol_name.strip("', ")
                     self.add_to_symbol_table(symbol_type, symbol_name, path)
             else:
-                logging.warning("!Cannot infer symbol name/type for mixed value: {}".format(symbol))
+                logging.info("!Cannot infer symbol name/type for mixed value: {}".format(symbol))
 
     def add_to_symbol_table(self, symbol_type, symbol_name, path):
         # Put type in canonical form
@@ -494,14 +495,22 @@ class SymbolExtractor:
                 raise Exception("Unknown kind {} in signature {}".format(kind, signature))
         # Recursive case
         else:
-            kind, value = signature[0]
             if kind == "type":
-                if value in dct and isinstance(dct[value], dict):
-                    return self.get_nested_instances(dct[value], signature[1:], instances, prefix)
+                if id in dct and isinstance(dct[id], dict):
+                    return self.get_nested_instances(dct[id], signature[1:], instances, prefix)
             elif kind == "name":
                 for key, value in dct.items():
                     if isinstance(value, dict):
                         self.get_nested_instances(value, signature[1:], instances, key)
+            elif kind == "mixed":
+                for key, value in dct.items():
+                    if key.startswith(id[0]) and isinstance(value, dict):
+                        self.get_nested_instances(value, signature[1:], instances, prefix) # FIXME: prefix or key as last arg?
+            elif kind == "pair":
+                for key, value in dct.items():
+                    key_type, key_name = key.replace("inactive: ", "").split(' ')
+                    if key_type == id[0] and isinstance(value, dict):
+                        self.get_nested_instances(value, signature[1:], instances, prefix) # FIXME: prefix or key as last arg?
             else:
                 raise Exception("Unknown kind {} in signature {}".format(kind, signature))
 

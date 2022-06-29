@@ -1,6 +1,7 @@
 import pandas as pd
 import argparse
 import time
+import sys
 import numpy as np
 import re
 from sklearn.preprocessing import LabelEncoder as le
@@ -67,7 +68,7 @@ def stopping_condition(for_sum,start_time,option = 0):
     val = False
     if option==0:
 
-        threshold = 0.97
+        threshold = 0.7
         
         ratio = untouched_rows/total_rows
         
@@ -178,7 +179,8 @@ def main():
     outfile = arguments.out_path
 
     
-    rules_df = get_rule_coverage.main(arguments.org_df_path,arguments.rules_path,grp_feature,group)
+    rules_df = get_rule_coverage.main(arguments.org_df_path,arguments.rules_path,grp_feature,group,arguments.precision)
+    #rules_df.to_csv("TEmpppp.csv")
     
 
     logging.debug("Selecting rules with precision:{}".format(arguments.precision))
@@ -187,7 +189,7 @@ def main():
 
 
     
-    rules_df.reset_index(drop=True, inplace=True)
+    #rules_df.reset_index(drop=True, inplace=True)
     # testing import
     logging.debug("\t\t\tTesting rule_df import:\n{}".format(rules_df.head))
     #print(len(aggregate_df))
@@ -213,8 +215,11 @@ def main():
     logging.debug("\tget_rule_set->END")
 
     # Dropping coverage column
-    #rules_df.drop(["coverage"], axis=1, inplace=True)
-    selected_rules = rules_df.loc[rule_list]
+    rules_df.drop(["coverage","rule_coverage"], axis=1, inplace=True)
+    print(rule_list)
+    print(rules_df)
+    selected_rules = rules_df.iloc[rule_list]
+    #sys.exit()
     #selected_rules.to_csv("./csl_output/rules/spanning_rules/span_aggregate_df_depth_"+str(depth)+"keyword: "+keyword+"_pr",index=False)
     logging.debug("Saving to outfile:{}|".format(outfile))
     selected_rules.to_csv(outfile+".csv",index=False)
