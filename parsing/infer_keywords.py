@@ -24,40 +24,55 @@ common_delims = ['_', '-', " "]
 
 
 # function to find stuff like the common_starts elements
-def longest_shared_sequence(keyword1,keyword2, shared_seq_dict):
+def longest_shared_sequence(keyword1,keyword2, k1_shared_seq_dict, k2_shared_seq_dict, min_len):
     #shared_seq_dict  # dictionary containing common sequences found and how many times they were found
     longest_shared_seq = ""
     for i in range(len(keyword1)-1):
-        for j in range(i+1,len(keyword1)):
-            if keyword1[i:j] in keyword2:
-                if keyword1[i:j] not in shared_seq_dict:
-                    shared_seq_dict[keyword1[i:j]] = 0
-                shared_seq_dict[keyword1[i:j]] += 1
-                if len(keyword1[i:j])>len(longest_shared_seq):
-                    longest_shared_seq = keyword1[i:j]
-
-    #logging.debug("\t\t words:{} {}| seq:{}| ".format(keyword1,keyword2,longest_shared_seq)) #commented out 6/24 11:30am
+        for j in range(i+min_len,len(keyword1)):
+            seq = keyword1[i:j+1]
+            if seq in keyword2:
+                if seq not in k1_shared_seq_dict:
+                    k1_shared_seq_dict[seq] = 0
+                if seq not in k2_shared_seq_dict:
+                    k2_shared_seq_dict[seq] = 0
+                k1_shared_seq_dict[seq] += 1
+                k2_shared_seq_dict[seq] += 1
+                if len(seq)>len(longest_shared_seq):
+                    longest_shared_seq = seq
     return longest_shared_seq
             
-def reduce_similarity(word,similar_words, shared_seq_dict, min_len=3):
+def reduce_similarity(word,similar_words, all_shared_seq_dict, min_len=3):
     to_return = []
-    longest_list = []
     longest = ""
-    #print(type(similar_words))
-    for i in similar_words:
-        longest = longest_shared_sequence(word,i,shared_seq_dict)
-        if longest not in longest_list:
-            longest_list.append(longest)
-        if len(longest)>=min_len:
-            to_return.append(i)
-    to_pop = []
-    for seq in shared_seq_dict:
-        for lngst in longest_list:
-            if (seq in lngst) and (seq != lngst) and (seq not in to_pop) :
-                to_pop.append(seq)
-    for seq in to_pop:
-        shared_seq_dict.pop(seq)
+    for similar_word in similar_words:
+        longest = longest_shared_sequence(word, similar_word, all_shared_seq_dict[word], all_shared_seq_dict[similar_word], min_len)
+        if longest not in to_return:
+            to_return.append(longest)
+    for word2 in to_return:
+        if word2!="":
+            other_words = word.split(word2)
+            for word3 in other_words:
+                if word3 not in all_shared_seq_dict[word]:
+                    all_shared_seq_dict[word][word3] = 0
     return to_return
+
+def de_num(d):
+    to_change = []
+    for key in d:
+        new_key = ""
+        num_count= 0
+        for el in key:
+            if (not el.isdigit()):
+                new_key += el
+            else:
+                num_count+=1
+        if (new_key!=key) and (num_count!=len(key)):
+            to_change.append((key, new_key))
+    for (key,new_key) in to_change:
+        pass
+        d[new_key] = d[key]
+        d.pop(key)
+
 
 """Get keywords from a phrase"""
 def get_keywords(phrase, delims=[" "]):
@@ -116,9 +131,7 @@ def infer_keywords(file, outf):
             #print("Empty description.")
 
     similarity_dict = {}
-    #logging.debug("All he keywords:{}".format(keyword_dict.keys()))
     for word in unique_keywords:
-        #logging.debug("\t\tkeywords:{}|\n\t\t\toccurences:{}".format(word,keyword_dict[word]))
         similarity_dict[word] = []
     for i in range(len(unique_keywords)):
         word1 = unique_keywords[i]
@@ -134,18 +147,34 @@ def infer_keywords(file, outf):
                     similarity_dict[word1].append(word2)
                     similarity_dict[word2].append(word1)
 
-    # Checking similarity dict
+    # Check similarity dict
     new_dict={}
-    new_dict2 = {}
+    all_shared_seq_dict = {} # keys are keywords and values are dictionaries { shared_sequences : count of how many other keywords this sequence is shared with}
     for key in similarity_dict:
-        new_dict2[key] = {}
-        #logging.debug("Key: " + key)
-        #logging.debug("\tList of similar words: " + str(similarity_dict[key]))
-        new_dict[key] = reduce_similarity(key,similarity_dict[key], new_dict2[key])
-        #logging.debug("\told_list similar words: " + str(similarity_dict[key]))
-        #logging.debug("\tUpdated_list similar words: " + str(new_dict[key])) #commented out 6/24 9:50am
+        all_shared_seq_dict[key] = {}
+    for key in similarity_dict:
+        new_dict[key] = reduce_similarity(key,similarity_dict[key], all_shared_seq_dict)
 
-    print(new_dict2)
+    for word in all_shared_seq_dict:
+        to_pop = []
+        shared_seq_lst = list(all_shared_seq_dict[word].keys())
+        for seq in shared_seq_lst:
+            for seq2 in shared_seq_lst:
+                if (seq!=seq2) and (seq in seq2) and (seq not in to_pop):
+                    to_pop.append(seq)
+        for seq in to_pop:
+            all_shared_seq_dict[word].pop(seq)
+
+    for key in all_shared_seq_dict:
+        de_num(all_shared_seq_dict[key])
+
+    keyword_dict2 = {}
+    for key in all_shared_seq_dict:
+        keyword_dict2[key] = list(all_shared_seq_dict[key].keys())
+        print("Keyword: " + key)
+        print("Shared sequences and their counts: ")
+        print(all_shared_seq_dict[key])
+        print("\n\n")
 
 
 
@@ -176,9 +205,9 @@ def infer_keywords(file, outf):
             add_keywords(iface_dict, iName, [word])'''
 
     with open(outf, 'w') as outfile:
-        json.dump(keyword_dict, outfile, indent = 4)
+        json.dump(keyword_dict2, outfile, indent = 4)
 
-    return keyword_dict
+    return keyword_dict2
 
 def main():
     start = time.time()
