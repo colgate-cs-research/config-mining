@@ -58,27 +58,37 @@ def gen_rule_matrix(rules_df,total_rows,resuse=0):
 
     return rule_matrix
 
-def stopping_condition(for_sum,start_time,option = 0):
+def stopping_condition(old_sum,for_sum,start_time,option = 1):
     # for_sum <ndarray>
+    # Not implemented
 
     time_out = True if time.time() - start_time<600 else False
 
-    untouched_rows = len(np.where(for_sum == 1.0)[0])
-    total_rows = len(for_sum)
-    val = False
+    
+    stop = False
     if option==0:
-
+        untouched_rows = len(np.where(for_sum == 1.0)[0])
+        total_rows = len(for_sum)
         threshold = 0.7
         
         ratio = untouched_rows/total_rows
         
-        val =  True if (ratio)<threshold else False
+        stop =  True if (ratio)<threshold else False
         #print("Untouched_rows:"+str(untouched_rows))
+        print(" Untouched percentage:"+str(round(untouched_rows/total_rows*100)) + '%', end="\r") if option==0 else None
     
+    elif option==1:
+        min_mining_per_cycle = 0.05
+        curr_mined = float(1 - for_sum.sum()/old_sum.sum())*100
+        first_cycle = np.array_equal(old_sum,for_sum)
+        if  curr_mined<min_mining_per_cycle and not first_cycle:
+            stop = True
+        print(" ChangeIn Mined(%):"+str(curr_mined), end="\n")
 
-    print(" Untouched percentage:"+str(round(untouched_rows/total_rows*100)) + '%', end="\r")
     
-    return val
+    
+    
+    return stop
     pass
 
 def get_rule_set(rule_matrix,total_rows,initial_weight,weight_reduction):
@@ -88,11 +98,11 @@ def get_rule_set(rule_matrix,total_rows,initial_weight,weight_reduction):
     
 
     rule_set =[]
-    old_sum=np.Inf
+    old_sum=np.copy(for_sum)
     start_time = time.time()
     #datetime.combine(date.today(), time.process_time()) - datetime.combine(date.today(), start_time)
-    while (not stopping_condition(for_sum,start_time)):#,option=0):
-
+    while (not stopping_condition(old_sum,for_sum,start_time)):#,option=0):
+        old_sum = np.copy(for_sum)
     
         
         # print("Current sum(for_sum):"+str(np.sum(for_sum)))
