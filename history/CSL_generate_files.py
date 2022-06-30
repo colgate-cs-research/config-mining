@@ -19,8 +19,10 @@ def main():
         subprocess.run(["python3", 
                         "csl/run_stucco.py", 
                         "config_history_stats/144_SandA_Updated.csv",
-                        "output/run_stucco_result",
+                        
+                        os.path.join("output/colgate/run_stucco_result/", SandA_list[i] + '.csv'),
                         SandA_list[i]])
-
+    
+    
 if __name__ == "__main__":
     main()
