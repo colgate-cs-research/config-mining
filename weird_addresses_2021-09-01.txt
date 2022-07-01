@@ -1,0 +1,640 @@
+INPUT: ['/shared/configs/colgate/mining/2021-09-01/configs_json', '/shared/configs/colgate/mining/2021-09-01/keywords'] OUTPUT: /shared/configs/colgate/mining/2021-09-01/graphs
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/100broad-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/100broad-2nd-sw.json']]
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/100broad-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/100broad-base-sw.json']]
+Graph with 113 nodes and 111 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/100hamilton-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/100hamilton-sw.json']]
+Graph with 139 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/102broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/102broad-sw.json']]
+Graph with 166 nodes and 166 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/104broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/104broad-sw.json']]
+Graph with 115 nodes and 111 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/10utica-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/10utica-sw.json']]
+Graph with 137 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/110broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/110broad-sw.json']]
+Graph with 138 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/113broad-brigham-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/113broad-brigham-sw.json']]
+Graph with 165 nodes and 159 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/113broad-core-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/113broad-core-sw.json']]
+Graph with 168 nodes and 162 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/113broad-read-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/113broad-read-sw.json']]
+Graph with 187 nodes and 188 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/113broad-shepardson-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/113broad-shepardson-sw.json']]
+Graph with 160 nodes and 164 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/113broad-whitnall-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/113broad-whitnall-sw.json']]
+Graph with 212 nodes and 212 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/114broad-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/114broad-2nd-sw.json']]
+Graph with 188 nodes and 188 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/114broad-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/114broad-base-sw.json']]
+Graph with 158 nodes and 159 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/116broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/116broad-sw.json']]
+Graph with 138 nodes and 138 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/118broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/118broad-sw.json']]
+Graph with 123 nodes and 121 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/20utica-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/20utica-sw.json']]
+Graph with 157 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/40broad-annex-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/40broad-annex-sw.json']]
+Graph with 132 nodes and 133 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/40broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/40broad-sw.json']]
+Graph with 161 nodes and 162 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/49broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/49broad-sw.json']]
+Graph with 158 nodes and 159 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/52broad-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/52broad-2nd-sw.json']]
+Graph with 161 nodes and 174 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/52broad-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/52broad-base-sw.json']]
+Graph with 134 nodes and 137 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/65arena-119-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/65arena-119-sw.json']]
+Graph with 161 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/65arena-144-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/65arena-144-sw.json']]
+Graph with 184 nodes and 177 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/66broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/66broad-sw.json']]
+Graph with 235 nodes and 225 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/70broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/70broad-sw.json']]
+Graph with 189 nodes and 186 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/72broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/72broad-sw.json']]
+Graph with 160 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/76broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/76broad-sw.json']]
+Graph with 159 nodes and 160 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/80broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/80broad-sw.json']]
+Graph with 159 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/84broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/84broad-sw.json']]
+Graph with 161 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/88broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/88broad-sw.json']]
+Graph with 158 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/92broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/92broad-sw.json']]
+Graph with 189 nodes and 188 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/94broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/94broad-sw.json']]
+Graph with 188 nodes and 185 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/alana-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/alana-sw.json']]
+Graph with 160 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/alumni-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/alumni-3rd-sw.json']]
+Graph with 159 nodes and 173 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/alumni-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/alumni-base-sw.json']]
+Graph with 294 nodes and 383 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/andrews-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/andrews-sw.json']]
+Graph with 224 nodes and 304 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/andykerr-dunlapnorth-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/andykerr-dunlapnorth-sw.json']]
+Graph with 210 nodes and 210 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/andykerr-dunlapsouth-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/andykerr-dunlapsouth-sw.json']]
+Graph with 135 nodes and 138 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/andykerr-pressbox-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/andykerr-pressbox-sw.json']]
+Graph with 135 nodes and 138 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/bandg-PM-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bandg-PM-sw.json']]
+Graph with 162 nodes and 168 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/bandg-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bandg-sw.json']]
+Graph with 133 nodes and 132 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/basecamp-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/basecamp-sw.json']]
+Graph with 236 nodes and 229 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/benton-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/benton-sw.json']]
+Graph with 140 nodes and 146 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/bookstore-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bookstore-sw.json']]
+Graph with 262 nodes and 255 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/bryan-cobb-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bryan-cobb-sw.json']]
+Graph with 214 nodes and 232 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/bryan-core-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bryan-core-sw.json']]
+Graph with 187 nodes and 185 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/bryan-crawshaw-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bryan-crawshaw-sw.json']]
+Graph with 191 nodes and 240 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/bryan-parke-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bryan-parke-sw.json']]
+Graph with 188 nodes and 185 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/bryan-russell-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bryan-russell-sw.json']]
+Graph with 159 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/burke-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/burke-sw.json']]
+Graph with 159 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/campussafety-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/campussafety-sw.json']]
+Graph with 239 nodes and 242 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-100-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-100-sw.json']]
+Graph with 178 nodes and 173 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-149-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-149-sw.json']]
+Graph with 165 nodes and 162 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-247-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-247-sw.json']]
+Graph with 200 nodes and 236 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-298-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-298-sw.json']]
+Graph with 164 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-299-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-299-sw.json']]
+Graph with 135 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-301-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-301-sw.json']]
+Graph with 165 nodes and 214 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-351-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-351-sw.json']]
+Graph with 242 nodes and 228 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-401-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-401-sw.json']]
+Graph with 350 nodes and 374 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-451-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-451-sw.json']]
+Graph with 270 nodes and 289 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-451-test-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-451-test-sw.json']]
+Graph with 308 nodes and 677 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-545b-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-545b-sw.json']]
+Graph with 175 nodes and 168 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row01-8325-01-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row01-8325-01-sw.json']]
+Graph with 162 nodes and 159 edges
+
+Weird ipaddress: 	10.111..20/31	1/1/51
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row01-8325-02-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row01-8325-02-sw.json']]
+Graph with 168 nodes and 399 edges
+
+Weird ipaddress: 	10.111..21/31	1/1/51
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row01-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row01-sw.json']]
+Graph with 167 nodes and 399 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row02-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row02-sw.json']]
+Graph with 184 nodes and 165 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row03-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row03-sw.json']]
+Graph with 210 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row04-beowulf-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row04-beowulf-sw.json']]
+Graph with 155 nodes and 131 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row04-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row04-sw.json']]
+Graph with 74 nodes and 67 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row05-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row05-sw.json']]
+Graph with 252 nodes and 186 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row06-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row06-sw.json']]
+Graph with 139 nodes and 96 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row07-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row07-sw.json']]
+Graph with 160 nodes and 132 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/case6410.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case6410.json']]
+Graph with 161 nodes and 135 edges
+
+Weird ipaddress: 	10.111..0/31	1/6/48
+Weird ipaddress: 	10.111..102/32	loopback102
+Weird ipaddress: 	10.111..103/32	loopback103
+Weird ipaddress: 	10.111..104/32	loopback104
+Weird ipaddress: 	10.111..105/32	loopback105
+Weird ipaddress: 	10.111..102/24	vlan1052
+Weird ipaddress: 	10.111..103/24	vlan1053
+Weird ipaddress: 	10.111..104/24	vlan1054
+Weird ipaddress: 	10.111..105/24	vlan1055
+Weird ipaddress: 	10.51..0.2/16	vlan556
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/chapel-booth-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/chapel-booth-sw.json']]
+Graph with 1038 nodes and 7234 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/chapel-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/chapel-sw.json']]
+Graph with 132 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/chapelhouse-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/chapelhouse-sw.json']]
+Graph with 155 nodes and 156 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/chillwater-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/chillwater-sw.json']]
+Graph with 158 nodes and 159 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/colgateinn-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/colgateinn-sw.json']]
+Graph with 172 nodes and 183 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/conanthouse-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/conanthouse-sw.json']]
+Graph with 86 nodes and 81 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/curtis-010-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/curtis-010-sw.json']]
+Graph with 142 nodes and 143 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/curtis-040-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/curtis-040-sw.json']]
+Graph with 161 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/curtis-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/curtis-3rd-sw.json']]
+Graph with 210 nodes and 209 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/curtis-563-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/curtis-563-sw.json']]
+Graph with 158 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/dana-picker-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/dana-picker-sw.json']]
+Graph with 187 nodes and 192 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/dana-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/dana-sw.json']]
+Graph with 156 nodes and 159 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/dkr-office-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/dkr-office-sw.json']]
+Graph with 239 nodes and 247 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/drake-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/drake-3rd-sw.json']]
+Graph with 136 nodes and 125 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/drake-b13-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/drake-b13-sw.json']]
+Graph with 185 nodes and 185 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/drake-b20-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/drake-b20-sw.json']]
+Graph with 189 nodes and 192 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/east-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/east-3rd-sw.json']]
+Graph with 184 nodes and 180 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/east-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/east-base-sw.json']]
+Graph with 158 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/frank-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/frank-sw.json']]
+Graph with 214 nodes and 216 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/gatehouse-1st-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/gatehouse-1st-sw.json']]
+Graph with 208 nodes and 206 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/gatehouse-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/gatehouse-2nd-sw.json']]
+Graph with 157 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/hascall-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/hascall-sw.json']]
+Graph with 158 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/health-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/health-sw.json']]
+Graph with 156 nodes and 181 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/heatingplant-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/heatingplant-sw.json']]
+Graph with 144 nodes and 145 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-126-ems-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-126-ems-sw.json']]
+Graph with 140 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-126-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-126-sw.json']]
+Graph with 83 nodes and 77 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-240-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-240-sw.json']]
+Graph with 279 nodes and 316 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-348-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-348-sw.json']]
+Graph with 331 nodes and 417 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-403-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-403-sw.json']]
+Graph with 304 nodes and 371 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-b05-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-b05-sw.json']]
+Graph with 225 nodes and 253 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/hotelmaxwell-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/hotelmaxwell-sw.json']]
+Graph with 147 nodes and 151 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/hrd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/hrd-sw.json']]
+Graph with 242 nodes and 282 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/huntington-1st-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/huntington-1st-sw.json']]
+Graph with 157 nodes and 182 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/huntington-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/huntington-2nd-sw.json']]
+Graph with 243 nodes and 260 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/jbc-1st-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jbc-1st-sw.json']]
+Graph with 156 nodes and 159 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/jbc-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jbc-3rd-sw.json']]
+Graph with 132 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/jbc-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jbc-base-sw.json']]
+Graph with 184 nodes and 183 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/jbc-sub-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jbc-sub-sw.json']]
+Graph with 157 nodes and 167 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/jcc-1st-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jcc-1st-sw.json']]
+Graph with 293 nodes and 281 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/jcc-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jcc-2nd-sw.json']]
+Graph with 165 nodes and 213 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/jcc-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jcc-3rd-sw.json']]
+Graph with 159 nodes and 170 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/lathrop-110-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/lathrop-110-sw.json']]
+Graph with 158 nodes and 162 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/lathrop-228-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/lathrop-228-sw.json']]
+Graph with 239 nodes and 264 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/lawrence-16a-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/lawrence-16a-sw.json']]
+Graph with 321 nodes and 377 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/lawrence-304a-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/lawrence-304a-sw.json']]
+Graph with 238 nodes and 305 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/little-105-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/little-105-sw.json']]
+Graph with 241 nodes and 418 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/little-206-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/little-206-sw.json']]
+Graph with 133 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/little-208-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/little-208-sw.json']]
+Graph with 132 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/little-310-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/little-310-sw.json']]
+Graph with 132 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/little-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/little-base-sw.json']]
+Graph with 156 nodes and 159 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/mcgregory-210-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/mcgregory-210-sw.json']]
+Graph with 242 nodes and 281 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/mcgregory-314-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/mcgregory-314-sw.json']]
+Graph with 276 nodes and 314 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/mcgregory-401-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/mcgregory-401-sw.json']]
+Graph with 172 nodes and 175 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/mcgregory-sb10-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/mcgregory-sb10-sw.json']]
+Graph with 279 nodes and 348 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/merrillhouse-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/merrillhouse-sw.json']]
+Graph with 359 nodes and 351 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/newell1-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/newell1-sw.json']]
+Graph with 212 nodes and 210 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/newell2-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/newell2-sw.json']]
+Graph with 189 nodes and 186 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/newell3-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/newell3-sw.json']]
+Graph with 159 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/newell4-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/newell4-sw.json']]
+Graph with 161 nodes and 165 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/observatory-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/observatory-sw.json']]
+Graph with 161 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/ocon6410.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ocon6410.json']]
+Graph with 148 nodes and 151 edges
+
+Weird ipaddress: 	10.111..1/31	1/6/48
+Weird ipaddress: 	10.111..202/32	loopback202
+Weird ipaddress: 	10.111..203/32	loopback203
+Weird ipaddress: 	10.111..204/32	loopback204
+Weird ipaddress: 	10.111..205/32	loopback205
+Weird ipaddress: 	10.111..202/24	vlan1052
+Weird ipaddress: 	10.111..203/24	vlan1053
+Weird ipaddress: 	10.111..204/24	vlan1054
+Weird ipaddress: 	10.111..205/24	vlan1055
+Weird ipaddress: 	10.51..0.3/16	vlan556
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-lab-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-lab-sw.json']]
+Graph with 1033 nodes and 7245 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-mail-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-mail-sw.json']]
+Graph with 214 nodes and 212 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-printshop-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-printshop-sw.json']]
+Graph with 219 nodes and 227 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-row01-8325-01-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-row01-8325-01-sw.json']]
+Graph with 158 nodes and 161 edges
+
+Weird ipaddress: 	10.111..22/31	1/1/51
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-row01-8325-02-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-row01-8325-02-sw.json']]
+Graph with 166 nodes and 381 edges
+
+Weird ipaddress: 	10.111..23/31	1/1/51
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-row01-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-row01-sw.json']]
+Graph with 166 nodes and 381 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/olin-225-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/olin-225-sw.json']]
+Graph with 222 nodes and 212 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/olin-230-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/olin-230-sw.json']]
+Graph with 278 nodes and 319 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/ous-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ous-sw.json']]
+Graph with 357 nodes and 411 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/parker-100-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/parker-100-sw.json']]
+Graph with 159 nodes and 159 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/parker-111-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/parker-111-sw.json']]
+Graph with 159 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/parker-210-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/parker-210-sw.json']]
+Graph with 134 nodes and 137 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/parker-302-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/parker-302-sw.json']]
+Graph with 158 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/parker-commons-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/parker-commons-sw.json']]
+Graph with 137 nodes and 140 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/persson-001-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/persson-001-sw.json']]
+Graph with 159 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/persson-008-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/persson-008-sw.json']]
+Graph with 185 nodes and 207 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/pinchin-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/pinchin-sw.json']]
+Graph with 239 nodes and 288 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/raab-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/raab-sw.json']]
+Graph with 264 nodes and 269 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/radiotower-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/radiotower-sw.json']]
+Graph with 118 nodes and 116 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/reid-107-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/reid-107-sw.json']]
+Graph with 145 nodes and 147 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/reid-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/reid-2nd-sw.json']]
+Graph with 163 nodes and 175 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/reid-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/reid-3rd-sw.json']]
+Graph with 209 nodes and 207 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/reid-cotterell-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/reid-cotterell-sw.json']]
+Graph with 157 nodes and 188 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/reid-football-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/reid-football-sw.json']]
+Graph with 169 nodes and 159 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/rob-office-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/rob-office-sw.json']]
+Graph with 132 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/ryan-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ryan-sw.json']]
+Graph with 156 nodes and 183 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/sanford-north-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/sanford-north-sw.json']]
+Graph with 159 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/sanford-south-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/sanford-south-sw.json']]
+Graph with 130 nodes and 133 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/sanford-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/sanford-sw.json']]
+Graph with 130 nodes and 133 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/soccer-home-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/soccer-home-sw.json']]
+Graph with 158 nodes and 159 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/soccer-pressbox-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/soccer-pressbox-sw.json']]
+Graph with 132 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/spearhouse-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/spearhouse-sw.json']]
+Graph with 141 nodes and 144 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/stillman-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/stillman-sw.json']]
+Graph with 156 nodes and 157 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse1-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse1-sw.json']]
+Graph with 238 nodes and 233 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse2-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse2-sw.json']]
+Graph with 162 nodes and 167 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse3-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse3-sw.json']]
+Graph with 161 nodes and 162 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse4-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse4-sw.json']]
+Graph with 169 nodes and 174 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse5-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse5-sw.json']]
+Graph with 165 nodes and 172 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse6-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse6-sw.json']]
+Graph with 164 nodes and 168 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse7-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse7-sw.json']]
+Graph with 168 nodes and 172 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse8-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse8-sw.json']]
+Graph with 170 nodes and 176 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse9-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse9-sw.json']]
+Graph with 163 nodes and 164 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/trudy-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/trudy-2nd-sw.json']]
+Graph with 162 nodes and 167 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/trudy-grnd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/trudy-grnd-sw.json']]
+Graph with 211 nodes and 210 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/tyler-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/tyler-sw.json']]
+Graph with 161 nodes and 162 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/uc1-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc1-sw.json']]
+Graph with 132 nodes and 135 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/uc10-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc10-sw.json']]
+Graph with 134 nodes and 137 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/uc2-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc2-sw.json']]
+Graph with 134 nodes and 137 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/uc3-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc3-sw.json']]
+Graph with 134 nodes and 137 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/uc4-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc4-sw.json']]
+Graph with 133 nodes and 137 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/uc5-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc5-sw.json']]
+Graph with 134 nodes and 137 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/uc6-7-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc6-7-sw.json']]
+Graph with 134 nodes and 137 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/uc8-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc8-sw.json']]
+Graph with 158 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/uc9-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc9-sw.json']]
+Graph with 134 nodes and 137 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/wendt-north-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/wendt-north-sw.json']]
+Graph with 134 nodes and 137 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/wendt-south-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/wendt-south-sw.json']]
+Graph with 161 nodes and 165 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/west-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/west-3rd-sw.json']]
+Graph with 154 nodes and 187 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/west-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/west-base-sw.json']]
+Graph with 157 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/wynn-1st-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/wynn-1st-sw.json']]
+Graph with 158 nodes and 161 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/wynn-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/wynn-2nd-sw.json']]
+Graph with 227 nodes and 248 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/wynn-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/wynn-3rd-sw.json']]
+Graph with 255 nodes and 250 edges
+
+Current working files: [['/shared/configs/colgate/mining/2021-09-01/configs_json/100broad-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/100broad-2nd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/100broad-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/100broad-base-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/100hamilton-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/100hamilton-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/102broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/102broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/104broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/104broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/10utica-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/10utica-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/110broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/110broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/113broad-brigham-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/113broad-brigham-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/113broad-core-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/113broad-core-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/113broad-read-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/113broad-read-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/113broad-shepardson-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/113broad-shepardson-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/113broad-whitnall-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/113broad-whitnall-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/114broad-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/114broad-2nd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/114broad-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/114broad-base-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/116broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/116broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/118broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/118broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/20utica-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/20utica-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/40broad-annex-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/40broad-annex-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/40broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/40broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/49broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/49broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/52broad-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/52broad-2nd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/52broad-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/52broad-base-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/65arena-119-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/65arena-119-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/65arena-144-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/65arena-144-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/66broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/66broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/70broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/70broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/72broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/72broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/76broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/76broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/80broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/80broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/84broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/84broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/88broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/88broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/92broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/92broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/94broad-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/94broad-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/alana-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/alana-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/alumni-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/alumni-3rd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/alumni-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/alumni-base-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/andrews-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/andrews-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/andykerr-dunlapnorth-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/andykerr-dunlapnorth-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/andykerr-dunlapsouth-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/andykerr-dunlapsouth-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/andykerr-pressbox-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/andykerr-pressbox-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/bandg-PM-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bandg-PM-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/bandg-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bandg-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/basecamp-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/basecamp-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/benton-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/benton-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/bookstore-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bookstore-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/bryan-cobb-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bryan-cobb-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/bryan-core-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bryan-core-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/bryan-crawshaw-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bryan-crawshaw-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/bryan-parke-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bryan-parke-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/bryan-russell-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/bryan-russell-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/burke-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/burke-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/campussafety-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/campussafety-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-100-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-100-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-149-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-149-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-247-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-247-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-298-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-298-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-299-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-299-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-301-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-301-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-351-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-351-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-401-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-401-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-451-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-451-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-451-test-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-451-test-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-545b-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-545b-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row01-8325-01-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row01-8325-01-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row01-8325-02-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row01-8325-02-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row01-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row01-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row02-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row02-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row03-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row03-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row04-beowulf-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row04-beowulf-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row04-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row04-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row05-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row05-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row06-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row06-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case-row07-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case-row07-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/case6410.json', '/shared/configs/colgate/mining/2021-09-01/keywords/case6410.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/chapel-booth-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/chapel-booth-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/chapel-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/chapel-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/chapelhouse-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/chapelhouse-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/chillwater-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/chillwater-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/colgateinn-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/colgateinn-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/conanthouse-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/conanthouse-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/curtis-010-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/curtis-010-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/curtis-040-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/curtis-040-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/curtis-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/curtis-3rd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/curtis-563-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/curtis-563-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/dana-picker-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/dana-picker-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/dana-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/dana-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/dkr-office-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/dkr-office-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/drake-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/drake-3rd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/drake-b13-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/drake-b13-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/drake-b20-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/drake-b20-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/east-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/east-3rd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/east-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/east-base-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/frank-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/frank-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/gatehouse-1st-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/gatehouse-1st-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/gatehouse-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/gatehouse-2nd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/hascall-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/hascall-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/health-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/health-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/heatingplant-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/heatingplant-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-126-ems-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-126-ems-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-126-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-126-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-240-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-240-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-348-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-348-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-403-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-403-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/ho-b05-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ho-b05-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/hotelmaxwell-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/hotelmaxwell-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/hrd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/hrd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/huntington-1st-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/huntington-1st-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/huntington-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/huntington-2nd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/jbc-1st-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jbc-1st-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/jbc-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jbc-3rd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/jbc-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jbc-base-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/jbc-sub-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jbc-sub-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/jcc-1st-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jcc-1st-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/jcc-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jcc-2nd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/jcc-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/jcc-3rd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/lathrop-110-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/lathrop-110-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/lathrop-228-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/lathrop-228-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/lawrence-16a-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/lawrence-16a-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/lawrence-304a-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/lawrence-304a-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/little-105-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/little-105-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/little-206-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/little-206-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/little-208-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/little-208-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/little-310-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/little-310-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/little-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/little-base-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/mcgregory-210-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/mcgregory-210-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/mcgregory-314-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/mcgregory-314-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/mcgregory-401-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/mcgregory-401-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/mcgregory-sb10-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/mcgregory-sb10-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/merrillhouse-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/merrillhouse-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/newell1-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/newell1-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/newell2-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/newell2-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/newell3-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/newell3-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/newell4-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/newell4-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/observatory-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/observatory-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/ocon6410.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ocon6410.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-lab-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-lab-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-mail-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-mail-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-printshop-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-printshop-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-row01-8325-01-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-row01-8325-01-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-row01-8325-02-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-row01-8325-02-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/oconnor-row01-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/oconnor-row01-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/olin-225-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/olin-225-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/olin-230-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/olin-230-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/ous-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ous-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/parker-100-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/parker-100-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/parker-111-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/parker-111-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/parker-210-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/parker-210-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/parker-302-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/parker-302-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/parker-commons-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/parker-commons-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/persson-001-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/persson-001-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/persson-008-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/persson-008-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/pinchin-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/pinchin-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/raab-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/raab-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/radiotower-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/radiotower-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/reid-107-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/reid-107-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/reid-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/reid-2nd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/reid-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/reid-3rd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/reid-cotterell-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/reid-cotterell-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/reid-football-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/reid-football-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/rob-office-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/rob-office-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/ryan-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/ryan-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/sanford-north-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/sanford-north-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/sanford-south-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/sanford-south-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/sanford-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/sanford-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/soccer-home-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/soccer-home-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/soccer-pressbox-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/soccer-pressbox-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/spearhouse-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/spearhouse-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/stillman-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/stillman-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse1-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse1-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse2-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse2-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse3-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse3-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse4-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse4-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse5-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse5-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse6-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse6-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse7-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse7-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse8-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse8-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/townhouse9-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/townhouse9-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/trudy-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/trudy-2nd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/trudy-grnd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/trudy-grnd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/tyler-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/tyler-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/uc1-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc1-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/uc10-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc10-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/uc2-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc2-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/uc3-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc3-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/uc4-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc4-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/uc5-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc5-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/uc6-7-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc6-7-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/uc8-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc8-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/uc9-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/uc9-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/wendt-north-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/wendt-north-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/wendt-south-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/wendt-south-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/west-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/west-3rd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/west-base-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/west-base-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/wynn-1st-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/wynn-1st-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/wynn-2nd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/wynn-2nd-sw.json'], ['/shared/configs/colgate/mining/2021-09-01/configs_json/wynn-3rd-sw.json', '/shared/configs/colgate/mining/2021-09-01/keywords/wynn-3rd-sw.json']]
+Graph with 229 nodes and 226 edges
+
+Weird ipaddress: 	10.111..20/31	1/1/51
+Weird ipaddress: 	10.111..21/31	1/1/51
+Weird ipaddress: 	10.111..0/31	1/6/48
+Weird ipaddress: 	10.111..102/32	loopback102
+Weird ipaddress: 	10.111..103/32	loopback103
+Weird ipaddress: 	10.111..104/32	loopback104
+Weird ipaddress: 	10.111..105/32	loopback105
+Weird ipaddress: 	10.111..102/24	vlan1052
+Weird ipaddress: 	10.111..103/24	vlan1053
+Weird ipaddress: 	10.111..104/24	vlan1054
+Weird ipaddress: 	10.111..105/24	vlan1055
+Weird ipaddress: 	10.51..0.2/16	vlan556
+Weird ipaddress: 	10.111..1/31	1/6/48
+Weird ipaddress: 	10.111..202/32	loopback202
+Weird ipaddress: 	10.111..203/32	loopback203
+Weird ipaddress: 	10.111..204/32	loopback204
+Weird ipaddress: 	10.111..205/32	loopback205
+Weird ipaddress: 	10.111..202/24	vlan1052
+Weird ipaddress: 	10.111..203/24	vlan1053
+Weird ipaddress: 	10.111..204/24	vlan1054
+Weird ipaddress: 	10.111..205/24	vlan1055
+Weird ipaddress: 	10.51..0.3/16	vlan556
+Weird ipaddress: 	10.111..22/31	1/1/51
+Weird ipaddress: 	10.111..23/31	1/1/51
+Graph with 17021 nodes and 44379 edges
+
