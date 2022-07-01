@@ -4,22 +4,13 @@
 			"path": "."
 		},
 		{
-			"path": "/shared/configs/northwestern"
-		},
-		{
 			"path": "/shared/configs/uwmadison/2014-10-core"
 		},
 		{
 			"path": "/shared/configs/internet2/2021-06-16"
 		},
 		{
-			"path": "/shared/config-mining/output"
-		},
-		{
 			"path": "/shared/configs/colgate/daily/2022-03-06"
-		},
-		{
-			"path": "/shared/config-mining/csl"
 		}
 	],
 	"settings": {}
