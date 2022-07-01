@@ -2,6 +2,8 @@ import json
 import argparse
 import logging
 import os
+import csv
+import pprint
 
 def make_SandA_dict(SandA):
   SandA_dict = {}
@@ -24,16 +26,24 @@ def clean_up (input_list):
 
 def process (data):
   output_set = set()
+  # Iterate over each device
   for (location, device) in data.items():
-    for (key, values) in device.items():
-      for i in range (len(values)):
-        for (attribute, others) in values[i][2].items():
-          if (key == attribute and values[i][0] != 'System'):
-            for (a, details) in values[i][2].items():
-              for (meat, b) in details.items():
-                output_set.add((values[i][0],meat))
+
+    # Iterate over each stanza
+    for (stanza_name, changes) in device.items():
+
+      # Iterate over each change
+      for i in range (len(changes)):
+        stanza_type = changes[i][0]
+
+        # Iterate over each attribute
+        for (attribute, details) in changes[i][2].items():
+          if (stanza_name == attribute and stanza_type != 'System'):
+            logging.debug("Special case: {} > {} > {} {}".format(location, stanza_name, stanza_type, attribute))
+            for inner_attribute in details:
+              output_set.add((stanza_type, inner_attribute))
           else:
-            output_set.add((values[i][0], attribute))
+            output_set.add((stanza_type, attribute))
   
   return output_set
 
@@ -44,6 +54,12 @@ def make_matrix (all_diffs, stanza_type_dict):
 # Construct the matrix
   output_matrix = []
 
+  header = [''] * len(stanza_type_dict.keys())
+  for stanza_type, index in stanza_type_dict.items():
+    header[index] = ":".join(stanza_type)
+  header = ['date'] + header
+  output_matrix.append(header)
+
   for (date, date_diffs) in all_diffs.items():
     logging.info("Processing {}...".format(date))
     temp_list = [0] * len(stanza_type_dict.keys())
@@ -53,13 +69,26 @@ def make_matrix (all_diffs, stanza_type_dict):
       for (element_name, small_value) in device_diffs.items():
         for i in range(len(small_value)):
           stanza_type = small_value[i][0]
+            # Iterate over each attribute
           for (attribute, details) in small_value[i][2].items():
-            temp_tuple = (stanza_type, attribute)
+            if (element_name == attribute and stanza_type != 'System'):
+              for inner_attribute in details:
+                temp_tuple = (stanza_type, inner_attribute)
+                if (temp_tuple in stanza_type_dict):
+                  logging.debug(temp_tuple)
+                  temp_list[stanza_type_dict[temp_tuple]] = 1
+            else:
+              temp_tuple = (stanza_type, attribute)
+              if (temp_tuple in stanza_type_dict):
+                logging.debug(temp_tuple)
+                temp_list[stanza_type_dict[temp_tuple]] = 1
+
+            '''temp_tuple = (stanza_type, attribute)
             if (temp_tuple in stanza_type_dict):
               logging.debug(temp_tuple)
-              temp_list[stanza_type_dict[temp_tuple]] = 1
+              temp_list[stanza_type_dict[temp_tuple]] = 1'''
 
-    output_matrix.append(temp_list)
+    output_matrix.append([date] + temp_list)
 
   return output_matrix
 
@@ -89,6 +118,8 @@ def main ():
       data = json.load(file)
       # Extract all the stanza type + attribute from the current config diffing result file
       result = process (data)
+      logging.debug(current)
+      logging.debug(pprint.pformat(result))
       result_list.append(result)
 
   # Clean up the "result"
@@ -108,7 +139,9 @@ def main ():
   matrix = make_matrix(all_diffs, SandA_dict)
 
   with open(arguments.matrix_file, 'w') as outfile:
-    json.dump(matrix, outfile, indent=4)
+    writer = csv.writer(outfile)
+    writer.writerows(matrix)
+#    json.dump(matrix, outfile, indent=4)
 
 if __name__ == "__main__":
   main()

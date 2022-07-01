@@ -16,6 +16,7 @@ def extract_dataframe(dataframe):
     # converting rules to dict { 'attribute'<type: str> : 'value'<type: str> } 
     dataframe = dataframe.assign(rule= dataframe['rule'].map(lambda x: clean_rule(x)))
     # cleaning group
+    dataframe = dataframe.assign(consequent= dataframe['group'].map(lambda x: clean_consequent(x)))
     dataframe = dataframe.assign(group= dataframe['group'].map(lambda x: clean_group(x)))
 
     # cleaning precision
@@ -60,6 +61,9 @@ def filter_rule_column(df):
 
 def clean_group(string):
     return int(string.strip()[-1])
+
+def clean_consequent(string):
+    return clean_rule("{'" + string + "'}")
 
 def clean_rule(string):
     #print("executing: clean_rule", end=" ")
