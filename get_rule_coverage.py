@@ -65,6 +65,7 @@ def get_rule_rows(rule,table_hash_dict):
     for key in rule_keys:
         value = str(rule[key]) if str(rule[key]) != 'None' else 'nan'
         key = str(key)
+        logging.info("{}:{}".format(key, value))
         #print("     key:"+key+"| values:"+value )
         #print(table_hash_dict[key].keys())
         common_rows_list.append(table_hash_dict[key][value])
@@ -93,7 +94,11 @@ def rule_coverage(rule_df_record,table_hash_dict,column_hash_dict):
     group_val = str(rule_df_record['group'])
 
     rule_rows = get_rule_rows(singular_rule,table_hash_dict)
-    rule_cover = get_common_rows(rule_rows,get_group_rows(group_val,column_hash_dict))
+    if column_hash_dict is not None:
+        group_rows = get_group_rows(group_val,column_hash_dict)
+    else:
+        group_rows = get_rule_rows(rule_df_record['consequent'], table_hash_dict)
+    rule_cover = get_common_rows(rule_rows,group_rows)
     
     rows_not_covered = np.setdiff1d(rule_rows,rule_cover)#[i for i in rule_rows if i not in rule_cover]
 
@@ -168,7 +173,7 @@ def get_rules(path,group,raw=0):
     logging.debug("\t\t\t<<END>> get rules")
     return rules_df
 
-def main(org_df_path,rules_path,grp_feature,feature_val,precision=0):
+def main(org_df_path,rules_path,grp_feature=None,feature_val=-1,precision=0):
     logging.debug("\t\tget_rule_coverage \t\tMAIN:-")
     logging.debug("\t\tGroup Feature:{}\t feature_val:{}".format(grp_feature,int(feature_val)))
     feature_val = feature_val  # 0 for not present | 1 for present | -1 for both
@@ -177,10 +182,10 @@ def main(org_df_path,rules_path,grp_feature,feature_val,precision=0):
     # networkwide dataframe
     #aggregate_df = pd.read_csv("./csl_output/workingDB/aggregate_df_workDB.csv")
     aggregate_df = pd.read_csv(org_df_path)
-    aggregate_df[grp_feature] = aggregate_df[grp_feature].astype("int")
+    #aggregate_df[grp_feature] = aggregate_df[grp_feature].astype("int")
     #aggregate_df['index1'] = aggregate_df.index
 
-    logging.debug("grp_col_unique_items:{} \ntype:{}\n\n".format(aggregate_df[grp_feature],type(aggregate_df[grp_feature])))
+    #logging.debug("grp_col_unique_items:{} \ntype:{}\n\n".format(aggregate_df[grp_feature],type(aggregate_df[grp_feature])))
     
     
     # This version of the column selection works
@@ -190,12 +195,14 @@ def main(org_df_path,rules_path,grp_feature,feature_val,precision=0):
 
 
     
-    logging.debug("Unique grp feature:{} vals:{}".format(grp_feature,np.unique(aggregate_df[grp_feature])))
+    #logging.debug("Unique grp feature:{} vals:{}".format(grp_feature,np.unique(aggregate_df[grp_feature])))
     table_hash_dict = table_hash(aggregate_df)
-    
-    logging.debug("Columns:\n\t\t{}".format(table_hash_dict.keys()))
-    grp_feature_hash = table_hash_dict[grp_feature]
-    logging.debug("ColumnHashDict:\n\t\t{}".format(grp_feature_hash))
+
+    grp_feature_hash = None
+    if (grp_feature is not None):
+        logging.debug("Columns:\n\t\t{}".format(table_hash_dict.keys()))
+        grp_feature_hash = table_hash_dict[grp_feature]
+        logging.debug("ColumnHashDict:\n\t\t{}".format(grp_feature_hash))
     #sys.exit()
 
 

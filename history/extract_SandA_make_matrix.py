@@ -2,6 +2,7 @@ import json
 import argparse
 import logging
 import os
+import csv
 
 def make_SandA_dict(SandA):
   SandA_dict = {}
@@ -44,6 +45,12 @@ def make_matrix (all_diffs, stanza_type_dict):
 # Construct the matrix
   output_matrix = []
 
+  header = [''] * len(stanza_type_dict.keys())
+  for stanza_type, index in stanza_type_dict.items():
+    header[index] = ":".join(stanza_type)
+  header = ['date'] + header
+  output_matrix.append(header)
+
   for (date, date_diffs) in all_diffs.items():
     logging.info("Processing {}...".format(date))
     temp_list = [0] * len(stanza_type_dict.keys())
@@ -59,7 +66,7 @@ def make_matrix (all_diffs, stanza_type_dict):
               logging.debug(temp_tuple)
               temp_list[stanza_type_dict[temp_tuple]] = 1
 
-    output_matrix.append(temp_list)
+    output_matrix.append([date] + temp_list)
 
   return output_matrix
 
@@ -108,7 +115,9 @@ def main ():
   matrix = make_matrix(all_diffs, SandA_dict)
 
   with open(arguments.matrix_file, 'w') as outfile:
-    json.dump(matrix, outfile, indent=4)
+    writer = csv.writer(outfile)
+    writer.writerows(matrix)
+#    json.dump(matrix, outfile, indent=4)
 
 if __name__ == "__main__":
   main()
