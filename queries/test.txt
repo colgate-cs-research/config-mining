@@ -1,24 +1,73 @@
-interface Vlan477 keyword Vlan476,633,646,97.99
-interface Vlan477 keyword Vlan475,633,646,97.99
+d-3_s-interface_t-90_n-keyword-vlan.csv
+interface Vlan478 ems Vlan474,645,647,99.69
+Vlan478 only: {'ho-126-ems-sw_lag250', 'ho-126-sw_lag251'}
+interface Vlan475 bg Vlan477,633,634,99.84
+Vlan475 only: {'chillwater-sw_1/1/25'}
+interface Vlan475 bg Vlan476,633,634,99.84
+Vlan475 only: {'chillwater-sw_1/1/25'}
+interface Vlan2008 pci Vlan24,83,85,97.65
+Vlan2008 only: {'andykerr-dunlapsouth-sw_1/1/3', 'bookstore-sw_1/1/4'}
+interface Vlan502 voip Vlan508,117,121,96.69
+Vlan502 only: {'jbc-base-sw_1/1/2', 'case6410_lag250', 'ocon6410_lag250', 'dana-sw_1/1/4'}
+interface Vlan540 simplivity Vlan520,71,74,95.95
+Vlan540 only: {'case-row01-8325-02-sw_1/1/24', 'case-row01-8325-01-sw_1/1/24', 'oconnor-row01-8325-01-sw_1/1/24'}
+interface Vlan590 voip Vlan591,44,46,95.65
+Vlan590 only: {'case6410_lag255', 'ocon6410_lag255'}
+d-3_s-interface_t-90_n-vlan.csv
 interface Vlan478 keyword Vlan474,645,647,99.69
-interface Vlan503 keyword Vlan508,242,249,97.19
-interface Vlan501 keyword Vlan508,131,137,95.62
-interface Vlan881 interface Vlan164,1722,1764,97.62
-interface Vlan881 interface Vlan168,1722,1764,97.62
-interface Vlan700 interface Vlan164,812,841,96.55
-interface Vlan700 interface Vlan29,812,841,96.55
-interface Vlan700 interface Vlan24,812,841,96.55
-interface Vlan700 interface Vlan168,812,841,96.55
-interface Vlan700 interface Vlan413,812,841,96.55
-interface Vlan700 interface Vlan25,812,841,96.55
-interface Vlan700 interface Vlan3240,812,841,96.55
-interface Vlan700 interface Vlan32,812,841,96.55
+Vlan478 only: {'ho-126-ems-sw_lag250', 'ho-126-sw_lag251'}
+interface Vlan475 keyword Vlan477,633,634,99.84
+Vlan475 only: {'chillwater-sw_1/1/25'}
+interface Vlan475 keyword Vlan476,633,634,99.84
+Vlan475 only: {'chillwater-sw_1/1/25'}
 interface Vlan2008 keyword Vlan24,83,85,97.65
+Vlan2008 only: {'andykerr-dunlapsouth-sw_1/1/3', 'bookstore-sw_1/1/4'}
 interface Vlan502 keyword Vlan508,117,121,96.69
-interface Vlan180 interface Vlan60,420,441,95.24
-interface Vlan180 interface Vlan3000,420,441,95.24
-interface Vlan180 interface Vlan3020,420,441,95.24
-interface Vlan180 interface Vlan477,420,441,95.24
-interface Vlan180 interface Vlan478,420,441,95.24
-interface Vlan180 interface Vlan474,420,441,95.24
+Vlan502 only: {'jbc-base-sw_1/1/2', 'case6410_lag250', 'ocon6410_lag250', 'dana-sw_1/1/4'}
 interface Vlan540 keyword Vlan520,71,74,95.95
+Vlan540 only: {'case-row01-8325-02-sw_1/1/24', 'case-row01-8325-01-sw_1/1/24', 'oconnor-row01-8325-01-sw_1/1/24'}
+interface Vlan590 keyword Vlan591,44,46,95.65
+Vlan590 only: {'case6410_lag255', 'ocon6410_lag255'}
+d-3_s-vlan_t-90_n-vlan.csv
+Vlan24 keyword Vlan2008 interface,83,85,97.65
+Vlan2008 only: {'andykerr-dunlapsouth-sw_1/1/3', 'bookstore-sw_1/1/4'}
+Vlan476 keyword Vlan475 interface,633,634,99.84
+Vlan475 only: {'chillwater-sw_1/1/25'}
+Vlan474 keyword Vlan478 interface,645,647,99.69
+Vlan478 only: {'ho-126-ems-sw_lag250', 'ho-126-sw_lag251'}
+Vlan477 keyword Vlan475 interface,633,634,99.84
+Vlan475 only: {'chillwater-sw_1/1/25'}
+Vlan520 keyword Vlan540 interface,71,74,95.95
+Vlan540 only: {'case-row01-8325-02-sw_1/1/24', 'case-row01-8325-01-sw_1/1/24', 'oconnor-row01-8325-01-sw_1/1/24'}
+Vlan591 keyword Vlan590 interface,44,46,95.65
+Vlan590 only: {'case6410_lag255', 'ocon6410_lag255'}
+Vlan508 keyword Vlan502 interface,117,121,96.69
+Vlan502 only: {'jbc-base-sw_1/1/2', 'case6410_lag250', 'ocon6410_lag250', 'dana-sw_1/1/4'}
+d-3_s-vlan_t-90_n-keyword-vlan.csv
+Vlan24 pci Vlan2008 interface,83,85,97.65
+Vlan2008 only: {'andykerr-dunlapsouth-sw_1/1/3', 'bookstore-sw_1/1/4'}
+Vlan476 bg Vlan475 interface,633,634,99.84
+Vlan475 only: {'chillwater-sw_1/1/25'}
+Vlan474 ems Vlan478 interface,645,647,99.69
+Vlan478 only: {'ho-126-ems-sw_lag250', 'ho-126-sw_lag251'}
+Vlan477 bg Vlan475 interface,633,634,99.84
+Vlan475 only: {'chillwater-sw_1/1/25'}
+Vlan520 simplivity Vlan540 interface,71,74,95.95
+Vlan540 only: {'case-row01-8325-02-sw_1/1/24', 'case-row01-8325-01-sw_1/1/24', 'oconnor-row01-8325-01-sw_1/1/24'}
+Vlan591 voip Vlan590 interface,44,46,95.65
+Vlan590 only: {'case6410_lag255', 'ocon6410_lag255'}
+Vlan508 voip Vlan502 interface,117,121,96.69
+Vlan502 only: {'jbc-base-sw_1/1/2', 'case6410_lag250', 'ocon6410_lag250', 'dana-sw_1/1/4'}
+d-3_s-vlan_t-90_n-keyword.csv
+vlan interface mailroom-trailer-12port interface,28,30,93.33
+interface with keyword mailroom-trailer-12port ['ocon6410_1/6/38', 'ocon6410_1/6/39']
+ocon6410_1/6/38 only: set()
+ocon6410_1/6/39 only: {'Vlan240', 'Vlan500'}
+vlan ems vlan interface,1290,1292,99.85
+vlan with keyword ems ['Vlan478', 'Vlan474']
+Vlan478 only: {'ho-126-ems-sw_lag250', 'ho-126-sw_lag251'}
+Vlan474 only: set()
+vlan simplivity vlan interface,142,145,97.93
+vlan with keyword simplivity ['Vlan540', 'Vlan520']
+Vlan540 only: {'case-row01-8325-02-sw_1/1/24', 'case-row01-8325-01-sw_1/1/24', 'oconnor-row01-8325-01-sw_1/1/24'}
+Vlan520 only: set()
