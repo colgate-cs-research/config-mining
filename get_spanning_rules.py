@@ -196,9 +196,9 @@ def main():
     logging.debug("Selecting rules with precision:{}".format(arguments.precision))
     # selecting rules with precision:1
     rules_df = rules_df.loc[rules_df['precision'] > arguments.precision]
+    rules_df.drop(["coverage","rule_coverage"], axis=1, inplace=True)
+    rules_df.to_csv(outfile+"_coverage.csv",index=False)
 
-
-    
     #rules_df.reset_index(drop=True, inplace=True)
     # testing import
     logging.debug("\t\t\tTesting rule_df import:\n{}".format(rules_df.head))
@@ -228,6 +228,7 @@ def main():
     rules_df.drop(["coverage","rule_coverage"], axis=1, inplace=True)
     print(rule_list)
     print(rules_df)
+    rules_df.to_csv(outfile+"_coverage.csv",index=False)
     selected_rules = rules_df.iloc[rule_list]
     #sys.exit()
     #selected_rules.to_csv("./csl_output/rules/spanning_rules/span_aggregate_df_depth_"+str(depth)+"keyword: "+keyword+"_pr",index=False)

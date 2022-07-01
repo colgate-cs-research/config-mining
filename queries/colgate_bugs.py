@@ -3,6 +3,7 @@ import networkx as nx
 import os
 import sys
 import tqdm
+import pprint
 
 queries_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(1, os.path.dirname(queries_dir))
@@ -35,24 +36,33 @@ def keyword_pair_bug(graph, keyword, middle_type, other_type):
     for vlan in vlans:
         interfaces[vlan] = graph_utils.get_neighbors(vlan, graph, other_type)
 
-    print((vlans[0] + " only:"),  interfaces[vlans[0]].difference(interfaces[vlans[1]]))
-    print((vlans[1] + " only:"),  interfaces[vlans[1]].difference(interfaces[vlans[0]]))
+    vlan0only = interfaces[vlans[0]].difference(interfaces[vlans[1]])
+    vlan1only = interfaces[vlans[1]].difference(interfaces[vlans[0]])
+
+    #print((vlans[0] + " only:"),  vlan0only)
+    #print((vlans[1] + " only:"),  vlan1only)
+
+    return vlan0only.union(vlan1only)
+    
 
 
-def vlan_pair_bug(graph, vlan1, vlan2):
+def vlan_pair_bug(graph, vlan1, vlan2, shared_type="interface"):
     # do the vlans share the anchor node? (anchor == type interface)
-    interfaces1 = graph_utils.get_neighbors(vlan1, graph, "interface")
-    interfaces2 = graph_utils.get_neighbors(vlan2, graph, "interface")
-    print((vlan1 + " only:"),  interfaces1.difference(interfaces2))
+    interfaces1 = graph_utils.get_neighbors(vlan1, graph, shared_type)
+    interfaces2 = graph_utils.get_neighbors(vlan2, graph, shared_type)
+    #print((vlan1 + " only:"),  interfaces1.difference(interfaces2))
+    return interfaces1.difference(interfaces2)
 
-def get_relevant_cycles(graph, path="/shared/configs/colgate/daily/2022-03-06/cycles_jun13/consider", threshold=5):
+def get_relevant_cycles(graph, path, threshold=3):
     for file in os.listdir(path):
         print(file)
         get_relevant_cycles_file(graph, os.path.join(path, file), threshold)
+        print()
 
 def get_relevant_cycles_file(graph, filepath, threshold):
     vlan_tuples = []
     f = open(filepath, 'r')
+    summary = {}
     for line in f:
         lst = line.strip().split(',')
         nodes = lst[0].split()
@@ -65,20 +75,29 @@ def get_relevant_cycles_file(graph, filepath, threshold):
             cycle_percent = float(lst[-1])
             diff = float(lst[-2]) - float(lst[-3])
             if ((cycle_percent < 100) and (cycle_percent > 90)):
-                if diff <= threshold:
-                    print(line, end='')
+                if diff <= threshold * 100:
+                    #print(line, end='')
                     # check which type of cycle it is
-                    if nodes[1].startswith('Vlan') and nodes[3].startswith('Vlan'):
-                        #(vlan1 != 'vlan') and (vlan2 != 'vlan'):
-                        pass
-                        vlan_pair_bug(graph, nodes[1], nodes[3])
-                    elif nodes[0].startswith('Vlan') and nodes[2].startswith('Vlan'):
-                        pass
-                        vlan_pair_bug(graph, nodes[2], nodes[0])
-                    elif (nodes.count('vlan') == 2):
-                        keyword_pair_bug(graph, nodes[1], 'vlan', 'interface')
-                    elif (nodes.count('interface') == 2):
-                        keyword_pair_bug(graph, nodes[2], 'interface', 'vlan')
+                    if ((nodes[1].startswith('Vlan') and nodes[3].startswith('Vlan'))
+                        or (nodes[1].startswith('vlan_') and nodes[3].startswith('vlan_'))):
+                        bugs = vlan_pair_bug(graph, nodes[1], nodes[3], nodes[2])
+                    elif ((nodes[0].startswith('Vlan') and nodes[2].startswith('Vlan'))
+                        or (nodes[0].startswith('vlan_') and nodes[2].startswith('vlan_'))):
+                        bugs = vlan_pair_bug(graph, nodes[2], nodes[0], nodes[1])
+                    #elif (nodes.count('vlan') == 2):
+                    #    bugs = keyword_pair_bug(graph, nodes[1], 'vlan', 'interface')
+                    #elif (nodes.count('interface') == 2):
+                    #    bugs = keyword_pair_bug(graph, nodes[2], 'interface', 'vlan')
+                    else:
+                        bugs = []
+                    if len(bugs) > 0 and len(bugs) < threshold:
+                        print(line, end='')
+                        print(bugs)
+                        for bug in bugs:
+                            if bug not in summary:
+                                summary[bug] = []
+                            summary[bug].append(line.split(',')[0])
+                        print()
     # check if the % is between 95 and 100
 
     # check if difference is < 100
@@ -86,21 +105,24 @@ def get_relevant_cycles_file(graph, filepath, threshold):
     # print to file
     f.close()
 
+    if summary:
+        print(pprint.pformat(summary))
+
 
 def main():
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Analyze subgraphs involving VLANs')
     parser.add_argument('graph_path',type=str, 
             help='Path for a file containing a JSON representation of graph')
-    #parser.add_argument('cycles_path',type=str, 
-        #help='Path for a folder containing csv files of cycles and their frequencies')
+    parser.add_argument('cycles_path',type=str, 
+        help='Path for a folder containing csv files of cycles and their frequencies')
     arguments = parser.parse_args()
 
     graph = graph_utils.load_graph(arguments.graph_path)
     #ems_vlans_bug(graph)
     #simplivity_vlans_bug(graph)
     #vlans_bug(graph, 'simplivity', 'Vlan520','Vlan540')
-    get_relevant_cycles(graph)
+    get_relevant_cycles(graph, arguments.cycles_path)
     
 
 if __name__ == "__main__":

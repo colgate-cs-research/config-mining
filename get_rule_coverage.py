@@ -111,7 +111,7 @@ def all_rules_coverage(df,table_hash_dict,column_hash_dict):
         coverage,rule_rows,rows_not_covered = rule_coverage(record,table_hash_dict,column_hash_dict)
         all_rules_coverage_list.append(coverage)
         rule_rows_list.append(rule_rows)
-        rows_not_covered_list.append(rows_not_covered)
+        rows_not_covered_list.append(",".join(map(str,rows_not_covered)))
 
     df['coverage']=all_rules_coverage_list
     df['rule_coverage']=rule_rows_list
