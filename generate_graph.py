@@ -85,9 +85,12 @@ def make_graph(config, graph):
         
         if config["interfaces"][interface]["address"] is not None:
             address = config["interfaces"][interface]["address"]
-            network_obj = ipaddress.IPv4Interface(address)
-            graph.add_node(str(network_obj.network), type="subnet", subnet=True)
-            graph.add_edge(node_name, str(network_obj.network))
+            try:
+                network_obj = ipaddress.IPv4Interface(address)
+                graph.add_node(str(network_obj.network), type="subnet", subnet=True)
+                graph.add_edge(node_name, str(network_obj.network))
+            except:
+                print("Weird ipaddress: " + "\t" +  address + "\t" + interface)
 
         #added create node line (undefined allowed vlans???????)
         if config["interfaces"][interface]["allowed_vlans"] is not None:

@@ -1,6 +1,5 @@
-[
-    [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1],
-    [0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1]
-]
+date,Port:loop_protect_vlan,DHCP_Relay:ipv4_ucast_server,Port:l3_counters_enable,Port:lacp,Port:port_access_clients_limit,System:ntp_config_vrf,Port:loop_protect_enable,Port:other_config,Port:qos_config,ACL:cfg_version,DHCP_Relay:port,Port:vrf,System:qos_config,VRF:aclv4_control_plane_cfg,VRF:ospf_routers,Port:port_access_auth_configurations,System:5.5.132.24,VLAN:id,Port:name,VLAN:name,Interface:user_config,VRF:Tacacs_Server,VRF:Radius_Server,System:dlog_destination,Interface:description,System:stp_mode,Port:admin,Port:stp_config,System:portaccess_local_accounting_enable,Port:routing,System:mirrors,System:2,Port:vlan_mode,System:bpdu_guard_timeout,System:mstp_config_revision,VRF:aclv4_control_plane_cfg_version,Port:vlan_tag,Port:vlan_trunks,DHCP_Relay:vrf,Port:description,Interface:name,System:stp_enable,VLAN:description,Port:interfaces
+2021-08-09vs2021-09-09,1,0,0,1,1,0,1,1,1,0,0,1,1,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,1,0,1,1,0,1,0,1,0,1
+2021-09-09vs2021-10-09,1,0,0,1,1,0,1,1,1,0,0,1,0,0,0,1,0,1,1,1,1,1,1,0,1,1,1,1,0,1,0,0,1,0,1,0,1,1,0,1,1,0,0,1
+2021-10-09vs2021-11-09,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,0,1
+2021-11-09vs2021-12-09,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,1,0

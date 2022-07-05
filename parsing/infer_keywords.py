@@ -101,35 +101,7 @@ def add_keywords(dictionary, key, words):
             dictionary[key].append(word)
 
 
-
-
-def infer_keywords(file, outf):
-    #print("Current working FILE: " + file)
-    # Load inverted_table
-    with open(file, "r") as infile:
-        inverted_table = json.load(infile)
-
-    desc_lst = inverted_table['_description']
-
-    # dictionary -  descriptions are keys and values are lists of keywords
-    keyword_dict = {}
-    unique_keywords  = []
-
-    for desc in desc_lst:
-        delims = []
-        if desc!="":
-            keywords = get_keywords(desc, common_delims)
-            if len(keywords) > 0:
-                keyword_dict[desc] = keywords
-            else:
-                #print("Could not get keywords for description: " + desc)
-                keyword_dict[desc]= [desc] # use nltk to break these
-            for keyword in keywords:
-                if keyword not in unique_keywords:
-                    unique_keywords.append(keyword)
-        #else:
-            #print("Empty description.")
-
+def isSimilar(unique_keywords):
     similarity_dict = {}
     for word in unique_keywords:
         similarity_dict[word] = []
@@ -146,6 +118,36 @@ def infer_keywords(file, outf):
                 if similarity > 1:
                     similarity_dict[word1].append(word2)
                     similarity_dict[word2].append(word1)
+    return similarity_dict
+
+def infer_keywords(file, outf, outf2):
+    #print("Current working FILE: " + file)
+    # Load inverted_table
+    with open(file, "r") as infile:
+        inverted_table = json.load(infile)
+
+    desc_lst = inverted_table['_description']
+
+    # dictionary -  descriptions are keys and values are lists of keywords
+    desc_keyword_dict = {}
+    unique_keywords  = []
+
+    for desc in desc_lst:
+        delims = []
+        if desc!="":
+            keywords = get_keywords(desc, common_delims)
+            if len(keywords) > 0:
+                desc_keyword_dict[desc] = keywords
+            else:
+                #print("Could not get keywords for description: " + desc)
+                desc_keyword_dict[desc]= [desc] # use nltk to break these
+            for keyword in keywords:
+                if keyword not in unique_keywords:
+                    unique_keywords.append(keyword)
+        #else:
+            #print("Empty description.")
+
+    similarity_dict = isSimilar(unique_keywords)
 
     # Check similarity dict
     new_dict={}
@@ -171,41 +173,30 @@ def infer_keywords(file, outf):
     keyword_dict2 = {}
     for key in all_shared_seq_dict:
         keyword_dict2[key] = list(all_shared_seq_dict[key].keys())
-        print("Keyword: " + key)
+        '''print("Keyword: " + key)
         print("Shared sequences and their counts: ")
         print(all_shared_seq_dict[key])
-        print("\n\n")
+        print("\n\n")'''
 
-
-
-    '''# extract keywords that are variations of a common term (hardcoded in list common_starts on line 17-18)
-    common_keyword_dict = {}
-    for word2 in common_starts:
-        common_keyword_dict[word2] = []
-
-    
-    keys_to_remove = []
-    for word in keyword_dict:
-        for word2 in common_starts:
-            if word2 in word:
-                if word not in keys_to_remove:
-                    keys_to_remove.append(word)
-                for iface_or_vlan in keyword_dict[word]:
-                    (common_keyword_dict[word2]).append(iface_or_vlan)
-
-    for word in common_keyword_dict:
-        keyword_dict[word] = common_keyword_dict[word]
-
-    for word in keys_to_remove:
-        keyword_dict.pop(word)
-
-    # final list of keywords for Ifaces and Vlans
-    for word in keyword_dict:
-        for iName in keyword_dict[word]:
-            add_keywords(iface_dict, iName, [word])'''
 
     with open(outf, 'w') as outfile:
         json.dump(keyword_dict2, outfile, indent = 4)
+
+    for desc in desc_keyword_dict:
+        k_lst = desc_keyword_dict[desc].copy()
+        to_add = []
+        for kword in k_lst:
+            if kword in keyword_dict2:  # MAJOR ISSUE, NOT ALL KEYWORDS END UP AS KEYS IN THE KEYWORD DICT :'(
+                word_lst = keyword_dict2[kword]
+                for word in word_lst:
+                    if word not in to_add:
+                        to_add.append(word)
+        for word in to_add:
+            if word not in k_lst:
+                desc_keyword_dict[desc].append(word)
+
+    with open(outf2, 'w') as outfile2:
+        json.dump(desc_keyword_dict, outfile2, indent = 4)
 
     return keyword_dict2
 
@@ -214,11 +205,12 @@ def main():
     #parsing command-line arguments
     parser = argparse.ArgumentParser(description='Extract keywords from _description in the inverted symbol table obtained from all the configurations.')
     parser.add_argument('inverted_table_path', help='Path for a file (or directory) containing a JSON representation the inverted symbol table')
-    parser.add_argument('out_path', help='Name of file (or directory) to write JSON file(s) containing keywords associated with each description.')
+    parser.add_argument('out_path1', help='Name of file (or directory) to write JSON file(s) containing words associated with each keyword.')
+    parser.add_argument('out_path2', help='Name of file (or directory) to write JSON file(s) containing keywords associated with each description.')
 
     arguments = parser.parse_args()
     # call function to process description
-    infer_keywords(arguments.inverted_table_path, arguments.out_path)
+    infer_keywords(arguments.inverted_table_path, arguments.out_path1, arguments.out_path2)
 
     end = time.time()
     print()

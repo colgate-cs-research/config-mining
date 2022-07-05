@@ -16,6 +16,78 @@ TYPES_PRESERVE_ARUBA = [
 TYPES_PRESERVE = TYPES_PRESERVE_ARUBA
 
 
+# functions to find aliases that contain a subset of the names of a valid type 
+# but do not mention the type in their section of the config
+def is_names_total_subset(inverted_table):
+
+    key_change_dict = {} # dictionary {alias_type: [list of possible "root types" that have all of the alias_type's names]}
+    # values are lists instead of strings to allow for debugging, 
+    # but ideally each list only have one element
+
+    root_count_dict = {} # {root_types: number of times aliases refer to this root}
+    key_lst = list(inverted_table.keys()) 
+
+    for key in key_lst:
+        key_change_dict[key] = []
+
+    for i in range(len(key_lst)):
+        k1 = key_lst[i]
+
+        for j in range(len(key_lst)):
+            k2 = key_lst[j]
+            if k1==k2:
+                break
+
+            subset = True
+
+            # get the list of names of each key
+            # if statements check whether the value is a list of the name of a "root" type
+            # "root type" == type that alias_types point to
+            lst1 = inverted_table[k1]
+            if isinstance(lst1,str):
+                lst1 = inverted_table[lst1]
+            lst2 = inverted_table[k2]
+            if isinstance(lst2,str):
+                lst1 = inverted_table[lst2]
+            
+            # check if every element of one list is in the other list
+            for el in lst1:
+                if el not in lst2:
+                    subset = False
+            if subset:
+                if k2 not in root_count_dict:
+                    root_count_dict[k2] = 0
+                root_count_dict[k2] += 1
+                key_change_dict[k1].append(k2)
+
+
+    for key in key_change_dict:
+        # pick the root that has the highest number of aliases, if there is more than one root
+        if len(key_change_dict[key])>1:
+            max_count = 0
+            max_count_root = ""
+            for el in key_change_dict[key]:
+                if root_count_dict[el] > max_count:
+                    max_count = root_count_dict[el]
+                    max_count_root = el
+            key_change_dict[key] = [max_count_root]
+
+        # for debugging
+        if len(key_change_dict[key])>0:
+            print("Key '" + key + "' should refer to: " + key_change_dict[key][0])
+
+    # point to appropriate "root" type for each alias type
+    # this is the step that actually changes the inverted_table
+    for key in key_change_dict:
+        if len(key_change_dict[key])==1:
+            root_type = key_change_dict[key][0]
+            alias_type_names = inverted_table[key]
+            if isinstance(alias_type_names, str):
+                alias_type_names = inverted_table[alias_type_names]
+            inverted_table[root_type] = inverted_table[root_type] + alias_type_names
+            inverted_table[key] = root_type
+
+
 # function to find stuff like the common_starts elements
 def longest_shared_sequence(keyword1, keyword2):
     """Returns the longest sequnece of characters that occurs in both strings"""
@@ -255,6 +327,8 @@ def main():
     logging.info("Type aliases:\n{}".format(pprint.pformat(aliases)))
     remove_type_aliases(aliases, inverted_table, symbol_table)
     logging.debug("Number of types AFTER removing alias types: {}".format(len(inverted_table)))
+
+    is_names_total_subset(inverted_table)
 
     logging.debug("Number of types BEFORE removing types with few names: {}".format(len(inverted_table)))
     remove_small_types(inverted_table, symbol_table)
