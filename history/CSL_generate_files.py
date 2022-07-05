@@ -18,7 +18,7 @@ def main():
     with open(args.matrix_csv_file, 'r') as csv_file:
         header = csv_file.readline().strip()
         SandA_list = header.split(',')
-    
+        
     # Call run_stucco.py with each of the tuple
     for i in range (1, len(SandA_list)):
         subprocess.run(["python3", 

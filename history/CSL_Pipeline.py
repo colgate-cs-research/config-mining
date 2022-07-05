@@ -9,7 +9,7 @@ def main():
   parser.add_argument('threshold',type=str)
   arguments=parser.parse_args()
 
-  logging.debug("Run CSL Generate Files")
+  logging.debug("Run CSL Generate Files relying on run_stuccco.py")
   subprocess.run(["python3", "history/CSL_generate_files.py", "shared/colgate/diffs/daily_SandA.csv", "shared/colgate/diffs/SandA_csl"])
 
   logging.debug("Run CSL Threshold")
@@ -20,3 +20,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Try to understand the anomolies
+# On which devices is there a chnage
+# What triggered the anamolies
