@@ -10,3 +10,5 @@ ordered_df_INITIAL.csv
 ordered_df.csv
 tmep2_df.csv
 vlan474_spanning_rules.csv
+get_rule_violation.py
+.gitignore
