@@ -66,8 +66,8 @@ def get_rule_rows(rule,table_hash_dict):
         value = str(rule[key]) if str(rule[key]) != 'None' else 'nan'
         key = str(key)
         logging.info("{}:{}".format(key, value))
-        #print("     key:"+key+"| values:"+value )
-        #print(table_hash_dict[key].keys())
+        print("     key:"+key+"| values:"+value )
+        print(table_hash_dict[key].keys())
         common_rows_list.append(table_hash_dict[key][value])
 
     # getting common rows in numpy arrays

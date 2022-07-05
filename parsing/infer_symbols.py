@@ -8,25 +8,39 @@ import logging
 import pprint
 
 TOP_LEVEL_TYPES_JUNIPER = [
-    #"groups", 
+    "groups", 
+    #"apply-groups",
+    "system",
+    "chassis",
+    "services",
+    "security",
     "interfaces", 
-    #"security",
-    #"routing-options",
+    "routing-options",
     "protocols",
     "policy-options", 
-    #"class-of-service",
+    "class-of-service",
     "firewall", 
 ]
 TOP_LEVEL_TYPES_ARUBA = [
-    #"AAA_Accounting_Attributes",
-    #"AAA_Server_Group",
-    #"AAA_Server_Group_Prio",
+    "AAA_Accounting_Attributes",
+    "AAA_Server_Group",
+    "AAA_Server_Group_Prio",
     "ACL", 
     "Class",
-    "Interface", 
+    "DHCP_Relay",
+    "Interface",
+    #"NAE_Script",
+    "Policy",
     "Port", 
+    #"SNMP_Community_ACL",
+    #"SNMP_Trap",
+    "System",
+    #"User",
+    #"User_Group",
     "VLAN", 
-    "VRF"
+    "VRF",
+    "VSF_Member",
+    #"PKI_TA_Profile",
 ]
 KEYKINDS_JUNIPER = {
     (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
@@ -55,8 +69,9 @@ KEYKINDS_ARUBA = {
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'pim_routers'), ('type', 'ipv4')) : "type"
 }
 TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER + TOP_LEVEL_TYPES_ARUBA
-KEYKINDS = KEYKINDS_JUNIPER
+#KEYKINDS = KEYKINDS_JUNIPER
 #KEYKINDS = KEYKINDS_ARUBA
+KEYKINDS = {}
 
 def main():
     # Parse command-line arguments
