@@ -27,37 +27,40 @@ def is_names_total_subset(inverted_table):
     root_count_dict = {} # {root_types: number of times aliases refer to this root}
     key_lst = list(inverted_table.keys()) 
 
-    for key in key_lst:
-        key_change_dict[key] = []
-
     for i in range(len(key_lst)):
         k1 = key_lst[i]
+
+        # Skip over types that are already aliases
+        if isinstance(inverted_table[k1], str):
+            continue
+            
+        lst1 = set(inverted_table[k1])
+
+        # Skip over types that are all numbers
+        if all([name.isdigit() for name in lst1]):
+            continue
 
         for j in range(len(key_lst)):
             k2 = key_lst[j]
             if k1==k2:
-                break
+                continue #break
 
-            subset = True
+            # Skip over types that are already aliases
+            if isinstance(inverted_table[k2], str):
+                continue
 
-            # get the list of names of each key
-            # if statements check whether the value is a list of the name of a "root" type
-            # "root type" == type that alias_types point to
-            lst1 = inverted_table[k1]
-            if isinstance(lst1,str):
-                lst1 = inverted_table[lst1]
-            lst2 = inverted_table[k2]
-            if isinstance(lst2,str):
-                lst1 = inverted_table[lst2]
+            lst2 = set(inverted_table[k2])
+
+            # Skip over types that are all numbers
+            if all([name.isdigit() for name in lst2]):
+                continue
             
-            # check if every element of one list is in the other list
-            for el in lst1:
-                if el not in lst2:
-                    subset = False
-            if subset:
+            if lst1.issubset(lst2):
                 if k2 not in root_count_dict:
                     root_count_dict[k2] = 0
                 root_count_dict[k2] += 1
+                if k1 not in key_change_dict:
+                    key_change_dict[k1] = []
                 key_change_dict[k1].append(k2)
 
 
@@ -74,7 +77,7 @@ def is_names_total_subset(inverted_table):
 
         # for debugging
         if len(key_change_dict[key])>0:
-            print("Key '" + key + "' should refer to: " + key_change_dict[key][0])
+            logging.info("Names of type {} are a complete subset of type {}".format(key, key_change_dict[key][0]))
 
     # point to appropriate "root" type for each alias type
     # this is the step that actually changes the inverted_table
@@ -291,12 +294,18 @@ def fix_description(inverted_table, symbol_table):
     
     inverted_table["_description"] = all_descriptions
 
-def prune_symbols(symbol_table):
+def prune_symbols(inverted_table, symbol_table):
     """Remove symbol names with no type"""
     symbol_names = list(symbol_table.keys())
     for symbol_name in symbol_names:
         if not symbol_table[symbol_name]:
-            symbol_table.pop(symbol_name)
+            # Infer address type for symbol names that are addresses
+            if is_all_addr([symbol_name]):
+                inverted_table["_address"].append(symbol_name)
+                symbol_table[symbol_name].append("_address")
+            else:
+                symbol_table.pop(symbol_name)
+                logging.info("Removing name {} because it has no types".format(symbol_name))
 
 def main():
     start = time.time()
@@ -328,8 +337,6 @@ def main():
     remove_type_aliases(aliases, inverted_table, symbol_table)
     logging.debug("Number of types AFTER removing alias types: {}".format(len(inverted_table)))
 
-    is_names_total_subset(inverted_table)
-
     logging.debug("Number of types BEFORE removing types with few names: {}".format(len(inverted_table)))
     remove_small_types(inverted_table, symbol_table)
     logging.debug("Number types AFTER removing types with few names: {}".format(len(inverted_table)))
@@ -342,8 +349,10 @@ def main():
     #print(len(list(inverted_table.keys())))
 
     fix_description(inverted_table, symbol_table)
+    
+    is_names_total_subset(inverted_table)
 
-    prune_symbols(symbol_table)
+    prune_symbols(inverted_table, symbol_table)
 
     # Save results
     with open(os.path.join(arguments.symbols_dir, "inverted.json"), 'w') as inverted_file:
