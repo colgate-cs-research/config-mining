@@ -2,6 +2,7 @@
 
 if [ $# -ne 2 ]; then
     echo "Usage: inference_pipeline.sh CONFIGS_DIR OUTPUT_DIR"
+    exit 1
 fi
 
 CONFIGS_DIR=$1
