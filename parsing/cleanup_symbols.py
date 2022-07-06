@@ -86,7 +86,11 @@ def is_names_total_subset(inverted_table):
             root_type = key_change_dict[key][0]
             alias_type_names = inverted_table[key]
             if isinstance(alias_type_names, str):
-                alias_type_names = inverted_table[alias_type_names]
+                continue
+                #alias_type_names = inverted_table[alias_type_names]
+            if isinstance(inverted_table[root_type], str):
+                logging.error("!{} is already aliased to {}".format(root_type, inverted_table[root_type])) 
+                continue
             inverted_table[root_type] = inverted_table[root_type] + alias_type_names
             inverted_table[key] = root_type
 

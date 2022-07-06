@@ -10,12 +10,12 @@ import pprint
 TOP_LEVEL_TYPES_JUNIPER = [
     "groups", 
     #"apply-groups",
-    "system",
-    "chassis",
-    "services",
-    "security",
+    #"system",
+    #"chassis",
+    #"services",
+    #"security",
     "interfaces", 
-    "routing-options",
+    #"routing-options",
     "protocols",
     "policy-options", 
     "class-of-service",
@@ -70,8 +70,8 @@ KEYKINDS_ARUBA = {
 }
 TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER + TOP_LEVEL_TYPES_ARUBA
 #KEYKINDS = KEYKINDS_JUNIPER
-#KEYKINDS = KEYKINDS_ARUBA
-KEYKINDS = {}
+KEYKINDS = KEYKINDS_ARUBA
+#KEYKINDS = {}
 
 def main():
     # Parse command-line arguments
@@ -147,7 +147,8 @@ class SymbolExtractor:
                 try:
                     logging.debug("\t{}".format(d.keys()))
                 except Exception as ex:
-                    logging.error("Mixed subinstances for {}".format(path))
+                    logging.error("!Some subinstances of {} are not dictionaries".format(path))
+                    break
 
             kind = self.infer_keykind(dictionaries)
             self.keykinds[path_signature] = kind

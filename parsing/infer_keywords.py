@@ -9,7 +9,7 @@ import re
 import numpy
 import time
 import logging
-#logging.basicConfig(filename="./TO_REMOVE/temp/graph_to_db.log",level=logging.DEBUG,filemode = 'w')
+import os
 
 abbreviations = {
     "bldg" : "building",
@@ -120,10 +120,10 @@ def isSimilar(unique_keywords):
                     similarity_dict[word2].append(word1)
     return similarity_dict
 
-def infer_keywords(file, outf, outf2):
+def infer_keywords(infer_path):
     #print("Current working FILE: " + file)
     # Load inverted_table
-    with open(file, "r") as infile:
+    with open(os.path.join(infer_path, "inverted.json"), "r") as infile:
         inverted_table = json.load(infile)
 
     desc_lst = inverted_table['_description']
@@ -179,7 +179,7 @@ def infer_keywords(file, outf, outf2):
         print("\n\n")'''
 
 
-    with open(outf, 'w') as outfile:
+    with open(os.path.join(infer_path, "keyword_subwords.json"), 'w') as outfile:
         json.dump(keyword_dict2, outfile, indent = 4)
 
     for desc in desc_keyword_dict:
@@ -195,7 +195,7 @@ def infer_keywords(file, outf, outf2):
             if word not in k_lst:
                 desc_keyword_dict[desc].append(word)
 
-    with open(outf2, 'w') as outfile2:
+    with open(os.path.join(infer_path, "keywords.json"), 'w') as outfile2:
         json.dump(desc_keyword_dict, outfile2, indent = 4)
 
     return keyword_dict2
@@ -204,13 +204,11 @@ def main():
     start = time.time()
     #parsing command-line arguments
     parser = argparse.ArgumentParser(description='Extract keywords from _description in the inverted symbol table obtained from all the configurations.')
-    parser.add_argument('inverted_table_path', help='Path for a file (or directory) containing a JSON representation the inverted symbol table')
-    parser.add_argument('out_path1', help='Name of file (or directory) to write JSON file(s) containing words associated with each keyword.')
-    parser.add_argument('out_path2', help='Name of file (or directory) to write JSON file(s) containing keywords associated with each description.')
+    parser.add_argument('infer_dir', help='Path to directory containing symbol files')
 
     arguments = parser.parse_args()
     # call function to process description
-    infer_keywords(arguments.inverted_table_path, arguments.out_path1, arguments.out_path2)
+    infer_keywords(arguments.infer_dir)
 
     end = time.time()
     print()
