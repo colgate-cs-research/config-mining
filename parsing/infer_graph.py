@@ -32,8 +32,10 @@ def main():
         symbol_table = json.load(symbols_file)
     with open(os.path.join(arguments.infer_dir, "relationships.json"), 'r') as relationships_file:
         relationships = json.load(relationships_file)
+    with open(os.path.join(arguments.infer_dir, "keywords.json"), 'r') as keywords_file:
+        keywords = json.load(keywords_file)
 
-    generator = GraphGenerator(symbol_table, relationships)
+    generator = GraphGenerator(symbol_table, relationships, keywords)
 
     logging.info(generator.graph)
 
@@ -49,9 +51,10 @@ def main():
                 graph_file, indent=4, sort_keys=True)
 
 class GraphGenerator:
-    def __init__(self, symbol_table, relationships):
+    def __init__(self, symbol_table, relationships, keywords):
         self.symbol_table = symbol_table
         self.relationships = relationships
+        self.keywords = keywords
         self.graph = networkx.Graph()
 
         for edge in relationships:
@@ -74,12 +77,22 @@ class GraphGenerator:
         if target_parent is not None:
             target_name = target_parent + "_" + target_name
 
-        if source_type == "_description" or target_type == "_description":
-            # FIXME: infer keywords
-            return
-
         source_node_name = "{}_{}".format(source_type, source_name)
         target_node_name = "{}_{}".format(target_type, target_name)
+
+        # Special handling of keywords
+        if target_type == "_description":
+            self.graph.add_node(source_node_name, type=target_type)
+            target_keywords = self.keywords[target_name]
+            for keyword in target_keywords:
+                keyword_node_name = "keyword_{}".format(keyword)
+                self.graph.add_node(keyword_node_name, type="keyword")
+                self.graph.add_edge(source_node_name, keyword_node_name)
+            return
+        if source_type == "_description":
+            logging.error("!{} has source type _description".format(edge))
+            return
+
 
         self.graph.add_node(source_node_name, type=source_type)
         self.graph.add_node(target_node_name, type=target_type)

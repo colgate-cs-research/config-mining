@@ -10,12 +10,12 @@ import pprint
 TOP_LEVEL_TYPES_JUNIPER = [
     "groups", 
     #"apply-groups",
-    "system",
-    "chassis",
-    "services",
-    "security",
+    #"system",
+    #"chassis",
+    #"services",
+    #"security",
     "interfaces", 
-    "routing-options",
+    #"routing-options",
     "protocols",
     "policy-options", 
     "class-of-service",
@@ -43,13 +43,13 @@ TOP_LEVEL_TYPES_ARUBA = [
     #"PKI_TA_Profile",
 ]
 KEYKINDS_JUNIPER = {
-    (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
-    (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
+#    (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
+#    (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
     (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term')): "name",
-    (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term'), ('name', '*'), ('type', 'to')): "mixed",
+#    (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term'), ('name', '*'), ('type', 'to')): "mixed",
     (('name', '*'), ('type', 'groups')) : "name",
-    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('type', 'unit'), ('name', '*'), ('mixed', ('family', '*')), ('type', 'filter'), ('type', 'input-list')): "name",
-    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('type', 'unit'), ('name', '*'), ('mixed', ('family', '*')), ('type', 'filter'), ('type', 'output-list')): "name",
+#    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('type', 'unit'), ('name', '*'), ('mixed', ('family', '*')), ('type', 'filter'), ('type', 'input-list')): "name",
+#    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('type', 'unit'), ('name', '*'), ('mixed', ('family', '*')), ('type', 'filter'), ('type', 'output-list')): "name",
 #    (('name', '*'), ('type', 'security'), ('type', 'pki')): "mixed",
 }
 KEYKINDS_ARUBA = {
@@ -69,9 +69,9 @@ KEYKINDS_ARUBA = {
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'pim_routers'), ('type', 'ipv4')) : "type"
 }
 TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER + TOP_LEVEL_TYPES_ARUBA
-#KEYKINDS = KEYKINDS_JUNIPER
+KEYKINDS = KEYKINDS_JUNIPER
 #KEYKINDS = KEYKINDS_ARUBA
-KEYKINDS = {}
+#KEYKINDS = {}
 
 def main():
     # Parse command-line arguments
@@ -147,7 +147,8 @@ class SymbolExtractor:
                 try:
                     logging.debug("\t{}".format(d.keys()))
                 except Exception as ex:
-                    logging.error("Mixed subinstances for {}".format(path))
+                    logging.error("!Some subinstances of {} are not dictionaries".format(path))
+                    break
 
             kind = self.infer_keykind(dictionaries)
             self.keykinds[path_signature] = kind
