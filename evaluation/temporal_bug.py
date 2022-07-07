@@ -70,8 +70,8 @@ def main():
 
     #files = ['only1.txt', 'only2.txt', 'only3.txt', 'only4.txt', 'fixed_after_2.txt', 'fixed_after_3.txt', 'new_after_1', 'new_after_2', 'always_there.txt', 'one_three.txt', 'one_four.txt', 'two_four.txt', 'one_three_four.txt']
     #to_write = ['','','','','','','','','','','','','']
-    files = ['fixed_after_1.txt', 'fixed_after_2.txt', 'fixed_after_3.txt', 'all.txt', 'others.txt']
-    to_write = ['','','','','']
+    files = ['fixed_after_1.txt', 'fixed_after_2.txt', 'fixed_after_3.txt', 'all.txt', 'others.txt', 'just4.tx']
+    to_write = ['','','','','','']
 
     '''for rule in rules_dict2:
         time_period_list = rules_dict2[rule]
@@ -118,8 +118,10 @@ def main():
             to_write[1] += rule + "\n"
         elif (1 in times):
             to_write[0] += rule + "\n"
+        elif (4 in times) and (len(times)==1):
+            to_write[5] += rule + "\n"
         else:
-            to_write[4] += rule + "\n"
+            to_write[4] += rule + "\n" + str(times) + "\n\n"
 
     for i in range(len(files)):
         f = open(files[i], 'w')
