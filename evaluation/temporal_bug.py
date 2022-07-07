@@ -73,40 +73,6 @@ def main():
     files = ['fixed_after_1.txt', 'fixed_after_2.txt', 'fixed_after_3.txt', 'all.txt', 'others.txt', 'just4.tx']
     to_write = ['','','','','','']
 
-    '''for rule in rules_dict2:
-        time_period_list = rules_dict2[rule]
-        if 1 in time_period_list:
-            if 2 in time_period_list:
-                if 3 in time_period_list:
-                    if 4 in time_period_list:
-                        to_write[8] += rule + "\n"
-                    else:
-                        to_write[5] += rule + "\n"
-                else:
-                    to_write[4] += rule + "\n"
-            else:
-                if 3 in time_period_list:
-                    if 4 in time_period_list:
-                        to_write[12] += rule + "\n"
-                    else:
-                        to_write[9] += rule + "\n"
-                elif 4 in time_period_list:
-                    to_write[9] += rule + "\n"
-
-        
-        elif 2 in time_period_list:
-            if 3 in time_period_list:
-                if 4 in time_period_list:
-
-        elif 3 in time_period_list:   
-            if 4 in time_period_list:
-                to_write[] += rule + "\n"
-            else:
-                to_write[2] += rule + "\n"
-
-        elif 4 in time_period_list:
-            to_write[3] += rule + "\n"'''
-
     for rule in rules_dict2:
         times = rules_dict2[rule]
 
