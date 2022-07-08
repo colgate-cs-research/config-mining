@@ -122,6 +122,7 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False,
                 #    print("\tComputed paths starting from {}".format(future_to_node[future]))
                 pbar.update()
             except Exception as ex:
+                print(ex)
                 print("\tFailed to compute paths starting from {}".format(future_to_node[future]))
     pbar.close()
 
@@ -132,16 +133,44 @@ def find_structural_rel(graph, degrees, node_type, pattern_table, verbose=False,
               
     return
 
+def get_relevant_superset(unique_types):
+    # empty set is never added
+    superset = []
+    lst = list(unique_types)
+    for i in range(len(lst)):
+        single_el_subset = set()
+        single_el_subset.add(lst[i])
+        superset.append(single_el_subset)
+        for j in range(i+1, len(lst)):
+            single_el_subset.add(lst[j])
+            if single_el_subset not in superset:
+                superset.append(single_el_subset)
+
+    # throw out set itself
+    superset.remove(unique_types)
+
+    # return list of sets
+    return superset
+
 def count_path(path, graph, pattern_table, verbose=False, value_types=[]):
     start_node = path[0]
     last_node = path[-1]
     types = []
+    unique_types = set()
     for node in path:
-        if types_cache[node] in value_types:
-            types.append(node)
-        else:
-            types.append(types_cache[node])
-    count_patterns(tuple(types), graph.has_edge(start_node, last_node), pattern_table, (path if verbose else None))
+        typ = types_cache[node]
+        unique_types.add(typ)
+
+    # get superset
+    superset = get_relevant_superset(unique_types)  # list of all possible subsets of unique_types except for the empty set and itself
+
+    for value_types in superset:
+        for node in path:
+            if types_cache[node] in value_types:
+                types.append(node)
+            else:
+                types.append(types_cache[node])
+        count_patterns(tuple(types), graph.has_edge(start_node, last_node), pattern_table, (path if verbose else None))
 
 def compute_paths_start(node, graph, max_degree, verbose=False, value_types=[]):
     #all_paths = []
@@ -154,9 +183,12 @@ def structural_rel_helper(path, graph, max_degree, pattern_table, verbose=False,
     """helper function for find_structural_rel()
     generates lists of paths with <max_degree> number of nodes and
     aggregates all paths into global var (all_paths)"""
-    #base case
-    if len(path)-1 == max_degree:
+
+    if len(path) >= 3:
         count_path(path, graph, pattern_table, verbose, value_types)
+    #base case
+    if len(path) == max_degree:
+        #count_path(path, graph, pattern_table, verbose, value_types)
 #        all_paths.append(path)
 #        if set(path) not in set_paths:
 #            set_paths.append(set(path))
@@ -180,8 +212,8 @@ def main():
     parser = argparse.ArgumentParser(description='Commandline arguments')
 
     #required
-    parser.add_argument('-d', '--degree', type=int, default=2,
-        help='Degrees of separation between nodes')
+    parser.add_argument('-d', '--degree', type=int, default=4,
+        help='Maximum number of nodes in a path')
     parser.add_argument('graph_path',type=str, 
             help='Path for a file containing a JSON representation of graph')
     parser.add_argument('output_path',type=str, 
