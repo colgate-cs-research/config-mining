@@ -9,10 +9,18 @@ import ast
 import pprint
 
 TOP_LEVEL_TYPES_JUNIPER = [
-    #"groups", 
-    #"interfaces", 
+    "groups", 
+    #"apply-groups",
+    #"system",
+    #"chassis",
+    #"services",
+    #"security",
+    "interfaces", 
+    #"routing-options",
+    "protocols",
     "policy-options", 
-    #"firewall", 
+    "class-of-service",
+    "firewall", 
 ]
 TOP_LEVEL_TYPES_ARUBA = [
     #"AAA_Accounting_Attributes",
