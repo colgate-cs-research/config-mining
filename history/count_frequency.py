@@ -2,7 +2,6 @@ import json
 import argparse
 import logging
 import os
-# import csv
 import pprint
 
 def write_file (input_dict, option, path):
@@ -123,7 +122,12 @@ def main ():
     
     raw_dict = count_frequency (result_list)
     sorted_dict = sort_dict (raw_dict)
-    write_file (sorted_dict, arguments.option, arguments.output_path)
+
+    for (key, value) in sorted_dict.items():
+        print (key)
+        print (value)
+        print ("")
+    # write_file (sorted_dict, arguments.option, arguments.output_path)
 
 if __name__ == "__main__":
     main()
