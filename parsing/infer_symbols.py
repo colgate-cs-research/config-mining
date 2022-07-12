@@ -8,9 +8,9 @@ import logging
 import pprint
 
 TOP_LEVEL_TYPES_JUNIPER = [
-    "groups", 
+    #"groups", 
     #"apply-groups",
-    "system",
+    #"system",
     "chassis",
     "services",
     "security",
@@ -72,23 +72,47 @@ KEYKINDS_JUNIPER = {
 }
 KEYKINDS_ARUBA = {
     (('name', '*'), ('type', 'AAA_Server_Group')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'default'), ('type', 'accounting_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'default'), ('type', 'authentication_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'default'), ('type', 'authorization_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'https-server')) : "type",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'https-server'), ('type', 'accounting_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'https-server'), ('type', 'authentication_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'ssh')) : "type",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'ssh'), ('type', 'accounting_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'ssh'), ('type', 'authentication_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'ssh'), ('type', 'authorization_group_prios')) : "name",
     (('name', '*'), ('type', 'ACL')) : "name",
     (('name', '*'), ('type', 'Class'), ('name', '*')) : "type",
+    (('name', '*'), ('type', 'DHCP_Relay'), ('name', '*'), ('type', 'ipv4_ucast_server')) : "name",
+    (('name', '*'), ('type', 'Policy'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'Policy'), ('name', '*'), ('type', 'cfg_entries'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'Policy'), ('name', '*'), ('type', 'cfg_entries'), ('name', '*'), ('type', 'policy_action_set'), ('name', '*')) : "type",
     (('name', '*'), ('type', 'Port'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'System')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'aruba_central'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'mirrors'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'mirrors'), ('name', '*'), ('type', 'tunnel')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'qos_cos_map_entries')): "name",
+    (('name', '*'), ('type', 'System'), ('type', 'rest_api')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'subsystems'), ('name', '*'), ('type', 'leds'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'syslog_remotes')): "name",
+    (('name', '*'), ('type', 'System'), ('type', 'vsx')): "name",
     (('name', '*'), ('type', 'VRF')) : "name",
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'NTP_Association')): 'name',
-    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Radius_Server')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Radius_Dynamic_Authorization_Client')): "name",
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Radius_Server')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Static_Route')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Tacacs_Server')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'dns_host_v4_address_mapping')): "name",
-    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'ospf_routers'), ('name', '*'), ('type', 'areas')): "name",
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'pim_routers')): "type",
-    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'pim_routers'), ('type', 'ipv4')) : "type"
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'pim_routers'), ('type', 'ipv4')) : "type",
+    (('name', '*'), ('type', 'VSF_Member')) : "name",
+    (('name', '*'), ('type', 'VSF_Member'), ('name', '*'), ('type', 'links')): "name",
 }
 TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER + TOP_LEVEL_TYPES_ARUBA
-KEYKINDS = KEYKINDS_JUNIPER
-#KEYKINDS = KEYKINDS_ARUBA
+#KEYKINDS = KEYKINDS_JUNIPER
+KEYKINDS = KEYKINDS_ARUBA
 #KEYKINDS = {}
 
 def main():
@@ -165,7 +189,7 @@ class SymbolExtractor:
                 try:
                     logging.debug("\t{}".format(d.keys()))
                 except Exception as ex:
-                    logging.error("!Some subinstances of {} are not dictionaries".format(path))
+                    logging.error("!Some subinstances of {} are not dictionaries".format(path_signature))
                     break
 
             kind = self.infer_keykind(dictionaries)
