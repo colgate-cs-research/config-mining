@@ -8,20 +8,31 @@ import ciscoconfparse
 import pprint
 import logging
 
-TOP_LEVEL_PREFIXES = [
-    "ip access-list standard",
-    "ip access-list extended"
+TOP_LEVEL_PREFIXES = {
+    ('router', 'ospf'): 3,
+}
+
+CHILD_SKIP = [
+    '!',
+    'exit-address-family',
 ]
 
-CHILD_FLAT_PREFIXES = [
-    ('description',),
-    ('switchport','mode'),
-    ('standby','version'),
-    ('ip','address'),
-    ('ip','helper-address'),
-    ('ip','flow'),
-    ('ipv6','address'),
-]
+CHILD_FLAT_PREFIXES = {
+    ('description',): 1,
+    ('switchport','mode'): 2,
+    ('standby','version'): 2,
+    ('ip','address'): 2,
+    ('ip','helper-address'): 2,
+    ('ip','flow'): 2,
+    ('ipv6','address'): 2,
+    ('spanning-tree','status'): 2,
+    ('ip','redirects'): 2,
+    ('ip','proxy-arp'): 2,
+    ('passive-interface',): 2,
+    ('location',): 1,
+    ('contact',): 1,
+    ('seq',): 2,
+}
 
 CHILD_NESTED_PREFIXES = {
     ('spanning-tree',): 1,
@@ -32,10 +43,42 @@ CHILD_NESTED_PREFIXES = {
     ('ip', 'access-group'): 2,
     ('ip', 'multicast'): 2,
     ('ip', 'igmp'): 2,
-    ('ip', 'pim'): 2,
+    ('pim',): 1,
     ('ipv6', 'nd'): 2,
     ('ipv6', 'pim'): 2,
     ('standby',): 2,
+    ('neighbor',): 2,
+    ('ip', 'rip'): 2,
+    ('allowed','vlan'): 2,
+    ('allowed','vlan','add'): 2,
+    ('network',): 3,
+    ('access-list',): (2,list),
+    ('flow-export',): 1,
+    ('prefix-list',): 2,
+    ('snmp-server',): 1,
+    ('radius-server',): 1,
+    ('logging',): 1,
+    ('service',): 2,
+    ('ssh',): 1,
+    ('telnet',): 1,
+    ('tftp',): 1,
+    ('login',): 1,
+    ('mls',): 1,
+    ('diagnostic',): 1,
+    ('ntp',): 1,
+    ('access-group',): 1,
+    ('server',): 2,
+    ('flow-cache',): 1,
+    ('clock',): 1,
+    ('aaa',): 1,
+    ('ip',): 1,
+    ('name-server',): (1,list),
+    ('forward-protocol',): (1,list),
+    ('route',): (1,list),
+    ('http',): 1,
+    ('errdisable',): 1,
+    ('ipv6',): 1,
+    ('standard'): (3, list),
 }
 
 def jsonify_config(config_filepath, output_dir):
@@ -50,19 +93,14 @@ def jsonify_config(config_filepath, output_dir):
 
     logging.debug("PARENTS")
     for parent in parents:
-        line = parent.text
-        if line.count(" ") == 1:
-            logging.debug(line.split(" "))
-        else:
-            logging.debug(line)
-        details = add_to_config(json_config, line.split(" "))
+        parts = parent.text.split(' ')
+        details = add_to_config(json_config, parts)
         children = parent.children
         add_children(details, children)
-        
 
     logging.debug("NON_PARENTS")
     for non_parent in non_parents:
-        logging.debug(non_parent.text)
+        add_child(json_config, non_parent.text)
 
 
     with open(os.path.join(output_dir, os.path.basename(config_filepath).replace(".cfg", ".json")), 'w') as out_file:
@@ -78,48 +116,84 @@ def add_to_config(dct, parts):
 
 def add_children(parent, children):
     for child in children:
-        child = child.text.strip()
-        if child.startswith("no "):
-            child = child[len("no "):]
-            enabled = False
+        if child.children:
+            logging.debug("{} has children:".format(child))
+            parts = child.text.strip().split(' ')
+            details = add_to_config(parent, parts) 
+            grandchildren = child.children
+            add_children(details, grandchildren)
         else:
-            enabled = True
-        parts = child.split(' ')
-        if len(parts) > 1 and (parts[0],) in CHILD_FLAT_PREFIXES:
-            parent[parts[0]] = ' '.join(parts[1:])
-        elif len(parts) > 2 and (parts[0],parts[1]) in CHILD_FLAT_PREFIXES:
-            parent['-'.join(parts[:2])] = ' '.join(parts[2:])
-        elif len(parts) > 1 and (parts[0],) in CHILD_NESTED_PREFIXES:
-            prefix = (parts[0],)
-            add_child_nested(prefix, parts, parent)
-        elif len(parts) > 2 and (parts[0],parts[1]) in CHILD_NESTED_PREFIXES:
-            prefix = (parts[0],parts[1])
-            add_child_nested(prefix, parts, parent)
-        elif len(parts) == 1:
-            parent[parts[0]] = enabled
-        elif len(parts) == 2:
-            parent[parts[0]] = parts[1]
-        else:
-            parent[child] = None
+            add_child(parent, child.text.strip()) 
 
-def add_child_nested(prefix, parts, parent):
-    splitpoint = CHILD_NESTED_PREFIXES[prefix]
-    if splitpoint == 2 and len(prefix) == 1:
+def add_child(parent, child, enabled=True):
+    # Handle no commands
+    if child.startswith("no "):
+        child = child[len("no "):]
+        enabled = False
+
+    if child in CHILD_SKIP:
+        return None
+
+    # Infer how to add child
+    parts = child.split(' ')
+    if isinstance(parent, list):
+        parent.append(child)
+    elif len(parts) >= 2 and (parts[0],parts[1]) in CHILD_FLAT_PREFIXES:
+        prefix = (parts[0],parts[1])
+        add_child_flat(prefix, parts, parent, enabled)
+    elif len(parts) >= 1 and (parts[0],) in CHILD_FLAT_PREFIXES:
+        prefix = (parts[0],)
+        add_child_flat(prefix, parts, parent, enabled)
+    elif len(parts) > 3 and (parts[0],parts[1],parts[2]) in CHILD_NESTED_PREFIXES:
+        prefix = (parts[0],parts[1],parts[2])
+        return add_child_nested(prefix, parts, parent, enabled)
+    elif len(parts) > 2 and (parts[0],parts[1]) in CHILD_NESTED_PREFIXES:
+        prefix = (parts[0],parts[1])
+        return add_child_nested(prefix, parts, parent, enabled)
+    elif len(parts) > 1 and (parts[0],) in CHILD_NESTED_PREFIXES:
+        prefix = (parts[0],)
+        return add_child_nested(prefix, parts, parent, enabled)
+    elif len(parts) == 1:
+        parent[parts[0]] = enabled
+    elif len(parts) == 2:
+        parent[parts[0]] = parts[1]
+    else:
+        parent[child] = None
+
+    return None
+
+def add_child_flat(prefix, parts, parent, enabled):
+    splitpoint = CHILD_FLAT_PREFIXES[prefix]
+    if splitpoint > len(prefix):
+        joinchar = ' '
+    else:
+        joinchar = '-'
+    key = joinchar.join(parts[:splitpoint])
+    remainpoint = max(splitpoint,len(prefix))
+    value = ' '.join(parts[remainpoint:])
+    parent[key] = value
+
+def add_child_nested(prefix, parts, parent, enabled):
+    if isinstance(CHILD_NESTED_PREFIXES[prefix], tuple):
+        splitpoint, datastruct = CHILD_NESTED_PREFIXES[prefix]
+    else:
+        splitpoint = CHILD_NESTED_PREFIXES[prefix]
+        datastruct = dict
+    if splitpoint > len(prefix):
         joinchar = ' '
     else:
         joinchar = '-'
     outer_key = joinchar.join(parts[:splitpoint])
     if outer_key not in parent:
-        parent[outer_key] = {}
+        parent[outer_key] = datastruct()
     nested = parent[outer_key]
 
-    remain = parts[splitpoint:]
-    if len(remain) == 1:
-        nested[remain[0]] = True
-    elif len(remain) == 2:
-        nested[remain[0]] = remain[1]
-    else:
-        nested[' '.join(remain)] = None 
+    remainpoint = max(splitpoint,len(prefix)) 
+    if parts[remainpoint:]:
+        remain = ' '.join(parts[remainpoint:])
+        add_child(nested, remain, enabled)
+
+    return nested
 
 def main():
     # Parse command-line arguments
