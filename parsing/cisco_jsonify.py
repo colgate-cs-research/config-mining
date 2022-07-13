@@ -8,49 +8,63 @@ import ciscoconfparse
 import pprint
 import logging
 
-TOP_LEVEL_PREFIXES = {
-    ('router', 'ospf'): 3,
+PARENT_LIST_PREFIXES = {
+    ('ip','access-list','standard'): ('access-list',),
+    ('ip','access-list','extended'): ('access-list',),
+    ('ipv6','access-list'): ('access-list',),
+}
+
+PARENT_DICT_PREFIXES = {
+    ('ip','vrf'): ('vrf',),
+    ('monitor','session'): ('monitor-session',),
+    ('router','ospf'): ('router','ospf'),
+}
+
+PARENT_SKIP = {
+    ('banner',): True
 }
 
 CHILD_SKIP = [
     '!',
     'exit-address-family',
+    'switchport'
 ]
 
 CHILD_FLAT_PREFIXES = {
     ('description',): 1,
-    ('switchport','mode'): 2,
+    #('switchport','mode'): 2,
     ('standby','version'): 2,
     ('ip','address'): 2,
-    ('ip','helper-address'): 2,
-    ('ip','flow'): 2,
+    #('ip','helper-address'): 2,
+    #('ip','flow'): 2,
     ('ipv6','address'): 2,
     ('spanning-tree','status'): 2,
-    ('ip','redirects'): 2,
-    ('ip','proxy-arp'): 2,
+    #('ip','redirects'): 2,
+    #('ip','proxy-arp'): 2,
     ('passive-interface',): 2,
     ('location',): 1,
     ('contact',): 1,
     ('seq',): 2,
+    ('access-group',): 2,
+    ('access-class',): 2,
 }
 
 CHILD_NESTED_PREFIXES = {
     ('spanning-tree',): 1,
     ('logging','event'): 2,
-    ('switchport', 'trunk'): 2,
+    #('switchport', 'trunk'): 2,
     ('storm-control',): 2,
     ('channel-group',): 2,
-    ('ip', 'access-group'): 2,
-    ('ip', 'multicast'): 2,
-    ('ip', 'igmp'): 2,
+    #('ip', 'multicast'): 2,
+    #('ip', 'igmp'): 2,
     ('pim',): 1,
     ('ipv6', 'nd'): 2,
     ('ipv6', 'pim'): 2,
     ('standby',): 2,
     ('neighbor',): 2,
     ('ip', 'rip'): 2,
-    ('allowed','vlan'): 2,
-    ('allowed','vlan','add'): 2,
+    ('allowed','vlan'): (2,list),
+    ('allowed','vlan','add'): (2,list),
     ('network',): 3,
     ('access-list',): (2,list),
     ('flow-export',): 1,
@@ -66,7 +80,7 @@ CHILD_NESTED_PREFIXES = {
     ('mls',): 1,
     ('diagnostic',): 1,
     ('ntp',): 1,
-    ('access-group',): 1,
+    #('access-group',): 1,
     ('server',): 2,
     ('flow-cache',): 1,
     ('clock',): 1,
@@ -78,7 +92,11 @@ CHILD_NESTED_PREFIXES = {
     ('http',): 1,
     ('errdisable',): 1,
     ('ipv6',): 1,
-    ('standard'): (3, list),
+    ('redirects',): 1,
+    ('igmp',): 1,
+    ('multicast',): 1,
+    ('switchport',): 1,
+    ('trunk',): 1,
 }
 
 def jsonify_config(config_filepath, output_dir):
@@ -93,24 +111,50 @@ def jsonify_config(config_filepath, output_dir):
 
     logging.debug("PARENTS")
     for parent in parents:
-        parts = parent.text.split(' ')
-        details = add_to_config(json_config, parts)
         children = parent.children
+        parent = parent.text.strip()
+        logging.debug(parent)
+        if parent.split(' ')[0] in PARENT_SKIP:
+            continue
+        details = add_parent(json_config, parent)
         add_children(details, children)
 
     logging.debug("NON_PARENTS")
     for non_parent in non_parents:
-        add_child(json_config, non_parent.text)
+        non_parent = non_parent.text.strip()
+        add_child(json_config, non_parent)
 
 
     with open(os.path.join(output_dir, os.path.basename(config_filepath).replace(".cfg", ".json")), 'w') as out_file:
         json.dump(json_config, out_file, indent=4, sort_keys=False)
 
-def add_to_config(dct, parts):
+def add_parent(grandparent, parent):
+    parts = parent.split(' ')
+    for i in range(4,1,-1):
+        prefix = tuple(parts[:i])
+        if prefix in PARENT_LIST_PREFIXES:
+            extra = parts[i+1:]
+            parts = parts[:i+1]
+            parts[:i] = list(PARENT_LIST_PREFIXES[prefix])
+            result = add_to_config(grandparent, parts, [])
+            if extra:
+                add_child(result, ' '.join(extra))
+            return result
+        elif prefix in PARENT_DICT_PREFIXES:
+            extra = parts[i+1:]
+            parts = parts[:i+1]
+            parts[:i] = list(PARENT_DICT_PREFIXES[prefix])
+            result = add_to_config(grandparent, parts, {})
+            if extra:
+                add_child(result, ' '.join(extra))
+            return result
+    return add_to_config(grandparent, parts, {})
+
+def add_to_config(dct, parts, datastruct):
     if parts[0] not in dct:
         dct[parts[0]] = {}
     if len(parts) > 1:
-        return add_to_config(dct[parts[0]], parts[1:])
+        return add_to_config(dct[parts[0]], parts[1:], datastruct)
     else:
         return dct[parts[0]]
 
@@ -118,8 +162,7 @@ def add_children(parent, children):
     for child in children:
         if child.children:
             logging.debug("{} has children:".format(child))
-            parts = child.text.strip().split(' ')
-            details = add_to_config(parent, parts) 
+            details = add_parent(parent, child.text.strip()) 
             grandchildren = child.children
             add_children(details, grandchildren)
         else:
@@ -170,7 +213,10 @@ def add_child_flat(prefix, parts, parent, enabled):
         joinchar = '-'
     key = joinchar.join(parts[:splitpoint])
     remainpoint = max(splitpoint,len(prefix))
-    value = ' '.join(parts[remainpoint:])
+    if parts[remainpoint:]:
+        value = ' '.join(parts[remainpoint:])
+    else:
+        value = enabled
     parent[key] = value
 
 def add_child_nested(prefix, parts, parent, enabled):
