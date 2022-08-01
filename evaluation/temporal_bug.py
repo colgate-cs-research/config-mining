@@ -2,12 +2,10 @@
 
 import argparse
 
-def get_rules(f, rules_dict, date):
-
+def get_rules(f, cycles_dict, date):
 
     lst = f.read().split('\n')
-
-    rules_list = []
+    cycle_list = []
 
     i = 0
     while i < len(lst):
@@ -18,20 +16,50 @@ def get_rules(f, rules_dict, date):
                     i += 1
                     line = lst[i]
             else:
-                crime_scene = get_bug_site_list(lst[i+1][2:-2])
-                rule = (line, crime_scene)
-                rules_list.append(rule)
+                components = get_bug_site_list(lst[i+1][2:-2])
+                cycle = (line, components)
+                cycle_list.append(cycle)
                 i += 1
         
         i += 1
 
-    rules_dict[date] = rules_list
+    cycles_dict[date] = cycle_list
 
 def get_bug_site_list(bug_site_str):
     bug_site_list = []
-    for site in bug_site_str.split(','):
-        bug_site_list.append(site.strip("' "))
+    for component in bug_site_str.split(','):
+        bug_site_list.append(component.strip("' "))
     return bug_site_list
+
+def fixed_after_one_period(matrix):
+    if (matrix[0]==1):
+        if (matrix[1]== 0) and (matrix[3]==0) and (matrix[3]==0):
+            return True
+    else:
+        if ((matrix[1]==1) and (matrix[2]==0) and (matrix[3]==0)):
+            return True
+        else:
+            if ((matrix[2]==1) and (matrix[3]==0)):
+                return True
+    return False
+
+def fixed_after_two_periods(matrix):
+    if (matrix[0]==1):
+        if ((matrix[1]==1) and (matrix[2]==0) and (matrix[3]==0)):
+            return True
+    else:
+        if ((matrix[1]==1) and (matrix[2]==1) and (matrix[3]==0)):
+            return True
+    return False
+
+def fixed_after_three_periods(matrix):
+    return ((matrix[0]==1) and (matrix[1]==1) and (matrix[2]==1) and (matrix[3]==0))
+
+def not_fixed(matrix):
+    sum  = 0
+    for num in matrix:
+        sum += num
+    return sum==4
 
 def main():
 
@@ -39,17 +67,61 @@ def main():
     #parser.add_argument('bugs_path',type=str, help='Path for a file (or directory) containing a text files of bugs.')
     #arguments = parser.parse_args()
 
-    rules_dict = {} #key is filename, value is list of rules from file
+    cycles_dict = {} #key is filename, value is list of rules from file
     time_periods = ['2021-09-01', '2021-12-01', '2022-02-01','2022-05-01']
     for date in time_periods:
-        f = open(('bug_report_' + date + '.txt'), 'r')
+        f = open(('/shared/configs/colgate/mining/bug_reports/bug_report_' + date + '.txt'), 'r')
         #f = open(arguments.bugs_path, 'r')
-        get_rules(f, rules_dict,date)
+        get_rules(f, cycles_dict,date)
         f.close()
 
     #print(rules_dict)
 
-    rules_dict2 = {}
+    # get each unique cycle found
+    # make matrix where each index i is 1 if the cycle was there in period i+1 (or index i in time_periods)
+    cycle_matrix_dict = {}
+    for i in range(len(time_periods)):
+        date = time_periods[i]
+        for (cycle, components) in cycles_dict[date]:
+            if cycle not in cycle_matrix_dict:
+                cycle_matrix_dict[cycle] = [0,0,0,0]
+            cycle_matrix_dict[cycle][i] = 1
+
+    # count cycles in each category
+    one = 0
+    two = 0
+    three = 0
+    never = 0
+    other = 0
+    for cycle in cycle_matrix_dict:
+        matrix = cycle_matrix_dict[cycle]
+        # 1. fixed after one period
+        if fixed_after_one_period(matrix):
+            one += 1
+        # 2. fixed after two periods
+        elif fixed_after_two_periods(matrix):
+            two += 1
+        # 3. fixed after three periods
+        elif fixed_after_three_periods(matrix):
+            three += 1
+
+        # 4. not fixed
+        elif not_fixed(matrix):
+            never += 1
+
+        # 5. other 
+        else:
+            other += 1
+
+    # make csv
+    f = open('cycles_fixed.csv','w')
+    f.write("One, Two, Three, Not Fixed, Other\n")
+    line = "{}, {}, {}, {}, {}\n".format(one, two, three, never, other)
+    f.write(line)
+    f.close()
+
+
+    '''rules_dict2 = {}
     for i in range(len(time_periods)):
         t1 = time_periods[i]
         rules_list_1 = rules_dict[t1]
@@ -96,7 +168,7 @@ def main():
 
 
     #for file in arguments.bugs_path:
-        #get_rules(file, rules_dict)
+        #get_rules(file, rules_dict)'''
 
 if __name__=="__main__":
     main()
