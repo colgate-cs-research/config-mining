@@ -8,14 +8,14 @@ import logging
 import pprint
 
 TOP_LEVEL_TYPES_JUNIPER = [
-    "groups", 
+    #"groups", 
     #"apply-groups",
     #"system",
-    #"chassis",
-    #"services",
-    #"security",
+    "chassis",
+    "services",
+    "security",
     "interfaces", 
-    #"routing-options",
+    "routing-options",
     "protocols",
     "policy-options", 
     "class-of-service",
@@ -43,34 +43,76 @@ TOP_LEVEL_TYPES_ARUBA = [
     #"PKI_TA_Profile",
 ]
 KEYKINDS_JUNIPER = {
+    (('name', '*'), ('type', 'class-of-service'), ('type', 'classifiers'), ('pair', ('dscp', '*')), ('mixed', ('forwarding-class', '*')), ('mixed', ('loss-priority low code-points',))): "name",
+    (('name', '*'), ('type', 'class-of-service'), ('type', 'classifiers'), ('pair', ('exp', '*')), ('mixed', ('forwarding-class', '*')), ('mixed', ('loss-priority low code-points',))): "name",
+    (('name', '*'), ('type', 'class-of-service'), ('type', 'classifiers'), ('pair', ('ieee-802.1', '*')), ('mixed', ('forwarding-class', '*')), ('mixed', ('loss-priority low code-points',))): "name",
+    (('name', '*'), ('type', 'class-of-service'), ('type', 'code-point-aliases'), ('type', 'dscp')): "name",
+    (('name', '*'), ('type', 'class-of-service'), ('type', 'code-point-aliases'), ('type', 'exp')): "name",
+    (('name', '*'), ('type', 'class-of-service'), ('type', 'scheduler-maps')): "name",
+    (('name', '*'), ('type', 'class-of-service'), ('type', 'schedulers')): "name",
+    (('name', '*'), ('type', 'firewall'), ('pair', ('family', '*')), ('pair', ('filter', '*')), ('mixed', ('term', '*'))): "type",
 #    (('name', '*'), ('type', 'firewall'), ('type', 'family inet'), ('type', 'filter')) : "name",
 #    (('name', '*'), ('type', 'policy-options'), ('type', 'as-path')) : "name",
-    (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term')): "name",
+#    (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term')): "name",
 #    (('name', '*'), ('type', 'policy-options'), ('type', 'policy-statement'), ('name', '*'), ('type', 'term'), ('name', '*'), ('type', 'to')): "mixed",
     (('name', '*'), ('type', 'groups')) : "name",
-#    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('type', 'unit'), ('name', '*'), ('mixed', ('family', '*')), ('type', 'filter'), ('type', 'input-list')): "name",
-#    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('type', 'unit'), ('name', '*'), ('mixed', ('family', '*')), ('type', 'filter'), ('type', 'output-list')): "name",
+    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('mixed', ('unit', '*')), ('mixed', ('apply-groups-except',))): "name",
+    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('mixed', ('unit', '*')), ('mixed', ('family', '*')), ('mixed', ('filter',)), ('type', 'input-list')): "name",
+    (('name', '*'), ('type', 'interfaces'), ('name', '*'), ('mixed', ('unit', '*')), ('mixed', ('family', '*')), ('mixed', ('filter',)), ('type', 'output-list')): "name",
+    (('name', '*'), ('type', 'protocols'), ('type', 'bgp'), ('mixed', ('group', '*')), ('mixed', ('export',))): "name",
+    (('name', '*'), ('type', 'protocols'), ('type', 'bgp'), ('mixed', ('group', '*')), ('mixed', ('import',))): "name",
+    (('name', '*'), ('type', 'protocols'), ('type', 'mpls'), ('mixed', ('admin-groups',))): "name",
+    (('name', '*'), ('type', 'routing-options'), ('mixed', ('bmp',))): "pair",
+    (('name', '*'), ('type', 'routing-options'), ('mixed', ('martians',))): "name",
+    (('name', '*'), ('type', 'routing-options'), ('mixed', ('ppm',))): "type",
+    (('name', '*'), ('type', 'routing-options'), ('mixed', ('rib', '*')), ('type', 'martians')): "name",
+    (('name', '*'), ('type', 'routing-options'), ('mixed', ('rib-groups',))): "name",
+    (('name', '*'), ('type', 'routing-options'), ('mixed', ('rib-groups',)), ('name', '*'), ('type', 'import-rib')): "name",
 #    (('name', '*'), ('type', 'security'), ('type', 'pki')): "mixed",
 }
 KEYKINDS_ARUBA = {
     (('name', '*'), ('type', 'AAA_Server_Group')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'default'), ('type', 'accounting_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'default'), ('type', 'authentication_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'default'), ('type', 'authorization_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'https-server')) : "type",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'https-server'), ('type', 'accounting_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'https-server'), ('type', 'authentication_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'ssh')) : "type",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'ssh'), ('type', 'accounting_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'ssh'), ('type', 'authentication_group_prios')) : "name",
+    (('name', '*'), ('type', 'AAA_Server_Group_Prio'), ('type', 'ssh'), ('type', 'authorization_group_prios')) : "name",
     (('name', '*'), ('type', 'ACL')) : "name",
     (('name', '*'), ('type', 'Class'), ('name', '*')) : "type",
+    (('name', '*'), ('type', 'DHCP_Relay'), ('name', '*'), ('type', 'ipv4_ucast_server')) : "name",
+    (('name', '*'), ('type', 'Policy'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'Policy'), ('name', '*'), ('type', 'cfg_entries'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'Policy'), ('name', '*'), ('type', 'cfg_entries'), ('name', '*'), ('type', 'policy_action_set'), ('name', '*')) : "type",
     (('name', '*'), ('type', 'Port'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'System')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'aruba_central'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'mirrors'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'mirrors'), ('name', '*'), ('type', 'tunnel')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'qos_cos_map_entries')): "name",
+    (('name', '*'), ('type', 'System'), ('type', 'rest_api')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'subsystems'), ('name', '*'), ('type', 'leds'), ('name', '*')): "type",
+    (('name', '*'), ('type', 'System'), ('type', 'syslog_remotes')): "name",
+    (('name', '*'), ('type', 'System'), ('type', 'vsx')): "name",
     (('name', '*'), ('type', 'VRF')) : "name",
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'NTP_Association')): 'name',
-    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Radius_Server')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Radius_Dynamic_Authorization_Client')): "name",
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Radius_Server')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Static_Route')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'Tacacs_Server')): 'name',
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'dns_host_v4_address_mapping')): "name",
-    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'ospf_routers'), ('name', '*'), ('type', 'areas')): "name",
     (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'pim_routers')): "type",
-    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'pim_routers'), ('type', 'ipv4')) : "type"
+    (('name', '*'), ('type', 'VRF'), ('name', '*'), ('type', 'pim_routers'), ('type', 'ipv4')) : "type",
+    (('name', '*'), ('type', 'VSF_Member')) : "name",
+    (('name', '*'), ('type', 'VSF_Member'), ('name', '*'), ('type', 'links')): "name",
 }
 TOP_LEVEL_TYPES = TOP_LEVEL_TYPES_JUNIPER + TOP_LEVEL_TYPES_ARUBA
-KEYKINDS = KEYKINDS_JUNIPER
-#KEYKINDS = KEYKINDS_ARUBA
+#KEYKINDS = KEYKINDS_JUNIPER
+KEYKINDS = KEYKINDS_ARUBA
 #KEYKINDS = {}
 
 def main():
@@ -147,14 +189,14 @@ class SymbolExtractor:
                 try:
                     logging.debug("\t{}".format(d.keys()))
                 except Exception as ex:
-                    logging.error("!Some subinstances of {} are not dictionaries".format(path))
+                    logging.error("!Some subinstances of {} are not dictionaries".format(path_signature))
                     break
 
             kind = self.infer_keykind(dictionaries)
             self.keykinds[path_signature] = kind
 
             if kind == "unknown":
-                logging.error("!Cannot infer key kind for {}".format(path))
+                logging.error("!Cannot infer key kind for {}".format(path_signature))
         logging.debug("Dict keys are {}s".format(kind))
         if (kind == "name"):
             self.extract_symbols_key_name(dct, path)
@@ -184,7 +226,7 @@ class SymbolExtractor:
             self.keykinds[path_signature] = kind
 
             if kind == "unknown":
-                logging.error("!Cannot infer key kind for {}".format(path))
+                logging.error("!Cannot infer key kind for {}".format(path_signature))
             #elif kind == "mixed":
             #    kinds = self.infer_mixedkinds(lists)
             #    self.mixedkinds[path_signature] = kinds
@@ -280,7 +322,8 @@ class SymbolExtractor:
         sublist_num_values = 0
         sublist_unique_values = set()
         not_sub_num = 0
-        for value in dct.values():
+        num_pair_keys = 0
+        for key, value in dct.items():
             if isinstance(value, dict):
                 subdict_num += 1
                 subdict_num_keys += len(value.keys())
@@ -291,6 +334,8 @@ class SymbolExtractor:
                 sublist_unique_values.update(value)
             else:
                 not_sub_num += 1
+            if key.count(' ') == 1:
+                num_pair_keys += 1
         logging.debug("\tTotal subdict: {}".format(subdict_num))
         logging.debug("\tUnique sub keys {}".format(len(subdict_unique_keys)))
         logging.debug("\tTotal sub keys {}".format(subdict_num_keys))
@@ -303,9 +348,19 @@ class SymbolExtractor:
         elif (not_sub_num > subdict_num + sublist_num):
             return "type"
         elif (subdict_num_keys > 0 and len(subdict_unique_keys) / subdict_num_keys <= 0.75):
-            return "name"
+            if (num_pair_keys > 0 and num_pair_keys == len(dct)):
+                return "pair"
+            elif (num_pair_keys == 0):
+                return "name"
+            else:
+                return "mixed"
         elif (sublist_num_values > 0 and len(sublist_unique_values) / sublist_num_values <= 0.75):
-            return "name"
+            if (num_pair_keys > 0 and num_pair_keys == len(dct)):
+                return "pair"
+            elif (num_pair_keys == 0):
+                return "name"
+            else:
+                return "mixed"
         else:
             return "type"
 
@@ -390,6 +445,9 @@ class SymbolExtractor:
         if path[-1][0] == "type":
             symbol_type = path[-1][1]
         for symbol_name, symbol_value in dct.items():
+            symbol_name = symbol_name.replace("inactive: ", "")
+            if " " in symbol_name: #.replace("inactive: ", ""):
+                logging.error("!{} does not appear to be a name at {}".format(symbol_name, path))
             self.add_to_symbol_table(symbol_type, symbol_name, path)
             if isinstance(symbol_value, dict):
                 self.parse_dict(symbol_value, path + [('name', symbol_name)])
@@ -409,6 +467,9 @@ class SymbolExtractor:
     def extract_symbols_key_pair(self, dct, path):
         # Treat keys as pairs of symbol type and name
         for symbol_pair, value in dct.items():
+            if symbol_pair.replace("inactive: ", "").count(" ") != 1:
+                logging.error("!{} is not a pair".format(symbol_pair))
+                continue
             symbol_type, symbol_name = symbol_pair.replace("inactive: ", "").split(" ")
             self.add_to_symbol_table(symbol_type, symbol_name, path)
             if isinstance(value, dict):

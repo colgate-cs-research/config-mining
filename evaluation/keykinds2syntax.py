@@ -11,15 +11,28 @@ def add_breadcrumb(breadcrumb, subtemplate):
         key = value
     elif kind == "name":
         key = "NAME"
-    elif kind == "pair" or kind == "mixed":
+    elif kind == "pair":
         key = value[0] + " NAME"
+    elif kind == "mixed":
+        if len(value) == 1:
+            key = value[0]
+        elif len(value) == 2 and value[1] == "*":
+            key = value[0] + " NAME"
+        else:
+            logging.error("!Unexpected mixed: {}".format(breadcrumb[0]))
     else:
         logging.error("!Breadcrumb has type {}: {}".format(kind, breadcrumb))
         return
+
     if key not in subtemplate:
         subtemplate[key] = {}
-    if len(breadcrumb) > 1:
+    elif isinstance(subtemplate[key], list):
+        subtemplate[key] = {}
+
+    if len(breadcrumb) > 2:
         add_breadcrumb(breadcrumb[1:], subtemplate[key])
+    else:
+        subtemplate[key] = [breadcrumb[1]]
 
 def main():
     #Parse command-line arguments
@@ -43,9 +56,9 @@ def main():
     keykinds = {ast.literal_eval(k) : v for k, v in pickle_keykinds.items()} 
 
     template = {}
-    for breadcrumb in keykinds.keys():
+    for breadcrumb, kind in keykinds.items():
         logging.debug("Adding {}".format(breadcrumb))
-        add_breadcrumb(breadcrumb, template)
+        add_breadcrumb(breadcrumb + (kind,), template)
         logging.debug("Updated template:\n{}".format(pprint.pformat(template)))
         
     logging.debug("Updated template:\n{}".format(pprint.pformat(template)))
